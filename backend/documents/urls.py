@@ -8,7 +8,7 @@ from .views import (
     DocumentTemplateListCreateAPIView,
     DocumentTemplateRetrieveUpdateDestroyAPIView,
     QRGenerateAPIView,
-    verify_qr_view
+    VerifyQRAPIView
 )
 
 
@@ -19,7 +19,7 @@ urlpatterns = [
     path('document-template/<int:pk>', DocumentTemplateRetrieveUpdateDestroyAPIView.as_view(), name='documenttemplate-detail'),
     path("documents/", CompanyDocumentCreateView.as_view(), name="document-create"),
     path("generate/", QRGenerateAPIView.as_view(), name="qr-generate"),
-    path("verify/<uuid:uuid>/", verify_qr_view, name="qr-verify"),
+    path("verify/<uuid:uuid>/", VerifyQRAPIView.as_view(), name="verify-qr"),
 
 
     # LIST
