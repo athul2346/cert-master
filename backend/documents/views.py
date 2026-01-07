@@ -210,58 +210,61 @@ class QRGenerateAPIView(APIView):
         )
 
 
-def verify_qr_view(request, uuid):
-    try:
-        qr = QRRecord.objects.select_related("document").get(id=uuid)
-    except QRRecord.DoesNotExist:
-        return render(
-            request,
-            "verify/invalid.html",
-            {"reason": "QR code not found"}
-        )
+class VerifyQRAPIView(APIView):
+    """
+    API to verify a QR code and return certificate info.
+    """
 
-    if not qr.is_active:
-        return render(
-            request,
-            "verify/invalid.html",
-            {"reason": "QR code has been revoked"}
-        )
-
-    document = getattr(qr, "document", None)
-
-    if not document:
-        return render(
-            request,
-            "verify/invalid.html",
-            {"reason": "No document linked to this QR"}
-        )
-
-    # Expiry logic
-    if not document.never_expires and document.expiry_date:
-        if document.expiry_date < now().date():
-            return render(
-                request,
-                "verify/invalid.html",
-                {"reason": "Document has expired"}
+    def get(self, request, uuid):
+        try:
+            qr = QRRecord.objects.select_related("document").get(id=uuid)
+        except QRRecord.DoesNotExist:
+            return Response(
+                {"verified": False, "reason": "QR code not found"},
+                status=status.HTTP_404_NOT_FOUND
             )
 
-    if document.status != "ACTIVE":
-        return render(
-            request,
-            "verify/invalid.html",
-            {"reason": f"Document status: {document.status}"}
-        )
+        if not qr.is_active:
+            return Response(
+                {"verified": False, "reason": "QR code has been revoked"},
+                status=status.HTTP_403_FORBIDDEN
+            )
 
-    # ✅ VALID
-    return render(
-        request,
-        "verify/valid.html",
-        {
-            "company": document.company.organisation_name,
-            "document_type": document.document_type.name,
-            "recipient": document.recipient,
-            "issued_date": document.issued_date,
-            "expiry_date": document.expiry_date,
-            "payload": qr.payload,
-        }
-    )
+        document = getattr(qr, "document", None)
+
+        if not document:
+            return Response(
+                {"verified": False, "reason": "No document linked to this QR"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        # Check expiry
+        if not document.never_expires and document.expiry_date:
+            if document.expiry_date < now().date():
+                return Response(
+                    {"verified": False, "reason": "Document has expired"},
+                    status=status.HTTP_403_FORBIDDEN
+                )
+
+        if document.status != "ACTIVE":
+            return Response(
+                {"verified": False, "reason": f"Document status: {document.status}"},
+                status=status.HTTP_403_FORBIDDEN
+            )
+
+        # ✅ Valid QR
+        certificate_url = document.file.url if document.file else None
+
+        return Response(
+            {
+                "verified": True,
+                "certificate_file": certificate_url,
+                "company": document.company.organisation_name,
+                "document_type": document.document_type.name,
+                "recipient": document.recipient,
+                "issued_date": document.issued_date,
+                "expiry_date": document.expiry_date,
+                "payload": qr.payload,
+            },
+            status=status.HTTP_200_OK
+        )
