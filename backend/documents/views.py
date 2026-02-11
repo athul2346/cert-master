@@ -18,7 +18,9 @@ from .serializers import (
     DocumentTypeSerializer, 
     CompanyDocumentSerializer, 
     DocumentTemplateSerializer,
-    QRGenerateSerializer
+    QRGenerateSerializer,
+    PatchDocumentJsonSerializer,
+    PatchTemplateJsonSerializer
 )
 from .authentication import CsrfExemptSessionAuthentication
 
@@ -176,7 +178,6 @@ class CompanyDocumentDetailView(APIView):
                 status=status.HTTP_404_NOT_FOUND
             )
 
-        document.file.delete(save=False)  # remove file from storage
         document.delete()
 
         return Response(
@@ -252,13 +253,11 @@ class VerifyQRAPIView(APIView):
                 status=status.HTTP_403_FORBIDDEN
             )
 
-        # ✅ Valid QR
-        certificate_url = document.file.url if document.file else None
+
 
         return Response(
             {
                 "verified": True,
-                "certificate_file": certificate_url,
                 "company": document.company.organisation_name,
                 "document_type": document.document_type.name,
                 "recipient": document.recipient,
@@ -268,3 +267,189 @@ class VerifyQRAPIView(APIView):
             },
             status=status.HTTP_200_OK
         )
+
+
+@method_decator(csrf_exempt, name="dispatch")
+class CompanyDocumentJsonUpdateView(APIView):
+    """
+    API to partially update document_json field without full document replacement.
+    
+    Supports three operations:
+    - to_add: Add new keys to the JSON document
+    - to_update: Update existing keys in the JSON document
+    - to_delete: Remove keys from the JSON document
+    
+    All operations are atomic - they all succeed or fail together.
+    """
+    authentication_classes = [CsrfExemptSessionAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self, request, document_type, recipient):
+        company = request.user.company
+        try:
+            return CompanyDocument.objects.get(
+                company=company,
+                document_type__code=document_type,
+                recipient=recipient,
+            )
+        except CompanyDocument.DoesNotExist:
+            return None
+
+    def patch(self, request, document_type, recipient):
+        """
+        Partial update document_json field
+        
+        Request body:
+        {
+            "to_add": {
+                "new_key": "value"
+            },
+            "to_update": {
+                "existing_key": "new_value"
+            },
+            "to_delete": ["key_to_remove"]
+        }
+        """
+        document = self.get_object(request, document_type, recipient)
+        
+        if not document:
+            return Response(
+                {"detail": "Document not found"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        
+        serializer = PatchDocumentJsonSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        
+        validated_data = serializer.validated_data
+        to_add = validated_data.get('to_add', {})
+        to_update = validated_data.get('to_update', {})
+        to_delete = validated_data.get('to_delete', [])
+        
+        # Get current JSON with atomic update
+        from django.db import transaction
+        with transaction.atomic():
+            # Lock the document row to prevent race conditions
+            from django.db import connection
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    "SELECT document_json FROM documents_companydocument WHERE id = %s FOR UPDATE",
+                    [document.id]
+                )
+            
+            current_json = document.document_json or {}
+            updated_json = current_json.copy()
+            
+            # Delete keys first
+            if to_delete:
+                for key in to_delete:
+                    updated_json.pop(key, None)  # Safe delete - ignore if key doesn't exist
+            
+            # Update existing keys
+            if to_update:
+                updated_json.update(to_update)
+            
+            # Add new keys
+            if to_add:
+                updated_json.update(to_add)
+            
+            # Save the updated JSON
+            document.document_json = updated_json
+            document.save(update_fields=['document_json', 'updated_at'])
+        
+        return Response({
+            "message": "Document JSON updated successfully",
+            "operations": {
+                "added": list(to_add.keys()) if to_add else [],
+                "updated": list(to_update.keys()) if to_update else [],
+                "deleted": to_delete if to_delete else []
+            },
+            "document_json": document.document_json
+        })
+
+
+@method_decator(csrf_exempt, name="dispatch")
+class DocumentTemplateJsonUpdateView(APIView):
+    """
+    API to partially update template_json field.
+    
+    Supports three operations:
+    - to_add: Add new keys to the template JSON
+    - to_update: Update existing keys in the template JSON
+    - to_delete: Remove keys from the template JSON
+    """
+    authentication_classes = [CsrfExemptSessionAuthentication]
+    permission_classes = [IsAdminUser]
+
+    def get_object(self, request, template_id):
+        try:
+            return DocumentTemplate.objects.get(
+                id=template_id,
+                company=request.user.company
+            )
+        except DocumentTemplate.DoesNotExist:
+            return None
+
+    def patch(self, request, template_id):
+        """
+        Partial update template_json field
+        
+        Request body:
+        {
+            "to_add": {
+                "new_field": "value"
+            },
+            "to_update": {
+                "existing_field": "new_value"
+            },
+            "to_delete": ["field_to_remove"]
+        }
+        """
+        template = self.get_object(request, template_id)
+        
+        if not template:
+            return Response(
+                {"detail": "Template not found"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        
+        serializer = PatchTemplateJsonSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        
+        validated_data = serializer.validated_data
+        to_add = validated_data.get('to_add', {})
+        to_update = validated_data.get('to_update', {})
+        to_delete = validated_data.get('to_delete', [])
+        
+        # Get current JSON with atomic update
+        from django.db import transaction
+        with transaction.atomic():
+            current_json = template.template_json or {}
+            updated_json = current_json.copy()
+            
+            # Delete keys first
+            if to_delete:
+                for key in to_delete:
+                    updated_json.pop(key, None)
+            
+            # Update existing keys
+            if to_update:
+                updated_json.update(to_update)
+            
+            # Add new keys
+            if to_add:
+                updated_json.update(to_add)
+            
+            # Save the updated JSON
+            template.template_json = updated_json
+            template.save(update_fields=['template_json'])
+        
+        return Response({
+            "message": "Template JSON updated successfully",
+            "operations": {
+                "added": list(to_add.keys()) if to_add else [],
+                "updated": list(to_update.keys()) if to_update else [],
+                "deleted": to_delete if to_delete else []
+            },
+            "template_json": template.template_json
+        })
