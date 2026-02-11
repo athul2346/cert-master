@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from datetime import date
 from .models import DocumentType, CompanyDocument, DocumentTemplate, QRRecord
 
 
@@ -11,7 +12,7 @@ class DocumentTypeSerializer(serializers.ModelSerializer):
 class DocumentTemplateSerializer(serializers.ModelSerializer):
     class Meta:
         model = DocumentTemplate
-        fields = ["template_name", "file"]
+        fields = ["template_name", "template_json", "template_html"]
 
     def create(self, validated_data):
         request = self.context["request"]
@@ -30,7 +31,6 @@ class CompanyDocumentSerializer(serializers.ModelSerializer):
         queryset=DocumentType.objects.all()
     )
     template = serializers.CharField(write_only=True)
-    file = serializers.FileField(use_url=True)
 
     class Meta:
         model = CompanyDocument
@@ -38,7 +38,7 @@ class CompanyDocumentSerializer(serializers.ModelSerializer):
             "document_type",
             "template",
             "recipient",
-            "file",
+            "document_json",
             "issued_date",
             "expiry_date",
             "never_expires",
@@ -139,3 +139,60 @@ class QRGenerateSerializer(serializers.Serializer):
         return QRRecord.objects.create(
             payload=validated_data["payload"]
         )
+
+
+class PatchDocumentJsonSerializer(serializers.Serializer):
+    """
+    Serializer for partial JSON updates on document_json field.
+    Allows adding, updating, and deleting keys without full document replacement.
+    """
+    to_add = serializers.DictField(
+        required=False, 
+        allow_empty=True,
+        help_text="Dictionary of new key-value pairs to add"
+    )
+    to_update = serializers.DictField(
+        required=False, 
+        allow_empty=True,
+        help_text="Dictionary of existing keys with new values to update"
+    )
+    to_delete = serializers.ListField(
+        child=serializers.CharField(),
+        required=False,
+        allow_empty=True,
+        help_text="List of key names to delete from document_json"
+    )
+
+    def validate_to_delete(self, value):
+        """Ensure to_delete is a list of strings"""
+        if value and not all(isinstance(item, str) for item in value):
+            raise serializers.ValidationError("to_delete must be a list of key names (strings)")
+        return value
+
+
+class PatchTemplateJsonSerializer(serializers.Serializer):
+    """
+    Serializer for partial JSON updates on template_json field.
+    """
+    to_add = serializers.DictField(
+        required=False, 
+        allow_empty=True,
+        help_text="Dictionary of new key-value pairs to add"
+    )
+    to_update = serializers.DictField(
+        required=False, 
+        allow_empty=True,
+        help_text="Dictionary of existing keys with new values to update"
+    )
+    to_delete = serializers.ListField(
+        child=serializers.CharField(),
+        required=False,
+        allow_empty=True,
+        help_text="List of key names to delete from template_json"
+    )
+
+    def validate_to_delete(self, value):
+        """Ensure to_delete is a list of strings"""
+        if value and not all(isinstance(item, str) for item in value):
+            raise serializers.ValidationError("to_delete must be a list of key names (strings)")
+        return value

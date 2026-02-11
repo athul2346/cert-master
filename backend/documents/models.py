@@ -19,8 +19,8 @@ class DocumentTemplate(models.Model):
         related_name="templates"
     )
     template_name = models.CharField(max_length=50)
-    file = models.FileField(upload_to="company_templates/")
-
+    template_json = models.JSONField(null=False)
+    template_html = models.CharField(max_length=255)
 
 class QRRecord(models.Model):
     id = models.UUIDField(
@@ -33,7 +33,6 @@ class QRRecord(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     def __str__(self):
         return str(self.id)
-
 
 
 
@@ -68,7 +67,9 @@ class CompanyDocument(models.Model):
     qr = models.OneToOneField(
         QRRecord,
         on_delete=models.PROTECT,
-        related_name="document"
+        related_name="document",
+        null=True,
+        blank=True
     )
 
     recipient = models.CharField(
@@ -77,7 +78,8 @@ class CompanyDocument(models.Model):
         default=None
     )
 
-    file = models.FileField(upload_to="company_documents/")
+
+    document_json = models.JSONField(null=False)
 
     issued_date = models.DateField(null=True, blank=True)
 
@@ -95,7 +97,6 @@ class CompanyDocument(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        # 🔑 THIS IS THE IMPORTANT PART
         constraints = [
             models.UniqueConstraint(
                 fields=["company", "document_type", "recipient"],
