@@ -168,31 +168,3 @@ class PatchDocumentJsonSerializer(serializers.Serializer):
         if value and not all(isinstance(item, str) for item in value):
             raise serializers.ValidationError("to_delete must be a list of key names (strings)")
         return value
-
-
-class PatchTemplateJsonSerializer(serializers.Serializer):
-    """
-    Serializer for partial JSON updates on template_json field.
-    """
-    to_add = serializers.DictField(
-        required=False, 
-        allow_empty=True,
-        help_text="Dictionary of new key-value pairs to add"
-    )
-    to_update = serializers.DictField(
-        required=False, 
-        allow_empty=True,
-        help_text="Dictionary of existing keys with new values to update"
-    )
-    to_delete = serializers.ListField(
-        child=serializers.CharField(),
-        required=False,
-        allow_empty=True,
-        help_text="List of key names to delete from template_json"
-    )
-
-    def validate_to_delete(self, value):
-        """Ensure to_delete is a list of strings"""
-        if value and not all(isinstance(item, str) for item in value):
-            raise serializers.ValidationError("to_delete must be a list of key names (strings)")
-        return value

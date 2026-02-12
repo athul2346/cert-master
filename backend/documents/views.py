@@ -7,7 +7,7 @@ from django.utils.decorators import method_decorator
 from django.conf import settings
 from django.shortcuts import render
 from django.utils.timezone import now
-from .utils import generate_qr_image
+from .utils import render_certificate_html
 from .models import (
     DocumentType, 
     CompanyDocument, 
@@ -18,9 +18,7 @@ from .serializers import (
     DocumentTypeSerializer, 
     CompanyDocumentSerializer, 
     DocumentTemplateSerializer,
-    QRGenerateSerializer,
-    PatchDocumentJsonSerializer,
-    PatchTemplateJsonSerializer
+    PatchDocumentJsonSerializer
 )
 from .authentication import CsrfExemptSessionAuthentication
 
@@ -123,21 +121,19 @@ class CompanyDocumentDetailView(APIView):
     authentication_classes = [CsrfExemptSessionAuthentication]
     permission_classes = [IsAuthenticated]
 
-    def get_object(self, request, document_type, recipient):
+    def get_object(self, request, pk):
         company = request.user.company
 
         try:
             return CompanyDocument.objects.get(
                 company=company,
-                document_type__code=document_type,
-                recipient=recipient,
+                pk=pk,
             )
         except CompanyDocument.DoesNotExist:
             return None
 
-
-    def get(self, request, document_type, recipient):
-        document = self.get_object(request, document_type, recipient)
+    def get(self, request, pk):
+        document = self.get_object(request, pk)
 
         if not document:
             return Response(
@@ -149,8 +145,8 @@ class CompanyDocumentDetailView(APIView):
         return Response(serializer.data)
     
 
-    def put(self, request, document_type, recipient):
-        document = self.get_object(request, document_type, recipient)
+    def put(self, request, pk):
+        document = self.get_object(request, pk)
 
         if not document:
             return Response(
@@ -169,8 +165,8 @@ class CompanyDocumentDetailView(APIView):
         return Response(serializer.data)
 
 
-    def delete(self, request, document_type, recipient):
-        document = self.get_object(request, document_type, recipient)
+    def delete(self, request, pk):
+        document = self.get_object(request, pk)
 
         if not document:
             return Response(
@@ -183,31 +179,6 @@ class CompanyDocumentDetailView(APIView):
         return Response(
             {"message": "Document deleted successfully"},
             status=status.HTTP_204_NO_CONTENT
-        )
-
-
-class QRGenerateAPIView(APIView):
-    """
-    Generates a QR code and stores payload
-    """
-
-    def post(self, request):
-        serializer = QRGenerateSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-
-        qr_record = serializer.save()
-
-        verify_url = f"{settings.PUBLIC_BASE_URL}/verify/{qr_record.id}/"
-
-        qr_image = generate_qr_image(verify_url)
-
-        return Response(
-            {
-                "qr_id": str(qr_record.id),
-                "verify_url": verify_url,
-                "qr_image_base64": qr_image.read().decode("latin1"),
-            },
-            status=status.HTTP_201_CREATED
         )
 
 
@@ -269,7 +240,7 @@ class VerifyQRAPIView(APIView):
         )
 
 
-@method_decator(csrf_exempt, name="dispatch")
+@method_decorator(csrf_exempt, name="dispatch")
 class CompanyDocumentJsonUpdateView(APIView):
     """
     API to partially update document_json field without full document replacement.
@@ -284,18 +255,17 @@ class CompanyDocumentJsonUpdateView(APIView):
     authentication_classes = [CsrfExemptSessionAuthentication]
     permission_classes = [IsAuthenticated]
 
-    def get_object(self, request, document_type, recipient):
+    def get_object(self, request, pk):
         company = request.user.company
         try:
             return CompanyDocument.objects.get(
                 company=company,
-                document_type__code=document_type,
-                recipient=recipient,
+                pk=pk,
             )
         except CompanyDocument.DoesNotExist:
             return None
 
-    def patch(self, request, document_type, recipient):
+    def patch(self, request, pk):
         """
         Partial update document_json field
         
@@ -310,7 +280,7 @@ class CompanyDocumentJsonUpdateView(APIView):
             "to_delete": ["key_to_remove"]
         }
         """
-        document = self.get_object(request, document_type, recipient)
+        document = self.get_object(request, pk)
         
         if not document:
             return Response(
@@ -368,88 +338,72 @@ class CompanyDocumentJsonUpdateView(APIView):
         })
 
 
-@method_decator(csrf_exempt, name="dispatch")
-class DocumentTemplateJsonUpdateView(APIView):
+@method_decorator(csrf_exempt, name="dispatch")
+class CertificateRenderAPIView(APIView):
     """
-    API to partially update template_json field.
+    API to render certificate HTML by replacing placeholders and adding QR code.
     
-    Supports three operations:
-    - to_add: Add new keys to the template JSON
-    - to_update: Update existing keys in the template JSON
-    - to_delete: Remove keys from the template JSON
+    Request body:
+    {
+        "template_id": 1,
+        "document_id": 1
+    }
+    
+    Response:
+    {
+        "rendered_html": "<html>...</html>"
+    }
     """
     authentication_classes = [CsrfExemptSessionAuthentication]
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAuthenticated]
 
-    def get_object(self, request, template_id):
+    def post(self, request):
+        template_id = request.data.get("template_id")
+        document_id = request.data.get("document_id")
+
+        if not template_id or not document_id:
+            return Response(
+                {"detail": "Both template_id and document_id are required"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        # Get the template (must belong to user's company)
+        company = request.user.company
         try:
-            return DocumentTemplate.objects.get(
+            template = DocumentTemplate.objects.get(
                 id=template_id,
-                company=request.user.company
+                company=company
             )
         except DocumentTemplate.DoesNotExist:
-            return None
-
-    def patch(self, request, template_id):
-        """
-        Partial update template_json field
-        
-        Request body:
-        {
-            "to_add": {
-                "new_field": "value"
-            },
-            "to_update": {
-                "existing_field": "new_value"
-            },
-            "to_delete": ["field_to_remove"]
-        }
-        """
-        template = self.get_object(request, template_id)
-        
-        if not template:
             return Response(
                 {"detail": "Template not found"},
                 status=status.HTTP_404_NOT_FOUND
             )
-        
-        serializer = PatchTemplateJsonSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        
-        validated_data = serializer.validated_data
-        to_add = validated_data.get('to_add', {})
-        to_update = validated_data.get('to_update', {})
-        to_delete = validated_data.get('to_delete', [])
-        
-        # Get current JSON with atomic update
-        from django.db import transaction
-        with transaction.atomic():
-            current_json = template.template_json or {}
-            updated_json = current_json.copy()
-            
-            # Delete keys first
-            if to_delete:
-                for key in to_delete:
-                    updated_json.pop(key, None)
-            
-            # Update existing keys
-            if to_update:
-                updated_json.update(to_update)
-            
-            # Add new keys
-            if to_add:
-                updated_json.update(to_add)
-            
-            # Save the updated JSON
-            template.template_json = updated_json
-            template.save(update_fields=['template_json'])
-        
-        return Response({
-            "message": "Template JSON updated successfully",
-            "operations": {
-                "added": list(to_add.keys()) if to_add else [],
-                "updated": list(to_update.keys()) if to_update else [],
-                "deleted": to_delete if to_delete else []
-            },
-            "template_json": template.template_json
-        })
+
+        # Get the document (must belong to user's company)
+        try:
+            document = CompanyDocument.objects.get(
+                id=document_id,
+                company=company
+            )
+        except CompanyDocument.DoesNotExist:
+            return Response(
+                {"detail": "Document not found"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        # Generate verification URL using document's UUID
+        qr_verify_url = f"{settings.PUBLIC_BASE_URL}/verify/{document.uuid}/"
+
+        # Render the certificate HTML
+        rendered_html = render_certificate_html(
+            template_html=template.template_html,
+            document_json=document.document_json,
+            qr_verify_url=qr_verify_url
+        )
+
+        return Response(
+            {"rendered_html": rendered_html},
+            status=status.HTTP_200_OK
+        )
+
