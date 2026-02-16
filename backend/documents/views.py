@@ -28,7 +28,7 @@ class DocumentTypeListCreateAPIView(generics.ListCreateAPIView):
     authentication_classes = [CsrfExemptSessionAuthentication]
     queryset = DocumentType.objects.all()
     serializer_class = DocumentTypeSerializer
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAuthenticated]
 
 
 @method_decorator(csrf_exempt, name="dispatch")
@@ -36,13 +36,13 @@ class DocumentTypeRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPI
     authentication_classes = [CsrfExemptSessionAuthentication]
     queryset = DocumentType.objects.all()
     serializer_class = DocumentTypeSerializer
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAuthenticated]
 
 
 @method_decorator(csrf_exempt, name="dispatch")
 class DocumentTemplateListCreateAPIView(generics.ListCreateAPIView):
     authentication_classes = [CsrfExemptSessionAuthentication]
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAuthenticated]
     serializer_class = DocumentTemplateSerializer
 
     def get_queryset(self):
@@ -62,7 +62,7 @@ class DocumentTemplateRetrieveUpdateDestroyAPIView(
     generics.RetrieveUpdateDestroyAPIView
 ):
     authentication_classes = [CsrfExemptSessionAuthentication]
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAuthenticated]
     serializer_class = DocumentTemplateSerializer
 
     def get_queryset(self):

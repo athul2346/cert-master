@@ -33,19 +33,19 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='companydocument',
             name='document_json',
-            field=models.JSONField(default=django.utils.timezone.now),
+            field=models.JSONField(default=dict),
             preserve_default=False,
         ),
         migrations.AddField(
             model_name='documenttemplate',
             name='template_html',
-            field=models.CharField(default=django.utils.timezone.now, max_length=255),
+            field=models.CharField(default="", max_length=255),
             preserve_default=False,
         ),
         migrations.AddField(
             model_name='documenttemplate',
             name='template_json',
-            field=models.JSONField(default=django.utils.timezone.now),
+            field=models.JSONField(default=dict),
             preserve_default=False,
         ),
         migrations.AddField(
