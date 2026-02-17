@@ -20,7 +20,7 @@ class DocumentTemplate(models.Model):
     )
     template_name = models.CharField(max_length=50)
     template_json = models.JSONField(null=False)
-    template_html = models.CharField(max_length=255)
+    template_html = models.TextField()
 
 class QRRecord(models.Model):
     id = models.UUIDField(
@@ -78,9 +78,6 @@ class CompanyDocument(models.Model):
         default=None
     )
 
-
-    document_json = models.JSONField(null=False)
-
     issued_date = models.DateField(null=True, blank=True)
 
     expiry_date = models.DateField(null=True, blank=True)
@@ -112,3 +109,25 @@ class CompanyDocument(models.Model):
 
     def __str__(self):
         return f"{self.company.organisation_name} - {self.document_type.name} - {self.recipient}"
+
+    def get_fields_dict(self):
+        return {field.key: field.value for field in self.fields.all()}
+
+
+class DocumentField(models.Model):
+    document = models.ForeignKey(
+        CompanyDocument,
+        on_delete=models.CASCADE,
+        related_name="fields"
+    )
+    key = models.CharField(max_length=100)
+    value = models.TextField()
+
+    class Meta:
+        unique_together = ["document", "key"]
+        indexes = [
+            models.Index(fields=["document", "key"]),
+        ]
+
+    def __str__(self):
+        return f"{self.document.id} - {self.key}: {self.value[:20]}"

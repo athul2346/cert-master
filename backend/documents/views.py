@@ -12,13 +12,15 @@ from .models import (
     DocumentType, 
     CompanyDocument, 
     DocumentTemplate,
-    QRRecord
+    QRRecord,
+    DocumentField
 )
 from .serializers import (
     DocumentTypeSerializer, 
     CompanyDocumentSerializer, 
     DocumentTemplateSerializer,
-    PatchDocumentJsonSerializer
+    PatchDocumentFieldSerializer,
+    DocumentFieldSerializer
 )
 from .authentication import CsrfExemptSessionAuthentication
 
@@ -76,8 +78,6 @@ class DocumentTemplateRetrieveUpdateDestroyAPIView(
         return context
 
 
-    
-
 @method_decorator(csrf_exempt, name="dispatch")
 class CompanyDocumentCreateView(APIView):
     authentication_classes = [CsrfExemptSessionAuthentication]
@@ -105,9 +105,8 @@ class CompanyDocumentListView(APIView):
     def get(self, request):
         company = request.user.company
 
-        queryset = CompanyDocument.objects.filter(company=company)
+        queryset = CompanyDocument.objects.filter(company=company).prefetch_related('fields')
 
-        # serializer = CompanyDocumentSerializer(queryset, many=True)
         serializer = CompanyDocumentSerializer(
             queryset,
             many=True,
@@ -125,7 +124,7 @@ class CompanyDocumentDetailView(APIView):
         company = request.user.company
 
         try:
-            return CompanyDocument.objects.get(
+            return CompanyDocument.objects.prefetch_related('fields').get(
                 company=company,
                 pk=pk,
             )
@@ -224,7 +223,8 @@ class VerifyQRAPIView(APIView):
                 status=status.HTTP_403_FORBIDDEN
             )
 
-
+        # Get fields as dictionary
+        fields_dict = {f.key: f.value for f in document.fields.all()}
 
         return Response(
             {
@@ -234,6 +234,7 @@ class VerifyQRAPIView(APIView):
                 "recipient": document.recipient,
                 "issued_date": document.issued_date,
                 "expiry_date": document.expiry_date,
+                "fields": fields_dict,
                 "payload": qr.payload,
             },
             status=status.HTTP_200_OK
@@ -241,14 +242,14 @@ class VerifyQRAPIView(APIView):
 
 
 @method_decorator(csrf_exempt, name="dispatch")
-class CompanyDocumentJsonUpdateView(APIView):
+class CompanyDocumentFieldUpdateView(APIView):
     """
-    API to partially update document_json field without full document replacement.
+    API to partially update DocumentField entries without full document replacement.
     
     Supports three operations:
-    - to_add: Add new keys to the JSON document
-    - to_update: Update existing keys in the JSON document
-    - to_delete: Remove keys from the JSON document
+    - to_add: Add new key-value pairs
+    - to_update: Update existing keys
+    - to_delete: Remove keys
     
     All operations are atomic - they all succeed or fail together.
     """
@@ -258,7 +259,7 @@ class CompanyDocumentJsonUpdateView(APIView):
     def get_object(self, request, pk):
         company = request.user.company
         try:
-            return CompanyDocument.objects.get(
+            return CompanyDocument.objects.prefetch_related('fields').get(
                 company=company,
                 pk=pk,
             )
@@ -267,7 +268,7 @@ class CompanyDocumentJsonUpdateView(APIView):
 
     def patch(self, request, pk):
         """
-        Partial update document_json field
+        Partial update DocumentField
         
         Request body:
         {
@@ -288,7 +289,7 @@ class CompanyDocumentJsonUpdateView(APIView):
                 status=status.HTTP_404_NOT_FOUND
             )
         
-        serializer = PatchDocumentJsonSerializer(data=request.data)
+        serializer = PatchDocumentFieldSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         
         validated_data = serializer.validated_data
@@ -296,45 +297,40 @@ class CompanyDocumentJsonUpdateView(APIView):
         to_update = validated_data.get('to_update', {})
         to_delete = validated_data.get('to_delete', [])
         
-        # Get current JSON with atomic update
+        # Atomic update
         from django.db import transaction
         with transaction.atomic():
-            # Lock the document row to prevent race conditions
-            from django.db import connection
-            with connection.cursor() as cursor:
-                cursor.execute(
-                    "SELECT document_json FROM documents_companydocument WHERE id = %s FOR UPDATE",
-                    [document.id]
-                )
-            
-            current_json = document.document_json or {}
-            updated_json = current_json.copy()
-            
             # Delete keys first
             if to_delete:
-                for key in to_delete:
-                    updated_json.pop(key, None)  # Safe delete - ignore if key doesn't exist
+                document.fields.filter(key__in=to_delete).delete()
             
             # Update existing keys
             if to_update:
-                updated_json.update(to_update)
+                for key, value in to_update.items():
+                    document.fields.update_or_create(
+                        key=key,
+                        defaults={'value': str(value)}
+                    )
             
             # Add new keys
             if to_add:
-                updated_json.update(to_add)
-            
-            # Save the updated JSON
-            document.document_json = updated_json
-            document.save(update_fields=['document_json', 'updated_at'])
+                for key, value in to_add.items():
+                    document.fields.update_or_create(
+                        key=key,
+                        defaults={'value': str(value)}
+                    )
+        
+        # Refresh and return updated fields
+        document.fields.all()
         
         return Response({
-            "message": "Document JSON updated successfully",
+            "message": "Document fields updated successfully",
             "operations": {
                 "added": list(to_add.keys()) if to_add else [],
                 "updated": list(to_update.keys()) if to_update else [],
                 "deleted": to_delete if to_delete else []
             },
-            "document_json": document.document_json
+            "fields": DocumentFieldSerializer(document.fields.all(), many=True).data
         })
 
 
@@ -382,7 +378,7 @@ class CertificateRenderAPIView(APIView):
 
         # Get the document (must belong to user's company)
         try:
-            document = CompanyDocument.objects.get(
+            document = CompanyDocument.objects.prefetch_related('fields').get(
                 id=document_id,
                 company=company
             )
@@ -392,13 +388,16 @@ class CertificateRenderAPIView(APIView):
                 status=status.HTTP_404_NOT_FOUND
             )
 
+        # Get document fields as dictionary
+        document_json = {f.key: f.value for f in document.fields.all()}
+
         # Generate verification URL using document's UUID
         qr_verify_url = f"{settings.PUBLIC_BASE_URL}/verify/{document.uuid}/"
 
         # Render the certificate HTML
         rendered_html = render_certificate_html(
             template_html=template.template_html,
-            document_json=document.document_json,
+            document_json=document_json,
             qr_verify_url=qr_verify_url
         )
 
@@ -406,4 +405,3 @@ class CertificateRenderAPIView(APIView):
             {"rendered_html": rendered_html},
             status=status.HTTP_200_OK
         )
-
