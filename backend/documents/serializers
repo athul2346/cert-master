@@ -12,7 +12,7 @@ class DocumentTypeSerializer(serializers.ModelSerializer):
 class DocumentTemplateSerializer(serializers.ModelSerializer):
     class Meta:
         model = DocumentTemplate
-        fields = ["id", "template_name", "template_json", "template_html"]
+        fields = ["template_name", "template_json", "template_html"]
 
     def create(self, validated_data):
         request = self.context["request"]
@@ -42,7 +42,6 @@ class CompanyDocumentSerializer(serializers.ModelSerializer):
         model = CompanyDocument
         fields = [
             "id",
-            "uuid",
             "document_type",
             "template",
             "recipient",
@@ -51,6 +50,7 @@ class CompanyDocumentSerializer(serializers.ModelSerializer):
             "expiry_date",
             "never_expires",
             "status",
+            "uuid",
         ]
 
     # ------------------------------------------------
@@ -132,7 +132,7 @@ class CompanyDocumentSerializer(serializers.ModelSerializer):
         new_template = validated_data.get("template", instance.template)
         new_recipient = validated_data.get("recipient", instance.recipient)
 
-        # 🔐 Prevent composite-key collision
+        # Prevent composite-key collision
         if CompanyDocument.objects.filter(
             company=company,
             template=new_template,
@@ -159,88 +159,6 @@ class CompanyDocumentSerializer(serializers.ModelSerializer):
                     document=instance,
                     key=field_data.get("key"),
                     value=field_data.get("value")
-                )
-
-        return instance
-
-
-class CompanyDocumentWithJsonSerializer(serializers.ModelSerializer):
-    """
-    Serializer that provides backward compatibility with document_json
-    but stores data in DocumentField model.
-    """
-    document_type = serializers.SlugRelatedField(
-        slug_field="code",
-        queryset=DocumentType.objects.all()
-    )
-    template = serializers.CharField(write_only=True)
-    document_json = serializers.JSONField(write_only=True, required=False)
-
-    class Meta:
-        model = CompanyDocument
-        fields = [
-            "document_type",
-            "template",
-            "recipient",
-            "document_json",
-            "issued_date",
-            "expiry_date",
-            "never_expires",
-            "status",
-        ]
-
-    def validate(self, attrs):
-        company = self.context["request"].user.company
-        template_name = attrs.get("template")
-        try:
-            template = DocumentTemplate.objects.get(
-                company=company,
-                template_name=template_name
-            )
-        except DocumentTemplate.DoesNotExist:
-            raise serializers.ValidationError({
-                "template_name": "Invalid template for this company."
-            })
-        attrs["template"] = template
-        return attrs
-
-    def create(self, validated_data):
-        company = self.context["request"].user.company
-        document_json = validated_data.pop("document_json", {})
-
-        document = CompanyDocument.objects.create(
-            company=company,
-            status="ACTIVE",
-            **validated_data
-        )
-
-        # Create DocumentField entries from document_json
-        for key, value in document_json.items():
-            DocumentField.objects.create(
-                document=document,
-                key=key,
-                value=str(value)
-            )
-
-        return document
-
-    def update(self, instance, validated_data):
-        company = self.context["request"].user.company
-        document_json = validated_data.pop("document_json", None)
-
-        for attr, value in validated_data.items():
-            setattr(instance, attr, value)
-
-        instance.save()
-
-        # Update DocumentField entries if document_json is provided
-        if document_json is not None:
-            instance.fields.all().delete()
-            for key, value in document_json.items():
-                DocumentField.objects.create(
-                    document=instance,
-                    key=key,
-                    value=str(value)
                 )
 
         return instance

@@ -10,26 +10,6 @@
             "key": "baseUrl",
             "value": "http://localhost:8000/api",
             "type": "string"
-        },
-        {
-            "key": "csrfToken",
-            "value": "your-csrf-token-here",
-            "type": "string"
-        },
-        {
-            "key": "documentId",
-            "value": "1",
-            "type": "string"
-        },
-        {
-            "key": "templateId",
-            "value": "1",
-            "type": "string"
-        },
-        {
-            "key": "documentUuid",
-            "value": "550e8400-e29b-41d4-a716-446655440000",
-            "type": "string"
         }
     ],
     "item": [
@@ -181,7 +161,7 @@
             ]
         },
         {
-            "name": "Documents (with fields)",
+            "name": "Documents",
             "item": [
                 {
                     "name": "Create Document",
@@ -191,10 +171,6 @@
                             {
                                 "key": "Content-Type",
                                 "value": "application/json"
-                            },
-                            {
-                                "key": "X-CSRFToken",
-                                "value": "{{csrfToken}}"
                             }
                         ],
                         "url": {
@@ -204,7 +180,7 @@
                         },
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"document_type\": \"CERT\",\n    \"template\": \"certificate_template\",\n    \"recipient\": \"John Doe\",\n    \"document_json\": {\n        \"certificate_number\": \"CERT-2024-001\",\n        \"holder_name\": \"John Doe\",\n        \"course_name\": \"Advanced Python Programming\",\n        \"issue_date\": \"2024-01-15\"\n    },\n    \"issued_date\": \"2024-01-15\",\n    \"expiry_date\": \"2025-01-15\",\n    \"never_expires\": false\n}"
+                            "raw": "{\n    \"document_type\": \"CERTIFICATE\",\n    \"template\": \"certificate_template\",\n    \"recipient\": \"John Doe\",\n    \"fields\": [\n        {\"key\": \"certificate_number\", \"value\": \"CERT-2024-001\"},\n        {\"key\": \"holder_name\", \"value\": \"John Doe\"},\n        {\"key\": \"course_name\", \"value\": \"Advanced Python Programming\"},\n        {\"key\": \"issue_date\", \"value\": \"2024-01-15\"}\n    ],\n    \"issued_date\": \"2024-01-15\",\n    \"expiry_date\": \"2025-01-15\",\n    \"never_expires\": false\n}"
                         }
                     }
                 },
@@ -240,20 +216,16 @@
                             {
                                 "key": "Content-Type",
                                 "value": "application/json"
-                            },
-                            {
-                                "key": "X-CSRFToken",
-                                "value": "{{csrfToken}}"
                             }
                         ],
                         "url": {
-                            "raw": "{{baseUrl}}/documents/{{documentId}}/",
+                            "raw": "{{baseUrl}}/documents/1/",
                             "host": ["{{baseUrl}}"],
-                            "path": ["documents", "{{documentId}}", ""]
+                            "path": ["documents", "1", ""]
                         },
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"document_type\": \"CERT\",\n    \"template\": \"certificate_template\",\n    \"recipient\": \"John Doe Updated\",\n    \"document_json\": {\n        \"certificate_number\": \"CERT-2024-001-UPDATED\",\n        \"holder_name\": \"John Smith Updated\",\n        \"course_name\": \"Advanced Python Programming\",\n        \"issue_date\": \"2024-01-15\"\n    },\n    \"issued_date\": \"2024-01-15\",\n    \"expiry_date\": \"2026-01-15\",\n    \"never_expires\": false,\n    \"status\": \"ACTIVE\"\n}"
+                            "raw": "{\n    \"document_type\": \"CERTIFICATE\",\n    \"template\": \"certificate_template\",\n    \"recipient\": \"John Doe\",\n    \"fields\": [\n        {\"key\": \"certificate_number\", \"value\": \"CERT-2024-001\"},\n        {\"key\": \"holder_name\", \"value\": \"John Smith Updated\"},\n        {\"key\": \"course_name\", \"value\": \"Advanced Python Programming\"},\n        {\"key\": \"issue_date\", \"value\": \"2024-01-15\"}\n    ],\n    \"issued_date\": \"2024-01-15\",\n    \"expiry_date\": \"2026-01-15\",\n    \"never_expires\": false\n}"
                         }
                     }
                 },
@@ -261,16 +233,11 @@
                     "name": "Delete Document",
                     "request": {
                         "method": "DELETE",
-                        "header": [
-                            {
-                                "key": "X-CSRFToken",
-                                "value": "{{csrfToken}}"
-                            }
-                        ],
+                        "header": [],
                         "url": {
-                            "raw": "{{baseUrl}}/documents/{{documentId}}/",
+                            "raw": "{{baseUrl}}/documents/1/",
                             "host": ["{{baseUrl}}"],
-                            "path": ["documents", "{{documentId}}", ""]
+                            "path": ["documents", "1", ""]
                         }
                     }
                 }
@@ -287,52 +254,17 @@
                             {
                                 "key": "Content-Type",
                                 "value": "application/json"
-                            },
-                            {
-                                "key": "X-CSRFToken",
-                                "value": "{{csrfToken}}"
                             }
                         ],
                         "url": {
-                            "raw": "{{baseUrl}}/documents/{{documentId}}/update-fields/",
+                            "raw": "{{baseUrl}}/documents/1/update-fields/",
                             "host": ["{{baseUrl}}"],
-                            "path": ["documents", "{{documentId}}", "update-fields", ""]
+                            "path": ["documents", "1", "update-fields", ""]
                         },
                         "description": "Partially update document fields: add new keys, update existing keys, and delete old keys atomically",
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"to_add\": {\n        \"new_field\": \"new_value\",\n        \"issuing_authority\": \"National Certification Board\"\n    },\n    \"to_update\": {\n        \"holder_name\": \"John Smith Updated\"\n    },\n    \"to_delete\": [\"old_field\"]\n}"
-                        }
-                    }
-                }
-            ]
-        },
-        {
-            "name": "Backward Compatibility",
-            "item": [
-                {
-                    "name": "Create Document (Alternative)",
-                    "request": {
-                        "method": "POST",
-                        "header": [
-                            {
-                                "key": "Content-Type",
-                                "value": "application/json"
-                            },
-                            {
-                                "key": "X-CSRFToken",
-                                "value": "{{csrfToken}}"
-                            }
-                        ],
-                        "url": {
-                            "raw": "{{baseUrl}}/documents/",
-                            "host": ["{{baseUrl}}"],
-                            "path": ["documents", ""]
-                        },
-                        "description": "Create document with document_json (converted to DocumentField records)",
-                        "body": {
-                            "mode": "raw",
-                            "raw": "{\n    \"document_type\": \"CERT\",\n    \"template\": \"certificate_template\",\n    \"recipient\": \"Jane Doe\",\n    \"document_json\": {\n        \"certificate_number\": \"CERT-2024-002\",\n        \"holder_name\": \"Jane Doe\",\n        \"course_name\": \"Advanced Python Programming\",\n        \"issue_date\": \"2024-01-15\"\n    },\n    \"issued_date\": \"2024-01-15\",\n    \"expiry_date\": \"2025-01-15\",\n    \"never_expires\": false\n}"
+                            "raw": "{\n    \"to_add\": {\n        \"new_certificate_number\": \"CERT-2024-001\",\n        \"issuing_authority\": \"National Certification Board\",\n        \"version\": \"2.0\"\n    },\n    \"to_update\": {\n        \"holder_name\": \"John Smith Updated\"\n    },\n    \"to_delete\": [\"temporary_field\", \"legacy_field\"]\n}"
                         }
                     }
                 }
@@ -349,10 +281,6 @@
                             {
                                 "key": "Content-Type",
                                 "value": "application/json"
-                            },
-                            {
-                                "key": "X-CSRFToken",
-                                "value": "{{csrfToken}}"
                             }
                         ],
                         "url": {
@@ -363,7 +291,7 @@
                         "description": "Generate rendered HTML certificate with placeholders replaced and QR code embedded",
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"template_id\": {{templateId}},\n    \"document_id\": {{documentId}}\n}"
+                            "raw": "{\n    \"template_id\": 1,\n    \"document_id\": 1\n}"
                         }
                     }
                 }
@@ -378,11 +306,11 @@
                         "method": "GET",
                         "header": [],
                         "url": {
-                            "raw": "{{baseUrl}}/verify/{{documentUuid}}/",
+                            "raw": "{{baseUrl}}/verify/{uuid}/",
                             "host": ["{{baseUrl}}"],
-                            "path": ["verify", "{{documentUuid}}", ""]
+                            "path": ["verify", "{uuid}", ""]
                         },
-                        "description": "Verify a certificate by its UUID (from document.uuid field) - Public endpoint, no auth required"
+                        "description": "Verify a certificate by its UUID (from document.uuid field)"
                     }
                 }
             ]
