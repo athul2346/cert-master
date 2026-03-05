@@ -20,7 +20,8 @@ from .serializers import (
     CompanyDocumentSerializer, 
     DocumentTemplateSerializer,
     PatchDocumentFieldSerializer,
-    DocumentFieldSerializer
+    DocumentFieldSerializer,
+    CompanyDocumentWithJsonSerializer
 )
 from .authentication import CsrfExemptSessionAuthentication
 
@@ -32,6 +33,16 @@ class DocumentTypeListCreateAPIView(generics.ListCreateAPIView):
     serializer_class = DocumentTypeSerializer
     permission_classes = [IsAuthenticated]
 
+    def get_queryset(self):
+        return DocumentType.objects.filter(
+            company=self.request.user.company
+        )
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context["request"] = self.request
+        return context
+
 
 @method_decorator(csrf_exempt, name="dispatch")
 class DocumentTypeRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
@@ -39,6 +50,16 @@ class DocumentTypeRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPI
     queryset = DocumentType.objects.all()
     serializer_class = DocumentTypeSerializer
     permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return DocumentType.objects.filter(
+            company=self.request.user.company
+        )
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context["request"] = self.request
+        return context
 
 
 @method_decorator(csrf_exempt, name="dispatch")
@@ -84,7 +105,7 @@ class CompanyDocumentCreateView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        serializer = CompanyDocumentSerializer(
+        serializer = CompanyDocumentWithJsonSerializer(
             data=request.data,
             context={"request": request}
         )
@@ -153,7 +174,7 @@ class CompanyDocumentDetailView(APIView):
                 status=status.HTTP_404_NOT_FOUND
             )
 
-        serializer = CompanyDocumentSerializer(
+        serializer = CompanyDocumentWithJsonSerializer(
             document,
             data=request.data,
             context={"request": request}
@@ -161,7 +182,7 @@ class CompanyDocumentDetailView(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
 
-        return Response(serializer.data)
+        return Response(CompanyDocumentSerializer(document).data)
 
 
     def delete(self, request, pk):

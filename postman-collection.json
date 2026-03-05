@@ -48,8 +48,14 @@
                         ],
                         "url": {
                             "raw": "{{baseUrl}}/auth/login/",
-                            "host": ["{{baseUrl}}"],
-                            "path": ["auth", "login", ""]
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "login",
+                                ""
+                            ]
                         },
                         "body": {
                             "mode": "raw",
@@ -69,8 +75,14 @@
                         ],
                         "url": {
                             "raw": "{{baseUrl}}/auth/signup/",
-                            "host": ["{{baseUrl}}"],
-                            "path": ["auth", "signup", ""]
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "auth",
+                                "signup",
+                                ""
+                            ]
                         },
                         "body": {
                             "mode": "raw",
@@ -90,8 +102,13 @@
                         "header": [],
                         "url": {
                             "raw": "{{baseUrl}}/document-types/",
-                            "host": ["{{baseUrl}}"],
-                            "path": ["document-types", ""]
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "document-types",
+                                ""
+                            ]
                         }
                     }
                 },
@@ -107,12 +124,17 @@
                         ],
                         "url": {
                             "raw": "{{baseUrl}}/document-types/",
-                            "host": ["{{baseUrl}}"],
-                            "path": ["document-types", ""]
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "document-types",
+                                ""
+                            ]
                         },
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"code\": \"CERTIFICATE\",\n    \"name\": \"Certificate\",\n    \"description\": \"Standard certificate document\",\n    \"is_mandatory\": true\n}"
+                            "raw": "{\n    \"code\": \"CERT\",\n    \"name\": \"Certificate\",\n    \"description\": \"Standard certificate document\",\n    \"is_mandatory\": true\n}"
                         }
                     }
                 },
@@ -123,8 +145,14 @@
                         "header": [],
                         "url": {
                             "raw": "{{baseUrl}}/document-types/1/",
-                            "host": ["{{baseUrl}}"],
-                            "path": ["document-types", "1", ""]
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "document-types",
+                                "1",
+                                ""
+                            ]
                         }
                     }
                 }
@@ -145,12 +173,17 @@
                         ],
                         "url": {
                             "raw": "{{baseUrl}}/document-template/",
-                            "host": ["{{baseUrl}}"],
-                            "path": ["document-template", ""]
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "document-template",
+                                ""
+                            ]
                         },
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"template_name\": \"certificate_template\",\n    \"template_json\": {\n        \"fields\": [\"certificate_number\", \"holder_name\", \"issue_date\"],\n        \"layout\": \"portrait\"\n    },\n    \"template_html\": \"<!DOCTYPE html><html><head><title>Certificate</title></head><body><h1>CERTIFICATE OF ACHIEVEMENT</h1><p>This certifies that:</p><h2>{{holder_name}}</h2><p>has successfully completed</p><p>{{course_name}}</p><p>Date: {{issue_date}}</p></body></html>\"\n}"
+                            "raw": "{\n    \"document_type\": \"CERTIFICATE\",\n    \"template_name\": \"certificate_template\",\n    \"template_json\": {\n        \"fields\": [\"recipient_name\", \"course_name\", \"issue_date\", \"certificate_number\"]\n    },\n    \"template_html\": \"<!DOCTYPE html><html><head><title>Certificate</title></head><body><h1>CERTIFICATE OF ACHIEVEMENT</h1><p>This certifies that:</p><h2>{{recipient_name}}</h2><p>has successfully completed</p><p>{{course_name}}</p><p>Date: {{issue_date}}</p><p>Certificate #: {{certificate_number}}</p></body></html>\"\n}"
                         }
                     }
                 },
@@ -161,8 +194,13 @@
                         "header": [],
                         "url": {
                             "raw": "{{baseUrl}}/document-template/",
-                            "host": ["{{baseUrl}}"],
-                            "path": ["document-template", ""]
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "document-template",
+                                ""
+                            ]
                         }
                     }
                 },
@@ -173,8 +211,14 @@
                         "header": [],
                         "url": {
                             "raw": "{{baseUrl}}/document-template/1/",
-                            "host": ["{{baseUrl}}"],
-                            "path": ["document-template", "1", ""]
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "document-template",
+                                "1",
+                                ""
+                            ]
                         }
                     }
                 }
@@ -199,12 +243,17 @@
                         ],
                         "url": {
                             "raw": "{{baseUrl}}/documents/",
-                            "host": ["{{baseUrl}}"],
-                            "path": ["documents", ""]
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "documents",
+                                ""
+                            ]
                         },
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"document_type\": \"CERT\",\n    \"template\": \"certificate_template\",\n    \"recipient\": \"John Doe\",\n    \"document_json\": {\n        \"certificate_number\": \"CERT-2024-001\",\n        \"holder_name\": \"John Doe\",\n        \"course_name\": \"Advanced Python Programming\",\n        \"issue_date\": \"2024-01-15\"\n    },\n    \"issued_date\": \"2024-01-15\",\n    \"expiry_date\": \"2025-01-15\",\n    \"never_expires\": false\n}"
+                            "raw": "{\n    \"document_type\": \"CERT\",\n    \"template\": \"certificate_template\",\n    \"recipient\": \"John Doe\",\n    \"document_json\": {\n        \"certificate_number\": \"CERT-2024-001\",\n        \"recipient_name\": \"John Doe\",\n        \"course_name\": \"Advanced Python Programming\",\n        \"issue_date\": \"2024-01-15\"\n    },\n    \"issued_date\": \"2024-01-15\",\n    \"expiry_date\": \"2025-01-15\",\n    \"never_expires\": false\n}"
                         }
                     }
                 },
@@ -215,8 +264,14 @@
                         "header": [],
                         "url": {
                             "raw": "{{baseUrl}}/documents/list/",
-                            "host": ["{{baseUrl}}"],
-                            "path": ["documents", "list", ""]
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "documents",
+                                "list",
+                                ""
+                            ]
                         }
                     }
                 },
@@ -227,8 +282,14 @@
                         "header": [],
                         "url": {
                             "raw": "{{baseUrl}}/documents/1/",
-                            "host": ["{{baseUrl}}"],
-                            "path": ["documents", "1", ""]
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "documents",
+                                "1",
+                                ""
+                            ]
                         }
                     }
                 },
@@ -248,12 +309,18 @@
                         ],
                         "url": {
                             "raw": "{{baseUrl}}/documents/{{documentId}}/",
-                            "host": ["{{baseUrl}}"],
-                            "path": ["documents", "{{documentId}}", ""]
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "documents",
+                                "{{documentId}}",
+                                ""
+                            ]
                         },
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"document_type\": \"CERT\",\n    \"template\": \"certificate_template\",\n    \"recipient\": \"John Doe Updated\",\n    \"document_json\": {\n        \"certificate_number\": \"CERT-2024-001-UPDATED\",\n        \"holder_name\": \"John Smith Updated\",\n        \"course_name\": \"Advanced Python Programming\",\n        \"issue_date\": \"2024-01-15\"\n    },\n    \"issued_date\": \"2024-01-15\",\n    \"expiry_date\": \"2026-01-15\",\n    \"never_expires\": false,\n    \"status\": \"ACTIVE\"\n}"
+                            "raw": "{\n    \"document_type\": \"CERT\",\n    \"template\": \"certificate_template\",\n    \"recipient\": \"John Doe Updated\",\n    \"document_json\": {\n        \"certificate_number\": \"CERT-2024-001-UPDATED\",\n        \"recipient_name\": \"John Smith Updated\",\n        \"course_name\": \"Advanced Python Programming\",\n        \"issue_date\": \"2024-01-15\"\n    },\n    \"issued_date\": \"2024-01-15\",\n    \"expiry_date\": \"2026-01-15\",\n    \"never_expires\": false,\n    \"status\": \"ACTIVE\"\n}"
                         }
                     }
                 },
@@ -269,8 +336,14 @@
                         ],
                         "url": {
                             "raw": "{{baseUrl}}/documents/{{documentId}}/",
-                            "host": ["{{baseUrl}}"],
-                            "path": ["documents", "{{documentId}}", ""]
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "documents",
+                                "{{documentId}}",
+                                ""
+                            ]
                         }
                     }
                 }
@@ -295,8 +368,15 @@
                         ],
                         "url": {
                             "raw": "{{baseUrl}}/documents/{{documentId}}/update-fields/",
-                            "host": ["{{baseUrl}}"],
-                            "path": ["documents", "{{documentId}}", "update-fields", ""]
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "documents",
+                                "{{documentId}}",
+                                "update-fields",
+                                ""
+                            ]
                         },
                         "description": "Partially update document fields: add new keys, update existing keys, and delete old keys atomically",
                         "body": {
@@ -326,13 +406,18 @@
                         ],
                         "url": {
                             "raw": "{{baseUrl}}/documents/",
-                            "host": ["{{baseUrl}}"],
-                            "path": ["documents", ""]
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "documents",
+                                ""
+                            ]
                         },
                         "description": "Create document with document_json (converted to DocumentField records)",
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"document_type\": \"CERT\",\n    \"template\": \"certificate_template\",\n    \"recipient\": \"Jane Doe\",\n    \"document_json\": {\n        \"certificate_number\": \"CERT-2024-002\",\n        \"holder_name\": \"Jane Doe\",\n        \"course_name\": \"Advanced Python Programming\",\n        \"issue_date\": \"2024-01-15\"\n    },\n    \"issued_date\": \"2024-01-15\",\n    \"expiry_date\": \"2025-01-15\",\n    \"never_expires\": false\n}"
+                            "raw": "{\n    \"document_type\": \"CERT\",\n    \"template\": \"certificate_template\",\n    \"recipient\": \"Jane Doe\",\n    \"document_json\": {\n        \"certificate_number\": \"CERT-2024-002\",\n        \"recipient_name\": \"Jane Doe\",\n        \"course_name\": \"Advanced Python Programming\",\n        \"issue_date\": \"2024-01-15\"\n    },\n    \"issued_date\": \"2024-01-15\",\n    \"expiry_date\": \"2025-01-15\",\n    \"never_expires\": false\n}"
                         }
                     }
                 }
@@ -357,8 +442,13 @@
                         ],
                         "url": {
                             "raw": "{{baseUrl}}/render/",
-                            "host": ["{{baseUrl}}"],
-                            "path": ["render", ""]
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "render",
+                                ""
+                            ]
                         },
                         "description": "Generate rendered HTML certificate with placeholders replaced and QR code embedded",
                         "body": {
@@ -379,8 +469,14 @@
                         "header": [],
                         "url": {
                             "raw": "{{baseUrl}}/verify/{{documentUuid}}/",
-                            "host": ["{{baseUrl}}"],
-                            "path": ["verify", "{{documentUuid}}", ""]
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "path": [
+                                "verify",
+                                "{{documentUuid}}",
+                                ""
+                            ]
                         },
                         "description": "Verify a certificate by its UUID (from document.uuid field) - Public endpoint, no auth required"
                     }
