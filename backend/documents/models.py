@@ -3,10 +3,20 @@ from accounts.models import CompanyProfile
 import uuid
 
 class DocumentType(models.Model):
-    code = models.CharField(max_length=50, unique=True)
+    company = models.ForeignKey(
+        CompanyProfile,
+        on_delete=models.CASCADE,
+        related_name="document_types",
+        null=True,
+        blank=True
+    )
+    code = models.CharField(max_length=50)
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
     is_mandatory = models.BooleanField(default=False)
+
+    class Meta:
+        unique_together = ["company", "code"]
 
     def __str__(self):
         return self.name
@@ -18,9 +28,19 @@ class DocumentTemplate(models.Model):
         on_delete=models.CASCADE,
         related_name="templates"
     )
+    document_type = models.ForeignKey(
+        DocumentType,
+        on_delete=models.CASCADE,
+        related_name="templates",
+        null=True,
+        blank=True
+    )
     template_name = models.CharField(max_length=50)
     template_json = models.JSONField(null=False)
     template_html = models.TextField()
+
+    class Meta:
+        unique_together = ["company", "template_name"]
 
 class QRRecord(models.Model):
     id = models.UUIDField(

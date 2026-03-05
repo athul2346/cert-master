@@ -83,7 +83,9 @@ X-CSRFToken: {csrf_token}
 
 ---
 
-## Document Types (Shared/Global)
+## Document Types (Company-Specific)
+
+**Note:** Document Types are now company-specific. Each company can only see and manage their own document types.
 
 ### 3. Create Document Type
 
@@ -181,6 +183,8 @@ Cookie: sessionid={session_id}
 
 ## Templates (Company-Specific)
 
+**Note:** Templates are now linked to a specific Document Type. Each template must specify which document type it belongs to.
+
 ### 6. Create Template
 
 **Endpoint:** `POST /document-template/`
@@ -195,6 +199,7 @@ Cookie: sessionid={session_id}
 **Request Body:**
 ```json
 {
+    "document_type": "CERT",
     "template_name": "certificate_template",
     "template_json": {
         "fields": ["recipient_name", "course_name", "issue_date", "certificate_number"]
@@ -207,6 +212,7 @@ Cookie: sessionid={session_id}
 ```json
 {
     "id": 4,
+    "document_type": "CERT",
     "template_name": "certificate_template",
     "template_json": {
         "fields": ["recipient_name", "course_name", "issue_date", "certificate_number"]
@@ -231,6 +237,7 @@ Cookie: sessionid={session_id}
 [
     {
         "id": 4,
+        "document_type": "CERT",
         "template_name": "certificate_template",
         "template_json": {
             "fields": ["recipient_name", "course_name", "issue_date", "certificate_number"]
@@ -257,6 +264,7 @@ Cookie: sessionid={session_id}
 ```json
 {
     "id": 4,
+    "document_type": "CERT",
     "template_name": "certificate_template",
     "template_json": {
         "fields": ["recipient_name", "course_name", "issue_date", "certificate_number"]
@@ -275,6 +283,8 @@ Cookie: sessionid={session_id}
 ---
 
 ## Documents (Company-Specific)
+
+**Note:** When creating a document, the `document_type` must match the `document_type` linked to the selected `template`. If there's a mismatch, you'll receive an error indicating which document type the template is linked to.
 
 ### 9. Create Document
 
@@ -688,8 +698,8 @@ curl -s -b cookies.txt -X POST http://localhost:8000/api/documents/ \
 |----------|-----------|-------|
 | `/auth/signup/` | N/A | Public |
 | `/auth/login/` | N/A | Public |
-| `/document-types/` | Shared | Global document types |
-| `/document-template/` | By Company | Only see own templates |
+| `/document-types/` | By Company | Only see own document types |
+| `/document-template/` | By Company | Only see own templates (linked to document types) |
 | `/documents/` | By Company | Only see own documents |
 | `/render/` | By Company | Only render own docs/templates |
 | `/verify/{uuid}/` | Public | Anyone can verify certificates |
