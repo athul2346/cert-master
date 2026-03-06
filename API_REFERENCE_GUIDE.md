@@ -181,11 +181,53 @@ Cookie: sessionid={session_id}
 
 ---
 
+### 6. Get Templates by Document Type
+
+**Endpoint:** `GET /document-types/1/templates/`
+
+**Headers:**
+```http
+Cookie: sessionid={session_id}
+```
+
+**Success Response (200):**
+```json
+{
+    "document_type": {
+        "id": 1,
+        "code": "CERT",
+        "name": "Certificate"
+    },
+    "templates": [
+        {
+            "id": 4,
+            "document_type": 1,
+            "template_name": "certificate_template",
+            "template_json": {
+                "fields": ["recipient_name", "course_name", "issue_date", "certificate_number"]
+            },
+            "template_html": "<html><body><h1>Certificate of Completion</h1>..."
+        }
+    ]
+}
+```
+
+**Error Response (404):**
+```json
+{
+    "detail": "Document type not found"
+}
+```
+
+**Note:** Only returns templates belonging to the logged-in user's company.
+
+---
+
 ## Templates (Company-Specific)
 
 **Note:** Templates are now linked to a specific Document Type. Each template must specify which document type it belongs to.
 
-### 6. Create Template
+### 7. Create Template
 
 **Endpoint:** `POST /document-template/`
 
@@ -223,7 +265,7 @@ Cookie: sessionid={session_id}
 
 ---
 
-### 7. List Templates
+### 8. List Templates
 
 **Endpoint:** `GET /document-template/`
 
@@ -251,7 +293,7 @@ Cookie: sessionid={session_id}
 
 ---
 
-### 8. Get Single Template
+### 9. Get Single Template
 
 **Endpoint:** `GET /document-template/4`
 
@@ -286,7 +328,7 @@ Cookie: sessionid={session_id}
 
 **Note:** When creating a document, the `document_type` must match the `document_type` linked to the selected `template`. If there's a mismatch, you'll receive an error indicating which document type the template is linked to.
 
-### 9. Create Document
+### 10. Create Document
 
 **Endpoint:** `POST /documents/`
 
@@ -345,7 +387,7 @@ Cookie: sessionid={session_id}
 
 ---
 
-### 10. List Documents
+### 11. List Documents
 
 **Endpoint:** `GET /documents/list/`
 
@@ -381,7 +423,7 @@ Cookie: sessionid={session_id}
 
 ---
 
-### 11. Get Single Document
+### 12. Get Single Document
 
 **Endpoint:** `GET /documents/6/`
 
@@ -420,7 +462,7 @@ Cookie: sessionid={session_id}
 
 ---
 
-### 12. Update Document (Full PUT)
+### 13. Update Document (Full PUT)
 
 **Endpoint:** `PUT /documents/6/`
 
@@ -473,7 +515,7 @@ Cookie: sessionid={session_id}
 
 ---
 
-### 13. Partial Update Document Fields (PATCH)
+### 14. Partial Update Document Fields (PATCH)
 
 **Endpoint:** `PATCH /documents/6/update-fields/`
 
@@ -516,7 +558,7 @@ Cookie: sessionid={session_id}
 
 ---
 
-### 14. Delete Document
+### 15. Delete Document
 
 **Endpoint:** `DELETE /documents/6/`
 
@@ -544,7 +586,7 @@ Cookie: sessionid={session_id}
 
 ## Certificate Rendering
 
-### 15. Render Certificate
+### 16. Render Certificate
 
 **Endpoint:** `POST /render/`
 
@@ -592,7 +634,7 @@ Cookie: sessionid={session_id}
 
 ## QR Verification (Public)
 
-### 16. Verify Certificate by UUID
+### 17. Verify Certificate by UUID
 
 **Endpoint:** `GET /verify/{uuid}/`
 
@@ -699,6 +741,7 @@ curl -s -b cookies.txt -X POST http://localhost:8000/api/documents/ \
 | `/auth/signup/` | N/A | Public |
 | `/auth/login/` | N/A | Public |
 | `/document-types/` | By Company | Only see own document types |
+| `/document-types/{id}/templates/` | By Company | See templates under a document type |
 | `/document-template/` | By Company | Only see own templates (linked to document types) |
 | `/documents/` | By Company | Only see own documents |
 | `/render/` | By Company | Only render own docs/templates |
