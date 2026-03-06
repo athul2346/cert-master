@@ -183,7 +183,7 @@
                         },
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"document_type\": \"CERTIFICATE\",\n    \"template_name\": \"certificate_template\",\n    \"template_json\": {\n        \"fields\": [\"recipient_name\", \"course_name\", \"issue_date\", \"certificate_number\"]\n    },\n    \"template_html\": \"<!DOCTYPE html><html><head><title>Certificate</title></head><body><h1>CERTIFICATE OF ACHIEVEMENT</h1><p>This certifies that:</p><h2>{{recipient_name}}</h2><p>has successfully completed</p><p>{{course_name}}</p><p>Date: {{issue_date}}</p><p>Certificate #: {{certificate_number}}</p></body></html>\"\n}"
+                            "raw": "{\n    \"document_type\": 1,\n    \"template_name\": \"certificate_template\",\n    \"template_json\": {\n        \"fields\": [\"recipient_name\", \"course_name\", \"issue_date\", \"certificate_number\"]\n    },\n    \"template_html\": \"<!DOCTYPE html><html><head><title>Certificate</title></head><body><h1>CERTIFICATE OF ACHIEVEMENT</h1><p>This certifies that:</p><h2>{{recipient_name}}</h2><p>has successfully completed</p><p>{{course_name}}</p><p>Date: {{issue_date}}</p><p>Certificate #: {{certificate_number}}</p></body></html>\"\n}"
                         }
                     }
                 },
@@ -253,7 +253,7 @@
                         },
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"document_type\": \"CERT\",\n    \"template\": \"certificate_template\",\n    \"recipient\": \"John Doe\",\n    \"document_json\": {\n        \"certificate_number\": \"CERT-2024-001\",\n        \"recipient_name\": \"John Doe\",\n        \"course_name\": \"Advanced Python Programming\",\n        \"issue_date\": \"2024-01-15\"\n    },\n    \"issued_date\": \"2024-01-15\",\n    \"expiry_date\": \"2025-01-15\",\n    \"never_expires\": false\n}"
+                            "raw": "{\n    \"document_type\": 1,\n    \"template\": 1,\n    \"recipient\": \"John Doe\",\n    \"document_json\": {\n        \"certificate_number\": \"CERT-2024-001\",\n        \"recipient_name\": \"John Doe\",\n        \"course_name\": \"Advanced Python Programming\",\n        \"issue_date\": \"2024-01-15\"\n    },\n    \"issued_date\": \"2024-01-15\",\n    \"expiry_date\": \"2025-01-15\",\n    \"never_expires\": false\n}"
                         }
                     }
                 },
@@ -320,7 +320,7 @@
                         },
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"document_type\": \"CERT\",\n    \"template\": \"certificate_template\",\n    \"recipient\": \"John Doe Updated\",\n    \"document_json\": {\n        \"certificate_number\": \"CERT-2024-001-UPDATED\",\n        \"recipient_name\": \"John Smith Updated\",\n        \"course_name\": \"Advanced Python Programming\",\n        \"issue_date\": \"2024-01-15\"\n    },\n    \"issued_date\": \"2024-01-15\",\n    \"expiry_date\": \"2026-01-15\",\n    \"never_expires\": false,\n    \"status\": \"ACTIVE\"\n}"
+                            "raw": "{\n    \"document_type\": 1,\n    \"template\": 1,\n    \"recipient\": \"John Doe Updated\",\n    \"document_json\": {\n        \"certificate_number\": \"CERT-2024-001-UPDATED\",\n        \"recipient_name\": \"John Smith Updated\",\n        \"course_name\": \"Advanced Python Programming\",\n        \"issue_date\": \"2024-01-15\"\n    },\n    \"issued_date\": \"2024-01-15\",\n    \"expiry_date\": \"2026-01-15\",\n    \"never_expires\": false,\n    \"status\": \"ACTIVE\"\n}"
                         }
                     }
                 },
@@ -417,7 +417,7 @@
                         "description": "Create document with document_json (converted to DocumentField records)",
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n    \"document_type\": \"CERT\",\n    \"template\": \"certificate_template\",\n    \"recipient\": \"Jane Doe\",\n    \"document_json\": {\n        \"certificate_number\": \"CERT-2024-002\",\n        \"recipient_name\": \"Jane Doe\",\n        \"course_name\": \"Advanced Python Programming\",\n        \"issue_date\": \"2024-01-15\"\n    },\n    \"issued_date\": \"2024-01-15\",\n    \"expiry_date\": \"2025-01-15\",\n    \"never_expires\": false\n}"
+                            "raw": "{\n    \"document_type\": 1,\n    \"template\": 1,\n    \"recipient\": \"Jane Doe\",\n    \"document_json\": {\n        \"certificate_number\": \"CERT-2024-002\",\n        \"recipient_name\": \"Jane Doe\",\n        \"course_name\": \"Advanced Python Programming\",\n        \"issue_date\": \"2024-01-15\"\n    },\n    \"issued_date\": \"2024-01-15\",\n    \"expiry_date\": \"2025-01-15\",\n    \"never_expires\": false\n}"
                         }
                     }
                 }

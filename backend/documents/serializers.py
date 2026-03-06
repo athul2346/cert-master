@@ -6,7 +6,7 @@ from .models import DocumentType, CompanyDocument, DocumentTemplate, QRRecord, D
 class DocumentTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = DocumentType
-        fields =  ["id", "code", "name", "description", "is_mandatory"]
+        fields =  ["id", "code", "name", "description", "document_canvas", "is_mandatory"]
 
     def create(self, validated_data):
         request = self.context["request"]
@@ -20,7 +20,7 @@ class DocumentTypeSerializer(serializers.ModelSerializer):
 
 class DocumentTemplateSerializer(serializers.ModelSerializer):
     document_type = serializers.SlugRelatedField(
-        slug_field="code",
+        slug_field="id",
         queryset=DocumentType.objects.none()
     )
 
@@ -54,10 +54,14 @@ class DocumentFieldSerializer(serializers.ModelSerializer):
 
 class CompanyDocumentSerializer(serializers.ModelSerializer):
     document_type = serializers.SlugRelatedField(
-        slug_field="code",
+        slug_field="id",
         queryset=DocumentType.objects.none()
     )
-    template = serializers.CharField(write_only=True)
+    template = serializers.SlugRelatedField(
+        slug_field="id",
+        queryset=DocumentTemplate.objects.none(),
+        write_only=True
+    )
     fields = DocumentFieldSerializer(many=True, read_only=True)
 
     def __init__(self, *args, **kwargs):
@@ -67,6 +71,7 @@ class CompanyDocumentSerializer(serializers.ModelSerializer):
         if request and hasattr(request, "user") and hasattr(request.user, "company"):
             company = request.user.company
             self.fields["document_type"].queryset = DocumentType.objects.filter(company=company)
+            self.fields["template"].queryset = DocumentTemplate.objects.filter(company=company)
 
     class Meta:
         model = CompanyDocument
@@ -87,27 +92,15 @@ class CompanyDocumentSerializer(serializers.ModelSerializer):
     # 1️⃣ Business validation
     # ------------------------------------------------
     def validate(self, attrs):
-        company = self.context["request"].user.company
-        template_name = attrs.get("template")
         document_type = attrs.get("document_type")
-        
-        try:
-            template = DocumentTemplate.objects.get(
-                company=company,
-                template_name=template_name
-            )
-        except DocumentTemplate.DoesNotExist:
-            raise serializers.ValidationError({
-                "template": "Invalid template for this company."
-            })
+        template = attrs.get("template")
         
         # Enforce that template's document_type matches selected document_type
-        if document_type and template.document_type != document_type:
+        if document_type and template and template.document_type != document_type:
             raise serializers.ValidationError({
-                "document_type": f"Template '{template_name}' is linked to document type '{template.document_type.code}'. Please use that document type or select a different template."
+                "document_type": f"Template is linked to document type '{template.document_type.code}'. Please use that document type or select a different template."
             })
         
-        attrs["template"] = template
         never_expires = attrs.get("never_expires", getattr(self.instance, "never_expires", False))
         expiry_date = attrs.get("expiry_date", getattr(self.instance, "expiry_date", None))
 
@@ -209,10 +202,14 @@ class CompanyDocumentWithJsonSerializer(serializers.ModelSerializer):
     but stores data in DocumentField model.
     """
     document_type = serializers.SlugRelatedField(
-        slug_field="code",
+        slug_field="id",
         queryset=DocumentType.objects.none()
     )
-    template = serializers.CharField(write_only=True)
+    template = serializers.SlugRelatedField(
+        slug_field="id",
+        queryset=DocumentTemplate.objects.none(),
+        write_only=True
+    )
     document_json = serializers.JSONField(write_only=True, required=False)
 
     def __init__(self, *args, **kwargs):
@@ -222,6 +219,7 @@ class CompanyDocumentWithJsonSerializer(serializers.ModelSerializer):
         if request and hasattr(request, "user") and hasattr(request.user, "company"):
             company = request.user.company
             self.fields["document_type"].queryset = DocumentType.objects.filter(company=company)
+            self.fields["template"].queryset = DocumentTemplate.objects.filter(company=company)
 
     class Meta:
         model = CompanyDocument
@@ -237,27 +235,15 @@ class CompanyDocumentWithJsonSerializer(serializers.ModelSerializer):
         ]
 
     def validate(self, attrs):
-        company = self.context["request"].user.company
-        template_name = attrs.get("template")
         document_type = attrs.get("document_type")
-        
-        try:
-            template = DocumentTemplate.objects.get(
-                company=company,
-                template_name=template_name
-            )
-        except DocumentTemplate.DoesNotExist:
-            raise serializers.ValidationError({
-                "template": "Invalid template for this company."
-            })
+        template = attrs.get("template")
         
         # Enforce that template's document_type matches selected document_type
-        if document_type and template.document_type != document_type:
+        if document_type and template and template.document_type != document_type:
             raise serializers.ValidationError({
-                "document_type": f"Template '{template_name}' is linked to document type '{template.document_type.code}'. Please use that document type or select a different template."
+                "document_type": f"Template is linked to document type '{template.document_type.code}'. Please use that document type or select a different template."
             })
         
-        attrs["template"] = template
         return attrs
 
     def create(self, validated_data):

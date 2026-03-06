@@ -199,7 +199,7 @@ Cookie: sessionid={session_id}
 **Request Body:**
 ```json
 {
-    "document_type": "CERT",
+    "document_type": 1,
     "template_name": "certificate_template",
     "template_json": {
         "fields": ["recipient_name", "course_name", "issue_date", "certificate_number"]
@@ -212,7 +212,7 @@ Cookie: sessionid={session_id}
 ```json
 {
     "id": 4,
-    "document_type": "CERT",
+    "document_type": 1,
     "template_name": "certificate_template",
     "template_json": {
         "fields": ["recipient_name", "course_name", "issue_date", "certificate_number"]
@@ -237,7 +237,7 @@ Cookie: sessionid={session_id}
 [
     {
         "id": 4,
-        "document_type": "CERT",
+        "document_type": 1,
         "template_name": "certificate_template",
         "template_json": {
             "fields": ["recipient_name", "course_name", "issue_date", "certificate_number"]
@@ -264,7 +264,7 @@ Cookie: sessionid={session_id}
 ```json
 {
     "id": 4,
-    "document_type": "CERT",
+    "document_type": 1,
     "template_name": "certificate_template",
     "template_json": {
         "fields": ["recipient_name", "course_name", "issue_date", "certificate_number"]
@@ -300,8 +300,8 @@ Cookie: sessionid={session_id}
 **Request Body (with document_json):**
 ```json
 {
-    "document_type": "CERT",
-    "template": "certificate_template",
+    "document_type": 1,
+    "template": 1,
     "recipient": "Alice Johnson",
     "document_json": {
         "recipient_name": "Alice Johnson",
@@ -320,8 +320,8 @@ Cookie: sessionid={session_id}
 {
     "id": 6,
     "uuid": "550e8400-e29b-41d4-a716-446655440000",
-    "document_type": "CERT",
-    "template": "certificate_template",
+    "document_type": 1,
+    "template": 1,
     "recipient": "Alice Johnson",
     "fields": [
         {"key": "recipient_name", "value": "Alice Johnson"},
@@ -360,8 +360,8 @@ Cookie: sessionid={session_id}
     {
         "id": 6,
         "uuid": "550e8400-e29b-41d4-a716-446655440000",
-        "document_type": "CERT",
-        "template": "certificate_template",
+        "document_type": 1,
+        "template": 1,
         "recipient": "Alice Johnson",
         "fields": [
             {"key": "recipient_name", "value": "Alice Johnson"},
@@ -395,8 +395,8 @@ Cookie: sessionid={session_id}
 {
     "id": 6,
     "uuid": "550e8400-e29b-41d4-a716-446655440000",
-    "document_type": "CERT",
-    "template": "certificate_template",
+    "document_type": 1,
+    "template": 1,
     "recipient": "Alice Johnson",
     "fields": [
         {"key": "recipient_name", "value": "Alice Johnson"},
@@ -434,8 +434,8 @@ Cookie: sessionid={session_id}
 **Request Body:**
 ```json
 {
-    "document_type": "CERT",
-    "template": "certificate_template",
+    "document_type": 1,
+    "template": 1,
     "recipient": "Alice Johnson Updated",
     "document_json": {
         "recipient_name": "Alice Johnson Updated",
@@ -455,8 +455,8 @@ Cookie: sessionid={session_id}
 {
     "id": 6,
     "uuid": "550e8400-e29b-41d4-a716-446655440000",
-    "document_type": "CERT",
-    "template": "certificate_template",
+    "document_type": 1,
+    "template": 1,
     "recipient": "Alice Johnson Updated",
     "fields": [
         {"key": "recipient_name", "value": "Alice Johnson Updated"},
@@ -673,7 +673,7 @@ curl -s -b cookies.txt -X GET http://localhost:8000/api/documents/list/ \
 curl -s -b cookies.txt -X POST http://localhost:8000/api/documents/ \
   -H "Content-Type: application/json" \
   -H "X-CSRFToken: your-csrf-token" \
-  -d '{"document_type": "CERT", "template": "certificate_template", "recipient": "Test User", "document_json": {"name": "Test"}, "never_expires": true}'
+  -d '{"document_type": 1, "template": 1, "recipient": "Test User", "document_json": {"name": "Test"}, "never_expires": true}'
 ```
 
 ---
