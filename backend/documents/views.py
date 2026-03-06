@@ -100,6 +100,56 @@ class DocumentTemplateRetrieveUpdateDestroyAPIView(
 
 
 @method_decorator(csrf_exempt, name="dispatch")
+class TemplatesByDocumentTypeAPIView(APIView):
+    """
+    API to get all templates under a specific document type.
+    
+    GET /document-types/{document_type_id}/templates/
+    
+    Returns all templates that belong to the specified document type.
+    """
+    authentication_classes = [CsrfExemptSessionAuthentication]
+    permission_classes = [IsAuthenticated]
+    serializer_class = DocumentTemplateSerializer
+
+    def get(self, request, document_type_id):
+        company = request.user.company
+        
+        # Verify the document type exists and belongs to the company
+        try:
+            document_type = DocumentType.objects.get(
+                id=document_type_id,
+                company=company
+            )
+        except DocumentType.DoesNotExist:
+            return Response(
+                {"detail": "Document type not found"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        
+        # Get all templates under this document type
+        templates = DocumentTemplate.objects.filter(
+            company=company,
+            document_type=document_type
+        )
+        
+        serializer = DocumentTemplateSerializer(
+            templates,
+            many=True,
+            context={"request": request}
+        )
+        
+        return Response({
+            "document_type": {
+                "id": document_type.id,
+                "code": document_type.code,
+                "name": document_type.name
+            },
+            "templates": serializer.data
+        })
+
+
+@method_decorator(csrf_exempt, name="dispatch")
 class CompanyDocumentCreateView(APIView):
     authentication_classes = [CsrfExemptSessionAuthentication]
     permission_classes = [IsAuthenticated]

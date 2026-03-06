@@ -2,6 +2,7 @@ from django.urls import path
 from .views import (
     DocumentTypeListCreateAPIView,
     DocumentTypeRetrieveUpdateDestroyAPIView,
+    TemplatesByDocumentTypeAPIView,
     CompanyDocumentCreateView,
     CompanyDocumentListView,
     CompanyDocumentDetailView,
@@ -16,6 +17,7 @@ from .views import (
 urlpatterns = [
     path('document-types/', DocumentTypeListCreateAPIView.as_view(), name='documenttype-list-create'),
     path('document-types/<int:pk>/', DocumentTypeRetrieveUpdateDestroyAPIView.as_view(), name='documenttype-detail'),
+    path('document-types/<int:document_type_id>/templates/', TemplatesByDocumentTypeAPIView.as_view(), name='templates-by-document-type'),
     path('document-template/', DocumentTemplateListCreateAPIView.as_view(), name='documenttemplate-list-create'),
     path('document-template/<int:pk>', DocumentTemplateRetrieveUpdateDestroyAPIView.as_view(), name='documenttemplate-detail'),
     path("documents/", CompanyDocumentCreateView.as_view(), name="document-create"),
