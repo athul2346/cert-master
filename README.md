@@ -34,7 +34,7 @@ SECRET_KEY=generate new @ https://djecrety.ir/
 DEBUG=false
 ALLOWED_HOSTS=yourapp.onrender.com,.onrender.com
 DATABASE_URL=from Render Postgres below
-PUBLIC_BASE_URL=https://yourapp.onrender.com
+# PUBLIC_BASE_URL=https://yourapp.onrender.com  (set after first deploy if needed)
 ```
 
 ### 3. Create PostgreSQL Database
@@ -65,6 +65,7 @@ See `API_REFERENCE_GUIDE.md`
 ```bash
 cp .env.example .env
 # Set DEBUG=false, generate SECRET_KEY, use docker postgres vars
+# PUBLIC_BASE_URL optional (auto http://hostname:8000 if unset)
 docker compose up --build
 curl -X POST $PUBLIC_BASE_URL/api/render/ ...
 ```
