@@ -158,4 +158,5 @@ WHITENOISE_USE_FINDERS = True
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Certificate Verification
-PUBLIC_BASE_URL = os.getenv("PUBLIC_BASE_URL", "http://localhost:8000")
+import socket
+PUBLIC_BASE_URL = os.getenv("PUBLIC_BASE_URL", f"http://{socket.gethostname()}:8000")
