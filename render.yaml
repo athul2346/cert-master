@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: cert-master
+    env: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: ./
+    rootDir: ./
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11
+      - fromDatabase:
+          name: cert-master-db
+          property: connectionString
+      - key: DEBUG
+        value: false
+        generateValue: false
+      - key: ALLOWED_HOSTS
+        value: .onrender.com
+        generateValue: false
+      - sync: false
+    autoDeploy: true
+
