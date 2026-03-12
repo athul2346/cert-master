@@ -10,7 +10,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY backend/ .
 
-RUN python manage.py migrate --noinput
+RUN python manage.py migrate --noinput || true
 RUN python manage.py collectstatic --noinput --clear || true
 
-CMD ["gunicorn", "backend.wsgi:application", "--bind", "0.0.0.0:8000"]
+CMD sh -c "python manage.py migrate --noinput && gunicorn backend.wsgi:application --bind 0.0.0.0:8000 --log-file=-"
