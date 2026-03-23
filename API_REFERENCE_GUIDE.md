@@ -152,15 +152,13 @@ Cookie: sessionid={session_id}
 
 ---
 
-### 5. Get Single Document Type
+### 5. Get/Update/Delete Document Type
 
-**Endpoint:** `GET /document-types/1/`
-
+**GET /document-types/{pk}/** (Retrieve)
 **Headers:**
 ```http
 Cookie: sessionid={session_id}
 ```
-
 **Success Response (200):**
 ```json
 {
@@ -171,6 +169,35 @@ Cookie: sessionid={session_id}
     "is_mandatory": true
 }
 ```
+
+**PUT /document-types/{pk}/** (Full Update)
+**Headers:**
+```http
+Content-Type: application/json
+X-CSRFToken: {csrf_token}
+Cookie: sessionid={session_id}
+```
+**Request Body:**
+```json
+{
+    "code": "CERT-UPDATED",
+    "name": "Updated Certificate",
+    "description": "Updated description",
+    "is_mandatory": false
+}
+```
+**Success Response (200):** Same as GET.
+
+**PATCH /document-types/{pk}/** (Partial Update)
+**Request Body:**
+```json
+{
+    "name": "Partially Updated Certificate"
+}
+```
+
+**DELETE /document-types/{pk}/**
+**Success Response (204):** No content.
 
 **Error Response (404):**
 ```json
@@ -293,15 +320,13 @@ Cookie: sessionid={session_id}
 
 ---
 
-### 9. Get Single Template
+### 9. Get/Update/Delete Template
 
-**Endpoint:** `GET /document-template/4`
-
+**GET /document-template/{pk}**
 **Headers:**
 ```http
 Cookie: sessionid={session_id}
 ```
-
 **Success Response (200):**
 ```json
 {
@@ -315,7 +340,35 @@ Cookie: sessionid={session_id}
 }
 ```
 
-**Error Response (404 - Not owned by user):**
+**PUT /document-template/{pk}** (Full Update)
+**Headers:**
+```http
+Content-Type: application/json
+X-CSRFToken: {csrf_token}
+Cookie: sessionid={session_id}
+```
+**Request Body:**
+```json
+{
+    "document_type": 1,
+    "template_name": "updated_template",
+    "template_json": {...},
+    "template_html": "<html>updated</html>"
+}
+```
+
+**PATCH /document-template/{pk}** (Partial)
+**Request Body:**
+```json
+{
+    "template_name": "partially_updated"
+}
+```
+
+**DELETE /document-template/{pk}/**
+**Success Response (204):** No content.
+
+**Error Response (404):**
 ```json
 {
     "detail": "Not found."
