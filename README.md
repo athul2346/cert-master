@@ -1,4 +1,16 @@
-# cert-master
+# Cert Master – Certificate Generation API System
+Overview
+A scalable backend system for generating and managing digital certificates via REST APIs.
+Features
+Bulk certificate generation
+Dynamic template handling
+API-based architecture
+File generation (PDF/images)
+Tech Stack
+Django REST Framework
+Python
+Architecture
+Client → API → Processing → File Output
 
 ## Quick Start (Local)
 
