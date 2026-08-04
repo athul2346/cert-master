@@ -160,3 +160,4 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # Certificate Verification
 import socket
 PUBLIC_BASE_URL = os.getenv("PUBLIC_BASE_URL", f"http://{socket.gethostname()}:8000")
+CERT_FRONTEND_URL = os.getenv("CERT_FRONTEND_URL")

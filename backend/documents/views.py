@@ -150,6 +150,57 @@ class TemplatesByDocumentTypeAPIView(APIView):
 
 
 @method_decorator(csrf_exempt, name="dispatch")
+class DocumentsByDocumentTypeAPIView(APIView):
+    """
+    Get all documents that belong to a specific document type.
+    
+    GET /document-types/{document_type_id}/documents/
+    
+    Returns all documents that belong to the specified document type
+    for the logged-in user's company.
+    """
+    authentication_classes = [CsrfExemptSessionAuthentication]
+    permission_classes = [IsAuthenticated]
+    serializer_class = CompanyDocumentSerializer
+
+    def get(self, request, document_type_id):
+        company = request.user.company
+
+        # Verify the document type exists and belongs to the company
+        try:
+            document_type = DocumentType.objects.get(
+                id=document_type_id,
+                company=company
+            )
+        except DocumentType.DoesNotExist:
+            return Response(
+                {"detail": "Document type not found"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        # Get all documents under this document type
+        documents = CompanyDocument.objects.filter(
+            company=company,
+            document_type=document_type
+        ).prefetch_related('fields')
+
+        serializer = CompanyDocumentSerializer(
+            documents,
+            many=True,
+            context={"request": request}
+        )
+
+        return Response({
+            "document_type": {
+                "id": document_type.id,
+                "code": document_type.code,
+                "name": document_type.name
+            },
+            "documents": serializer.data
+        })
+
+
+@method_decorator(csrf_exempt, name="dispatch")
 class CompanyDocumentCreateView(APIView):
     authentication_classes = [CsrfExemptSessionAuthentication]
     permission_classes = [IsAuthenticated]
@@ -464,6 +515,9 @@ class CertificateRenderAPIView(APIView):
 
         # Generate verification URL using document's UUID
         qr_verify_url = f"{settings.PUBLIC_BASE_URL}/verify/{document.uuid}/"
+        qr_verify_url = (
+            f"{settings.CERT_FRONTEND_URL}/render/{document.uuid}"
+        )
 
         # Render the certificate HTML
         rendered_html = render_certificate_html(

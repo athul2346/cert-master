@@ -440,7 +440,57 @@ Cookie: sessionid={session_id}
 
 ---
 
-### 11. List Documents
+### 11. Get Documents by Document Type
+
+**Endpoint:** `GET /document-types/{document_type_id}/documents/`
+
+**Headers:**
+```http
+Cookie: sessionid={session_id}
+```
+
+**Success Response (200):**
+```json
+{
+    "document_type": {
+        "id": 1,
+        "code": "CERT",
+        "name": "Certificate"
+    },
+    "documents": [
+        {
+            "id": 6,
+            "uuid": "550e8400-e29b-41d4-a716-446655440000",
+            "document_type": 1,
+            "template": 1,
+            "recipient": "Alice Johnson",
+            "fields": [
+                {"key": "recipient_name", "value": "Alice Johnson"},
+                {"key": "course_name", "value": "Advanced Python Programming"},
+                {"key": "issue_date", "value": "2024-01-15"},
+                {"key": "certificate_number", "value": "CERT-2024-001"}
+            ],
+            "issued_date": "2024-01-15",
+            "expiry_date": "2025-01-15",
+            "never_expires": false,
+            "status": "ACTIVE"
+        }
+    ]
+}
+```
+
+**Error Response (404):**
+```json
+{
+    "detail": "Document type not found"
+}
+```
+
+**Note:** Only returns documents belonging to the logged-in user's company for the specified document type.
+
+---
+
+### 12. List Documents
 
 **Endpoint:** `GET /documents/list/`
 
@@ -515,7 +565,7 @@ Cookie: sessionid={session_id}
 
 ---
 
-### 13. Update Document (Full PUT)
+### 14. Update Document (Full PUT)
 
 **Endpoint:** `PUT /documents/6/`
 
@@ -568,7 +618,7 @@ Cookie: sessionid={session_id}
 
 ---
 
-### 14. Partial Update Document Fields (PATCH)
+### 15. Partial Update Document Fields (PATCH)
 
 **Endpoint:** `PATCH /documents/6/update-fields/`
 
@@ -611,7 +661,7 @@ Cookie: sessionid={session_id}
 
 ---
 
-### 15. Delete Document
+### 16. Delete Document
 
 **Endpoint:** `DELETE /documents/6/`
 
@@ -639,7 +689,7 @@ Cookie: sessionid={session_id}
 
 ## Certificate Rendering
 
-### 16. Render Certificate
+### 17. Render Certificate
 
 **Endpoint:** `POST /render/`
 
@@ -687,7 +737,7 @@ Cookie: sessionid={session_id}
 
 ## QR Verification (Public)
 
-### 17. Verify Certificate by UUID
+### 18. Verify Certificate by UUID
 
 **Endpoint:** `GET /verify/{uuid}/`
 
@@ -795,6 +845,7 @@ curl -s -b cookies.txt -X POST http://localhost:8000/api/documents/ \
 | `/auth/login/` | N/A | Public |
 | `/document-types/` | By Company | Only see own document types |
 | `/document-types/{id}/templates/` | By Company | See templates under a document type |
+| `/document-types/{id}/documents/` | By Company | See documents under a document type |
 | `/document-template/` | By Company | Only see own templates (linked to document types) |
 | `/documents/` | By Company | Only see own documents |
 | `/render/` | By Company | Only render own docs/templates |
