@@ -3,6 +3,7 @@ from .views import (
     DocumentTypeListCreateAPIView,
     DocumentTypeRetrieveUpdateDestroyAPIView,
     TemplatesByDocumentTypeAPIView,
+    DocumentsByDocumentTypeAPIView,
     CompanyDocumentCreateView,
     CompanyDocumentListView,
     CompanyDocumentDetailView,
@@ -18,6 +19,7 @@ urlpatterns = [
     path('document-types/', DocumentTypeListCreateAPIView.as_view(), name='documenttype-list-create'),
     path('document-types/<int:pk>/', DocumentTypeRetrieveUpdateDestroyAPIView.as_view(), name='documenttype-detail'),
     path('document-types/<int:document_type_id>/templates/', TemplatesByDocumentTypeAPIView.as_view(), name='templates-by-document-type'),
+    path('document-types/<int:document_type_id>/documents/', DocumentsByDocumentTypeAPIView.as_view(), name='documents-by-document-type'),
     path('document-template/', DocumentTemplateListCreateAPIView.as_view(), name='documenttemplate-list-create'),
     path('document-template/<int:pk>', DocumentTemplateRetrieveUpdateDestroyAPIView.as_view(), name='documenttemplate-detail'),
     path("documents/", CompanyDocumentCreateView.as_view(), name="document-create"),
@@ -27,4 +29,3 @@ urlpatterns = [
     path("render/", CertificateRenderAPIView.as_view(), name="document-render"),
     path("verify/<uuid:uuid>/", VerifyQRAPIView.as_view(), name="verify-qr"),
 ]
-
