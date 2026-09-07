@@ -40,12 +40,14 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "whitenoise.runserver_nostatic",
+    "corsheaders",
     "rest_framework",
     "accounts",
     "documents",
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -161,3 +163,11 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 import socket
 PUBLIC_BASE_URL = os.getenv("PUBLIC_BASE_URL", f"http://{socket.gethostname()}:8000")
 CERT_FRONTEND_URL = os.getenv("CERT_FRONTEND_URL")
+
+# CORS Settings
+# WARNING: This allows all origins. For production, it's more secure to
+# use CORS_ALLOWED_ORIGINS with a specific list of domains.
+CORS_ALLOW_ALL_ORIGINS = True
+
+# This is necessary to allow cookies (like sessionid) to be sent in cross-origin requests.
+CORS_ALLOW_CREDENTIALS = True
