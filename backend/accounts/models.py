@@ -39,6 +39,15 @@ class CompanyProfile(models.Model):
         ("startup", "Startup"),
     ]
 
+    STATUS_PENDING = "PENDING"
+    STATUS_ACTIVE = "ACTIVE"
+    STATUS_SUSPENDED = "SUSPENDED"
+    STATUS_CHOICES = [
+        (STATUS_PENDING, "Pending"),
+        (STATUS_ACTIVE, "Active"),
+        (STATUS_SUSPENDED, "Suspended"),
+    ]
+
     user = models.OneToOneField(
         User,
         on_delete=models.CASCADE,
@@ -54,7 +63,40 @@ class CompanyProfile(models.Model):
     website_url = models.URLField(blank=True, null=True)
     cin_number = models.CharField(max_length=50, unique=True)
 
+    # Entity metadata shown in admin dashboard (e.g. "Institution", "Enterprise", "Healthcare")
+    entity_type = models.CharField(max_length=100, blank=True)
+    # Display location e.g. "San Francisco, CA"
+    location = models.CharField(max_length=255, blank=True)
+
+    status = models.CharField(
+        max_length=20,
+        choices=STATUS_CHOICES,
+        default=STATUS_PENDING,
+    )
+    verified_at = models.DateTimeField(null=True, blank=True)
+    verified_by = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="verified_companies",
+    )
+    rejection_reason = models.TextField(blank=True)
+
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.organisation_name
+
+
+class CompanyVerificationDocument(models.Model):
+    company = models.ForeignKey(
+        CompanyProfile,
+        on_delete=models.CASCADE,
+        related_name="verification_documents",
+    )
+    file = models.FileField(upload_to="verification_docs/")
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.company.organisation_name} - {self.file.name}"
