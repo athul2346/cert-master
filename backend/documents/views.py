@@ -530,3 +530,30 @@ class CertificateRenderAPIView(APIView):
             {"rendered_html": rendered_html},
             status=status.HTTP_200_OK
         )
+
+
+class HealthCheckAPIView(APIView):
+    """
+    Public health check endpoint to verify that the application
+    and its database connection are active and healthy.
+    """
+    permission_classes = []
+    authentication_classes = []
+
+    def get(self, request):
+        from django.db import connections
+        from django.db.utils import OperationalError
+        
+        try:
+            db_conn = connections['default']
+            db_conn.cursor()
+        except OperationalError:
+            return Response(
+                {"status": "unhealthy", "database": "disconnected"},
+                status=status.HTTP_503_SERVICE_UNAVAILABLE
+            )
+        
+        return Response(
+            {"status": "healthy", "database": "connected"},
+            status=status.HTTP_200_OK
+        )
