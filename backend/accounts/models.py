@@ -62,6 +62,7 @@ class CompanyProfile(models.Model):
     country = models.CharField(max_length=100)
     website_url = models.URLField(blank=True, null=True)
     cin_number = models.CharField(max_length=50, unique=True)
+    company_url = models.URLField(blank=False, null=False, default="www.company.com")
 
     # Entity metadata shown in admin dashboard (e.g. "Institution", "Enterprise", "Healthcare")
     entity_type = models.CharField(max_length=100, blank=True)
