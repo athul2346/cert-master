@@ -26,13 +26,24 @@ class LoginView(APIView):
         user = serializer.validated_data["user"]
         login(request, user)
 
-        return Response(
-            {
-                "message": "Login successful",
-                "email": user.email
-            },
-            status=status.HTTP_200_OK
-        )
+        company = getattr(user, "company", None)
+        role = "admin" if (user.is_staff or user.is_superuser) else "company"
+
+        response_data = {
+            "message": "Login successful",
+            "email": user.email,
+            "is_staff": user.is_staff,
+            "is_superuser": user.is_superuser,
+            "role": role,
+            "company_details": {
+                "id": company.id,
+                "organisation_name": company.organisation_name,
+                "status": company.status,
+                "entity_type": company.entity_type,
+            } if company else None
+        }
+
+        return Response(response_data, status=status.HTTP_200_OK)
 
 
 class CompanySignupView(APIView):
