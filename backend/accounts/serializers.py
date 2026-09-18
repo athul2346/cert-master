@@ -25,14 +25,18 @@ class LoginSerializer(serializers.Serializer):
             raise serializers.ValidationError("User account is disabled")
 
         company = getattr(user, "company", None)
-        if company is not None:
+        if company is not None and company.status != CompanyProfile.STATUS_ACTIVE:
             if company.status == CompanyProfile.STATUS_PENDING:
                 raise serializers.ValidationError(
                     "Your organisation is still pending verification."
                 )
-            if company.status == CompanyProfile.STATUS_SUSPENDED:
+            elif company.status == CompanyProfile.STATUS_SUSPENDED:
                 raise serializers.ValidationError(
                     "Your organisation account has been suspended."
+                )
+            else:
+                raise serializers.ValidationError(
+                    "Your organisation account is not active."
                 )
 
         attrs["user"] = user
@@ -57,6 +61,7 @@ class CompanySignupSerializer(serializers.Serializer):
     cin_number = serializers.CharField(max_length=50)
     entity_type = serializers.CharField(max_length=100, required=False, allow_blank=True)
     location = serializers.CharField(max_length=255, required=False, allow_blank=True)
+    company_url = serializers.URLField(required=True, allow_null=False, allow_blank=True)
 
     def validate_email(self, value):
         if User.objects.filter(email=value).exists():
@@ -85,6 +90,7 @@ class CompanySignupSerializer(serializers.Serializer):
             cin_number=validated_data["cin_number"],
             entity_type=validated_data.get("entity_type", ""),
             location=validated_data.get("location", ""),
+            company_url=validated_data.get("company_url", ""),
             status=CompanyProfile.STATUS_PENDING,
         )
 
