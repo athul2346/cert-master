@@ -25,7 +25,8 @@ Content-Type: application/json
     "organisation_name": "My Company",
     "classification": "private",
     "country": "USA",
-    "cin_number": "CIN123456789"
+    "cin_number": "CIN123456789",
+    "company_url": "https://company.com"
 }
 ```
 
