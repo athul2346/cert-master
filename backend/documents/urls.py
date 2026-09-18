@@ -11,7 +11,8 @@ from .views import (
     DocumentTemplateListCreateAPIView,
     DocumentTemplateRetrieveUpdateDestroyAPIView,
     VerifyQRAPIView,
-    CertificateRenderAPIView
+    CertificateRenderAPIView,
+    HealthCheckAPIView
 )
 
 
@@ -28,4 +29,5 @@ urlpatterns = [
     path("documents/<int:pk>/update-fields/", CompanyDocumentFieldUpdateView.as_view(), name="document-field-update"),
     path("render/", CertificateRenderAPIView.as_view(), name="document-render"),
     path("verify/<uuid:uuid>/", VerifyQRAPIView.as_view(), name="verify-qr"),
+    path("health/", HealthCheckAPIView.as_view(), name="health-check"),
 ]
