@@ -514,7 +514,7 @@ class CertificateRenderAPIView(APIView):
         document_json = {f.key: f.value for f in document.fields.all()}
 
         # Generate verification URL using document's UUID
-        qr_verify_url = f"{settings.PUBLIC_BASE_URL}/verify/{document.uuid}/"
+        qr_verify_url = f"{settings.PUBLIC_BASE_URL}/verify-qr/{document.uuid}/"
         qr_verify_url = (
             f"{settings.CERT_FRONTEND_URL}/render/{document.uuid}"
         )

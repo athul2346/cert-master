@@ -28,6 +28,6 @@ urlpatterns = [
     path("documents/<int:pk>/", CompanyDocumentDetailView.as_view(), name="document-detail"),
     path("documents/<int:pk>/update-fields/", CompanyDocumentFieldUpdateView.as_view(), name="document-field-update"),
     path("render/", CertificateRenderAPIView.as_view(), name="document-render"),
-    path("verify/<uuid:uuid>/", VerifyQRAPIView.as_view(), name="verify-qr"),
+    path("verify-qr/<uuid:uuid>/", VerifyQRAPIView.as_view(), name="verify-qr"),
     path("health/", HealthCheckAPIView.as_view(), name="health-check"),
 ]
