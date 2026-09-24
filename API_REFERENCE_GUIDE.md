@@ -740,11 +740,11 @@ Cookie: sessionid={session_id}
 
 ### 18. Verify Certificate by UUID
 
-**Endpoint:** `GET /verify/{uuid}/`
+**Endpoint:** `GET /verify-qr/{uuid}/`
 
 **Headers:** None (public endpoint)
 
-**URL Example:** `GET /verify/550e8400-e29b-41d4-a716-446655440000/`
+**URL Example:** `GET /verify-qr/550e8400-e29b-41d4-a716-446655440000/`
 
 **Success Response (200):**
 ```json
