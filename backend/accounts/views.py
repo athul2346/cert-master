@@ -4,6 +4,8 @@ from rest_framework import status, generics, filters
 from rest_framework.permissions import IsAdminUser
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from django.contrib.auth import login
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
 from django.db.models import Count, Q
 from django.utils.timezone import now
 from .models import CompanyProfile, CompanyVerificationDocument
@@ -15,7 +17,11 @@ from .serializers import (
     VerificationActionSerializer,
 )
 
+@method_decorator(csrf_exempt, name="dispatch")
 class LoginView(APIView):
+    authentication_classes = []
+    permission_classes = []
+
     def post(self, request):
         serializer = LoginSerializer(
             data=request.data,
@@ -46,7 +52,9 @@ class LoginView(APIView):
         return Response(response_data, status=status.HTTP_200_OK)
 
 
+@method_decorator(csrf_exempt, name="dispatch")
 class CompanySignupView(APIView):
+    authentication_classes = []
     permission_classes = []
     parser_classes = [MultiPartParser, FormParser, JSONParser]
 
