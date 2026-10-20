@@ -30,7 +30,6 @@ SECRET_KEY = os.getenv(
 
 DEBUG = os.getenv("DEBUG", "False").lower() == "true"
 
-# FIXED: added localhost / 127.0.0.1 so the backend can also be run locally.
 ALLOWED_HOSTS = os.getenv(
     "ALLOWED_HOSTS",
     "*.onrender.com,.onrender.com,localhost,127.0.0.1",
@@ -48,7 +47,6 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    # "whitenoise.runserver_nostatic",  <-- REMOVED: No longer needed with Supabase
     "corsheaders",
     "rest_framework",
     "accounts",
@@ -57,7 +55,6 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
-    # "whitenoise.middleware.WhiteNoiseMiddleware",  <-- REMOVED: No longer needed
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -158,16 +155,13 @@ STORAGES = {
     },
 }
 
-# These are still needed by Django internally, even if Supabase serves the files
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
-MEDIA_URL = "/media/"
+# CRITICAL FIX: Supabase handles the URL. If we leave this as "/media/", 
+# the package prepends it, causing the double "media/media/" bug.
+MEDIA_URL = "" 
 MEDIA_ROOT = BASE_DIR / "media"
-
-# REMOVED: STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-# REMOVED: WHITENOISE_USE_FINDERS = True
-
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
@@ -183,24 +177,18 @@ CERT_FRONTEND_URL = os.getenv("CERT_FRONTEND_URL")
 # ------------------------------------------------------------------
 # CORS — FIXED
 # ------------------------------------------------------------------
-# A wildcard origin CANNOT be combined with credentials (browsers reject it).
-# List every origin that will call the API with cookies.
 
 CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOW_CREDENTIALS = True
 
 CORS_ALLOWED_ORIGINS = [
-    # Vercel deployment
     "https://oauther-fqj8.vercel.app",
-    # Local dev — Vite
     "http://localhost:5173",
     "http://127.0.0.1:5173",
-    # Local dev — CRA / Next
     "http://localhost:3000",
     "http://127.0.0.1:3000",
 ]
 
-# Allow the CSRF cookie to be readable from JS (needed to send X-CSRFToken).
 CORS_ALLOW_HEADERS = [
     "accept",
     "accept-encoding",
@@ -217,7 +205,6 @@ CORS_ALLOW_HEADERS = [
 # ------------------------------------------------------------------
 # CSRF — FIXED
 # ------------------------------------------------------------------
-# Same origins as CORS, plus the deployed HTTPS frontend.
 
 CSRF_TRUSTED_ORIGINS = [
     "https://oauther-fqj8.vercel.app",
@@ -231,11 +218,6 @@ CSRF_TRUSTED_ORIGINS = [
 # ------------------------------------------------------------------
 # Session / CSRF cookie flags — FIXED
 # ------------------------------------------------------------------
-# Local dev (DEBUG=True):  SameSite=Lax, Secure=False
-#   -> cookies flow between http://localhost:5173 and http://localhost:8000
-#      without third-party-cookie blocking.
-# Deployed (DEBUG=False): SameSite=None, Secure=True
-#   -> required for the cross-site HTTPS Vercel frontend.
 
 if DEBUG:
     SESSION_COOKIE_SAMESITE = "Lax"
