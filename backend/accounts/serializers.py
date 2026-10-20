@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate
+from django.conf import settings
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 from .models import CompanyProfile, CompanyVerificationDocument
@@ -98,9 +99,24 @@ class CompanySignupSerializer(serializers.Serializer):
 
 
 class CompanyVerificationDocumentSerializer(serializers.ModelSerializer):
+    file = serializers.SerializerMethodField()
+
     class Meta:
         model = CompanyVerificationDocument
         fields = ["id", "file", "uploaded_at"]
+
+    def get_file(self, obj):
+        if not obj.file:
+            return None
+        
+        # 1. Get the file name from the database (e.g., "german_invoice.pdf" or "verification_docs/sample.pdf")
+        file_path = obj.file.name
+        
+        # 2. Pull the base Supabase URL from settings
+        supabase_url = settings.SUPABASE_URL
+        
+        # 3. Return the perfectly formatted URL
+        return f"{supabase_url}/storage/v1/object/public/media/{file_path}"
 
 
 class EntitySerializer(serializers.ModelSerializer):
