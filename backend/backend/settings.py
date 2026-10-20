@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "whitenoise.runserver_nostatic",
+    # "whitenoise.runserver_nostatic",  <-- REMOVED: No longer needed with Supabase
     "corsheaders",
     "rest_framework",
     "accounts",
@@ -57,7 +57,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",
+    # "whitenoise.middleware.WhiteNoiseMiddleware",  <-- REMOVED: No longer needed
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -137,17 +137,37 @@ USE_TZ = True
 
 
 # ------------------------------------------------------------------
-# Static / media
+# Static / media / Supabase Storage
 # ------------------------------------------------------------------
 
+# Supabase Credentials (Set these in Render Environment Variables)
+SUPABASE_URL = os.getenv('SUPABASE_URL')
+SUPABASE_KEY = os.getenv('SUPABASE_KEY')
+SUPABASE_BUCKET = os.getenv('SUPABASE_BUCKET', 'media')
+
+# Bucket names (Optional: defaults to SUPABASE_BUCKET or 'media'/'static')
+SUPABASE_MEDIA_BUCKET = os.getenv('SUPABASE_MEDIA_BUCKET', 'media')
+SUPABASE_STATIC_BUCKET = os.getenv('SUPABASE_STATIC_BUCKET', 'static')
+
+# Django 4.2+ Storage Configuration
+STORAGES = {
+    "default": {
+        "BACKEND": "django_supabase_storage.SupabaseMediaStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "django_supabase_storage.SupabaseStaticStorage",
+    },
+}
+
+# These are still needed by Django internally, even if Supabase serves the files
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-WHITENOISE_USE_FINDERS = True
+# REMOVED: STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+# REMOVED: WHITENOISE_USE_FINDERS = True
 
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
