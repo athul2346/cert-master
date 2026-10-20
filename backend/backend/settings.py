@@ -143,7 +143,6 @@ USE_TZ = True
 # Supabase Credentials (Set these in Render Environment Variables)
 SUPABASE_URL = os.getenv('SUPABASE_URL')
 SUPABASE_KEY = os.getenv('SUPABASE_KEY')
-SUPABASE_BUCKET = os.getenv('SUPABASE_BUCKET', 'media')
 
 # Bucket names (Optional: defaults to SUPABASE_BUCKET or 'media'/'static')
 SUPABASE_MEDIA_BUCKET = os.getenv('SUPABASE_MEDIA_BUCKET', 'media')
