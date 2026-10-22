@@ -12,8 +12,6 @@ from .models import (
     DocumentType, 
     CompanyDocument, 
     DocumentTemplate,
-    QRRecord,
-    DocumentField
 )
 from .serializers import (
     DocumentTypeSerializer, 
@@ -309,25 +307,12 @@ class VerifyQRAPIView(APIView):
     """
 
     def get(self, request, uuid):
+        # Look up the Document directly
         try:
-            qr = QRRecord.objects.select_related("document").get(id=uuid)
-        except QRRecord.DoesNotExist:
+            document = CompanyDocument.objects.prefetch_related('fields').get(uuid=uuid)
+        except CompanyDocument.DoesNotExist:
             return Response(
-                {"verified": False, "reason": "QR code not found"},
-                status=status.HTTP_404_NOT_FOUND
-            )
-
-        if not qr.is_active:
-            return Response(
-                {"verified": False, "reason": "QR code has been revoked"},
-                status=status.HTTP_403_FORBIDDEN
-            )
-
-        document = getattr(qr, "document", None)
-
-        if not document:
-            return Response(
-                {"verified": False, "reason": "No document linked to this QR"},
+                {"verified": False, "reason": "Document not found"},
                 status=status.HTTP_404_NOT_FOUND
             )
 
@@ -339,6 +324,7 @@ class VerifyQRAPIView(APIView):
                     status=status.HTTP_403_FORBIDDEN
                 )
 
+        # Check status (handles revoked/expired)
         if document.status != "ACTIVE":
             return Response(
                 {"verified": False, "reason": f"Document status: {document.status}"},
@@ -357,7 +343,6 @@ class VerifyQRAPIView(APIView):
                 "issued_date": document.issued_date,
                 "expiry_date": document.expiry_date,
                 "fields": fields_dict,
-                "payload": qr.payload,
             },
             status=status.HTTP_200_OK
         )
