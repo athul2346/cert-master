@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from datetime import date
-from .models import DocumentType, CompanyDocument, DocumentTemplate, QRRecord, DocumentField
+from .models import DocumentType, CompanyDocument, DocumentTemplate, DocumentField
 
 
 class DocumentTypeSerializer(serializers.ModelSerializer):
@@ -288,13 +288,13 @@ class CompanyDocumentWithJsonSerializer(serializers.ModelSerializer):
         return instance
 
 
-class QRGenerateSerializer(serializers.Serializer):
-    payload = serializers.JSONField()
+# class QRGenerateSerializer(serializers.Serializer):
+#     payload = serializers.JSONField()
 
-    def create(self, validated_data):
-        return QRRecord.objects.create(
-            payload=validated_data["payload"]
-        )
+#     def create(self, validated_data):
+#         return QRRecord.objects.create(
+#             payload=validated_data["payload"]
+#         )
 
 
 class PatchDocumentFieldSerializer(serializers.Serializer):

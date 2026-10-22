@@ -43,17 +43,17 @@ class DocumentTemplate(models.Model):
     class Meta:
         unique_together = ["company", "template_name"]
 
-class QRRecord(models.Model):
-    id = models.UUIDField(
-        primary_key=True,
-        default=uuid.uuid4,
-        editable=False
-    )
-    payload = models.JSONField()
-    is_active = models.BooleanField(default=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    def __str__(self):
-        return str(self.id)
+# class QRRecord(models.Model):
+#     id = models.UUIDField(
+#         primary_key=True,
+#         default=uuid.uuid4,
+#         editable=False
+#     )
+#     payload = models.JSONField()
+#     is_active = models.BooleanField(default=True)
+#     created_at = models.DateTimeField(auto_now_add=True)
+#     def __str__(self):
+#         return str(self.id)
 
 
 
@@ -85,13 +85,13 @@ class CompanyDocument(models.Model):
         blank=True,
     )
 
-    qr = models.OneToOneField(
-        QRRecord,
-        on_delete=models.PROTECT,
-        related_name="document",
-        null=True,
-        blank=True
-    )
+    # qr = models.OneToOneField(
+    #     QRRecord,
+    #     on_delete=models.PROTECT,
+    #     related_name="document",
+    #     null=True,
+    #     blank=True
+    # )
 
     recipient = models.CharField(
         max_length=255,
