@@ -324,3 +324,27 @@ class PatchDocumentFieldSerializer(serializers.Serializer):
         if value and not all(isinstance(item, str) for item in value):
             raise serializers.ValidationError("to_delete must be a list of key names (strings)")
         return value
+
+
+class DocumentStatusUpdateSerializer(serializers.ModelSerializer):
+    """
+    Serializer for updating only the status of a CompanyDocument.
+    """
+    status = serializers.ChoiceField(choices=CompanyDocument.STATUS_CHOICES)
+
+    class Meta:
+        model = CompanyDocument
+        fields = ["status"]
+
+    def validate_status(self, value):
+        # Prevent reactivating an expired document without updating expiry_date
+        if self.instance and self.instance.status == "EXPIRED" and value == "ACTIVE":
+            if (
+                not self.instance.never_expires
+                and self.instance.expiry_date
+                and self.instance.expiry_date < date.today()
+            ):
+                raise serializers.ValidationError(
+                    "Cannot reactivate an expired document. Update expiry_date first."
+                )
+        return value
