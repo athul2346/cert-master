@@ -23,14 +23,31 @@ def generate_qr_base64(url: str) -> str:
     return f"data:image/png;base64,{base64_str}"
 
 
-def render_certificate_html(template_html, document_json, qr_verify_url):
+def render_certificate_html(template_html, document_json, qr_verify_url=None):
+    """
+    Render certificate HTML by replacing placeholders.
+
+    - Always replaces {{key}} placeholders from document_json.
+    - Only replaces the dummy QR in the template if `qr_verify_url` is
+      provided (and truthy). When it is None / empty, the dummy QR
+      already present in the template is left untouched.
+    """
     rendered_html = template_html
 
-    # Replace {{key}} placeholders
+    # Replace {{key}} placeholders (always)
     if document_json:
         for key, value in document_json.items():
             placeholder_pattern = r'\{\{\s*' + re.escape(key) + r'\s*\}\}'
-            rendered_html = re.sub(placeholder_pattern, str(value), rendered_html, flags=re.IGNORECASE)
+            rendered_html = re.sub(
+                placeholder_pattern,
+                str(value),
+                rendered_html,
+                flags=re.IGNORECASE
+            )
+
+    # If no verify URL was supplied, keep the dummy QR from the template
+    if not qr_verify_url:
+        return rendered_html
 
     # Generate QR code as base64
     qr_base64 = generate_qr_base64(qr_verify_url)
@@ -40,8 +57,16 @@ def render_certificate_html(template_html, document_json, qr_verify_url):
     rendered_html = re.sub(qr_pattern, qr_base64, rendered_html)
 
     # Also handle SVG lucide-qr-code if present (for other templates)
-    qr_img_tag = f'<img src="{qr_base64}" alt="QR Code" style="width: 100%; height: 100%;">'
+    qr_img_tag = (
+        f'<img src="{qr_base64}" alt="QR Code" '
+        f'style="width: 100%; height: 100%;">'
+    )
     svg_pattern = r'<svg[^>]*class="[^"]*lucide-qr-code[^"]*"[^>]*>.*?</svg>'
-    rendered_html = re.sub(svg_pattern, qr_img_tag, rendered_html, flags=re.DOTALL)
+    rendered_html = re.sub(
+        svg_pattern,
+        qr_img_tag,
+        rendered_html,
+        flags=re.DOTALL
+    )
 
     return rendered_html

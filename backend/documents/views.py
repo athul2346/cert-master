@@ -19,7 +19,8 @@ from .serializers import (
     DocumentTemplateSerializer,
     PatchDocumentFieldSerializer,
     DocumentFieldSerializer,
-    CompanyDocumentWithJsonSerializer
+    CompanyDocumentWithJsonSerializer,
+    DocumentStatusUpdateSerializer,
 )
 from .authentication import CsrfExemptSessionAuthentication
 
@@ -442,16 +443,69 @@ class CompanyDocumentFieldUpdateView(APIView):
 
 
 @method_decorator(csrf_exempt, name="dispatch")
+class CompanyDocumentStatusUpdateView(APIView):
+    """
+    API to update only the status of a CompanyDocument.
+
+    PATCH /documents/{pk}/status/
+
+    Request body:
+    {
+        "status": "ACTIVE"   # one of: PENDING, ACTIVE, EXPIRED, REVOKED
+    }
+    """
+    authentication_classes = [CsrfExemptSessionAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get_object(self, request, pk):
+        company = request.user.company
+        try:
+            return CompanyDocument.objects.prefetch_related('fields').get(
+                company=company,
+                pk=pk,
+            )
+        except CompanyDocument.DoesNotExist:
+            return None
+
+    def patch(self, request, pk):
+        document = self.get_object(request, pk)
+
+        if not document:
+            return Response(
+                {"detail": "Document not found"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        serializer = DocumentStatusUpdateSerializer(
+            document,
+            data=request.data,
+            partial=True,
+            context={"request": request}
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response(
+            CompanyDocumentSerializer(document, context={"request": request}).data,
+            status=status.HTTP_200_OK
+        )
+
+
+@method_decorator(csrf_exempt, name="dispatch")
 class CertificateRenderAPIView(APIView):
     """
     API to render certificate HTML by replacing placeholders and adding QR code.
-    
+
+    The real QR code (encoding the verify URL) is only injected when the
+    document status is ACTIVE. For any other status the dummy QR provided
+    in the template is returned as-is.
+
     Request body:
     {
         "template_id": 1,
         "document_id": 1
     }
-    
+
     Response:
     {
         "rendered_html": "<html>...</html>"
@@ -498,9 +552,14 @@ class CertificateRenderAPIView(APIView):
         # Get document fields as dictionary
         document_json = {f.key: f.value for f in document.fields.all()}
 
-        # Generate verification URL using document's UUID
-                # Generate verification URL using document's UUID
-        qr_verify_url = f"{settings.CERT_FRONTEND_URL}/verify-qr/{document.uuid}"
+        # Only inject the real QR when the document is ACTIVE.
+        # For any other status (PENDING / EXPIRED / REVOKED) we pass None
+        # so the dummy QR from the template is returned untouched.
+        qr_verify_url = None
+        if document.status == "ACTIVE":
+            qr_verify_url = (
+                f"{settings.CERT_FRONTEND_URL}/verify-qr/{document.uuid}"
+            )
 
         # Render the certificate HTML
         rendered_html = render_certificate_html(
