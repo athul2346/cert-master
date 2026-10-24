@@ -122,7 +122,7 @@ class CompanyDocumentSerializer(serializers.ModelSerializer):
         return attrs
 
     # ------------------------------------------------
-    # 2️⃣ Create
+    # 2️⃣ Create  (status defaults to PENDING from the model)
     # ------------------------------------------------
     def create(self, validated_data):
         company = self.context["request"].user.company
@@ -137,9 +137,9 @@ class CompanyDocumentSerializer(serializers.ModelSerializer):
                 "Document already exists for this company, document type and recipient."
             )
 
+        # Do NOT set status here — the model default ("PENDING") applies.
         document = CompanyDocument.objects.create(
             company=company,
-            status="ACTIVE",
             **validated_data
         )
 
@@ -250,9 +250,11 @@ class CompanyDocumentWithJsonSerializer(serializers.ModelSerializer):
         company = self.context["request"].user.company
         document_json = validated_data.pop("document_json", {})
 
+        # Do NOT set status here — the model default ("PENDING") applies.
+        # If a client sent "status", validated_data now contains it and it
+        # will be applied. To forbid it, add "status" to read_only_fields.
         document = CompanyDocument.objects.create(
             company=company,
-            status="ACTIVE",
             **validated_data
         )
 
