@@ -44,8 +44,8 @@ class LoginSerializer(serializers.Serializer):
         return attrs
 
 
-
 User = get_user_model()
+
 
 class CompanySignupSerializer(serializers.Serializer):
     # Login info
@@ -108,13 +108,13 @@ class CompanyVerificationDocumentSerializer(serializers.ModelSerializer):
     def get_file(self, obj):
         if not obj.file:
             return None
-        
+
         # 1. Get the file name from the database (e.g., "german_invoice.pdf" or "verification_docs/sample.pdf")
         file_path = obj.file.name
-        
+
         # 2. Pull the base Supabase URL from settings
         supabase_url = settings.SUPABASE_URL
-        
+
         # 3. Return the perfectly formatted URL
         return f"{supabase_url}/storage/v1/object/public/media/{file_path}"
 

@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status, generics, filters
 from rest_framework.permissions import IsAdminUser
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.db.models import Count, Q
@@ -16,6 +16,7 @@ from .serializers import (
     VerificationQueueSerializer,
     VerificationActionSerializer,
 )
+
 
 @method_decorator(csrf_exempt, name="dispatch")
 class LoginView(APIView):
@@ -50,6 +51,19 @@ class LoginView(APIView):
         }
 
         return Response(response_data, status=status.HTTP_200_OK)
+
+
+@method_decorator(csrf_exempt, name="dispatch")
+class LogoutView(APIView):
+    authentication_classes = []
+    permission_classes = []
+
+    def post(self, request):
+        logout(request)
+        return Response(
+            {"message": "Logged out successfully"},
+            status=status.HTTP_200_OK,
+        )
 
 
 @method_decorator(csrf_exempt, name="dispatch")
