@@ -148,7 +148,7 @@ SUPABASE_STATIC_BUCKET = os.getenv('SUPABASE_STATIC_BUCKET', 'static')
 # Django 4.2+ Storage Configuration
 STORAGES = {
     "default": {
-        "BACKEND": "django_supabase_storage.SupabaseMediaStorage",
+        "BACKEND": "accounts.storage.RootMediaStorage",
     },
     "staticfiles": {
         "BACKEND": "django_supabase_storage.SupabaseStaticStorage",
