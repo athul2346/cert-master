@@ -3,6 +3,8 @@ from .views import (
     LoginView,
     LogoutView,
     CompanySignupView,
+    OTPVerifyView,
+    OTPResendView,
     ActiveEntitiesAPIView,
     EntityStatusUpdateAPIView,
     VerificationQueueAPIView,
@@ -13,6 +15,8 @@ urlpatterns = [
     path("login/", LoginView.as_view(), name="login"),
     path("logout/", LogoutView.as_view(), name="logout"),
     path("signup/", CompanySignupView.as_view(), name="company-signup"),
+    path("otp/verify/", OTPVerifyView.as_view(), name="otp-verify"),
+    path("otp/resend/", OTPResendView.as_view(), name="otp-resend"),
 
     # Enterprise-admin dashboard
     path("admin/entities/", ActiveEntitiesAPIView.as_view(), name="admin-entities"),

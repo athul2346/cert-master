@@ -33,10 +33,19 @@ Content-Type: application/json
 **Success Response (201):**
 ```json
 {
-    "message": "Company registered successfully",
-    "email": "company@example.com"
+    "message": "Company registered successfully. Please verify the OTP sent to your email; your organisation will then await verification.",
+    "email": "company@example.com",
+    "status": "PENDING",
+    "docs_attached": 0,
+    "email_verified": false,
+    "otp_sent": true
 }
 ```
+
+An OTP (6 digits by default) is emailed to the signup address. The account
+cannot log in until the OTP is verified **and** an admin approves the
+organisation. If the email could not be sent, the response still returns
+`201` with `"otp_sent": false` and a `warning`; call the resend endpoint.
 
 **Error Response (400 - CIN exists):**
 ```json
@@ -44,6 +53,95 @@ Content-Type: application/json
     "cin_number": ["CIN already exists"]
 }
 ```
+
+---
+
+### 1.1 Verify Signup OTP
+
+**Endpoint:** `POST /auth/otp/verify/`
+
+**Headers:**
+```http
+Content-Type: application/json
+```
+
+**Request Body:**
+```json
+{
+    "email": "company@example.com",
+    "otp": "123456"
+}
+```
+
+**Success Response (200):**
+```json
+{
+    "message": "Email verified successfully. Your organisation is now awaiting admin verification.",
+    "email": "company@example.com",
+    "email_verified": true,
+    "can_login": false,
+    "company_status": "PENDING"
+}
+```
+
+`can_login` becomes `true` once the organisation has been approved by an admin.
+
+**Error Response (400 - wrong/expired code or already verified):**
+```json
+{
+    "detail": "Invalid or expired verification code."
+}
+```
+
+**Error Response (429 - too many wrong attempts):**
+```json
+{
+    "detail": "Too many incorrect attempts. Request a new verification code."
+}
+```
+
+---
+
+### 1.2 Resend Signup OTP
+
+**Endpoint:** `POST /auth/otp/resend/`
+
+**Headers:**
+```http
+Content-Type: application/json
+```
+
+**Request Body:**
+```json
+{
+    "email": "company@example.com"
+}
+```
+
+**Success Response (200):**
+```json
+{
+    "message": "A new verification code has been sent.",
+    "email": "company@example.com",
+    "expires_in": 600
+}
+```
+
+**Error Response (429 - resend cooldown still active):**
+```json
+{
+    "detail": "Please wait 42 seconds before requesting a new code.",
+    "retry_after": 42
+}
+```
+
+**Notes:**
+- A new code invalidates any previous unused code.
+- Unknown email addresses return `200` with a generic message so the endpoint
+  cannot be used to enumerate registered accounts.
+- Email is sent via SMTP using `EMAIL_HOST`, `EMAIL_HOST_USER`,
+  `EMAIL_HOST_PASSWORD`, etc. If `EMAIL_HOST` is unset, Django prints the email
+  to the server console instead (development fallback).
 
 ---
 
@@ -116,7 +214,9 @@ Cookie: sessionid={session_id}
     "code": "CERT",
     "name": "Certificate",
     "description": "Official certificate document",
-    "is_mandatory": true
+    "document_canvas": "",
+    "is_mandatory": true,
+    "templates": []
 }
 ```
 
@@ -139,14 +239,27 @@ Cookie: sessionid={session_id}
         "code": "CERT",
         "name": "Certificate",
         "description": "Official certificate document",
-        "is_mandatory": true
+        "document_canvas": "",
+        "is_mandatory": true,
+        "templates": [
+            {
+                "id": 4,
+                "template_name": "certificate_template",
+                "template_json": {
+                    "fields": ["recipient_name", "course_name", "issue_date", "certificate_number"]
+                },
+                "template_html": "<html><body><h1>Certificate of Completion</h1>..."
+            }
+        ]
     },
     {
         "id": 2,
         "code": "LIC",
         "name": "License",
         "description": "Business license",
-        "is_mandatory": false
+        "document_canvas": "",
+        "is_mandatory": false,
+        "templates": []
     }
 ]
 ```
@@ -167,9 +280,22 @@ Cookie: sessionid={session_id}
     "code": "CERT",
     "name": "Certificate",
     "description": "Official certificate document",
-    "is_mandatory": true
+    "document_canvas": "",
+    "is_mandatory": true,
+    "templates": [
+        {
+            "id": 4,
+            "template_name": "certificate_template",
+            "template_json": {
+                "fields": ["recipient_name", "course_name", "issue_date", "certificate_number"]
+            },
+            "template_html": "<html><body><h1>Certificate of Completion</h1>..."
+        }
+    ]
 }
 ```
+
+**Note:** `templates` contains every template linked to this document type for the logged-in user's company. It is `[]` when none are linked.
 
 **PUT /document-types/{pk}/** (Full Update)
 **Headers:**
@@ -198,7 +324,22 @@ Cookie: sessionid={session_id}
 ```
 
 **DELETE /document-types/{pk}/**
-**Success Response (204):** No content.
+**Success Response (200):**
+```json
+{
+    "message": "Document type deleted successfully",
+    "document_type": {
+        "id": 1,
+        "code": "CERT",
+        "name": "Certificate"
+    },
+    "documents_preserved": 2,
+    "documents_deleted": 5,
+    "templates_detached": 1
+}
+```
+
+ACTIVE documents are preserved with `document_type = null`; non-ACTIVE documents are deleted; templates are preserved and detached from the type.
 
 **Error Response (404):**
 ```json
@@ -291,6 +432,28 @@ Cookie: sessionid={session_id}
 }
 ```
 
+**Error Response (400) — template name already used by this company:**
+```json
+{
+    "template_name": [
+        "A template with this name already exists for your company. Open the existing template to edit it, or choose a different name."
+    ]
+}
+```
+
+**Error Response (409) — database conflict (e.g. two concurrent creates):**
+```json
+{
+    "detail": "A template with this name already exists for your company. Open the existing template to edit it, or choose a different name.",
+    "code": "duplicate_entry",
+    "errors": {
+        "template_name": ["A template with this name already exists for your company. Open the existing template to edit it, or choose a different name."]
+    }
+}
+```
+
+**Note:** `POST` always creates a new template. To save changes to an existing one, use `PATCH /document-template/{pk}` (or `PUT`); re-posting an existing `template_name` is rejected.
+
 ---
 
 ### 8. List Templates
@@ -375,6 +538,121 @@ Cookie: sessionid={session_id}
     "detail": "Not found."
 }
 ```
+
+---
+
+## Predefined Templates (Source Bundle)
+
+Ready-made templates ship with the backend as `.html` + `.json` packages under
+`backend/documents/predefined_templates/` (see the README there for the exact
+layout). These endpoints expose them to the frontend; nothing is created until
+`/import/` is called.
+
+### 9a. List Predefined Templates
+
+**Endpoint:** `GET /predefined-templates/`
+
+**Success Response (200):**
+```json
+[
+    {
+        "id": "dt-1",
+        "slug": "certificate-editor__professional-certificate",
+        "name": "Professional Certificate",
+        "editor": "certificate-editor",
+        "editor_label": "Certificate Editor (Canvas)",
+        "page_size": "Certificate (Standard)",
+        "dimensions_mm": {"width": 297, "height": 210},
+        "orientation": "landscape",
+        "pages": 1,
+        "validity_days": 365,
+        "dynamic_fields": [
+            {
+                "name": "Document ID",
+                "placeholder": "{{Document ID}}",
+                "type": "text",
+                "required": true,
+                "sample_value": "VERIFIED-474705"
+            }
+        ],
+        "document_type": {"code": "CERT", "name": "Certificate"}
+    }
+]
+```
+
+- `id` is the bundle's stable identifier (`dt-1`, `dt-offer-india`, …); `slug`
+  is the file-based identifier used in URLs.
+- `dynamic_fields[].name` is the **exact placeholder text** (including spaces,
+  e.g. `Recipient Name`). Use it as the `DocumentField.key` / `document_json`
+  key when creating a document, otherwise `{{...}}` tokens will not be
+  replaced.
+- `document_type` is the standard type that `/import/` will create (or reuse)
+  for the caller's company. It comes from the package JSON when declared,
+  otherwise it is inferred from the slug and editor.
+- `validity_days` is the template's suggested validity (may be `null`).
+
+---
+
+### 9b. Get a Predefined Template
+
+**Endpoint:** `GET /predefined-templates/{slug}/`
+
+**Success Response (200):** the same object as the list item, plus:
+```json
+{
+    "id": "dt-1",
+    "slug": "certificate-editor__professional-certificate",
+    "name": "Professional Certificate",
+    "template_html": "<!DOCTYPE html>...",
+    "template_json": {
+        "schemaVersion": "1.0",
+        "documentType": {"id": "dt-1", "name": "Professional Certificate"},
+        "placeholders": ["{{Document ID}}", "{{Recipient Name}}"],
+        "dynamicVariables": [
+            {
+                "placeholder": "{{Recipient Name}}",
+                "fieldName": "Recipient Name",
+                "type": "text",
+                "required": true,
+                "sampleValue": "Ananya Sharma"
+            }
+        ],
+        "sampleData": {"Recipient Name": "Ananya Sharma"}
+    }
+}
+```
+
+The `template_html` / `template_json` keys match the create-template payload,
+so the response can be posted to `/document-template/` unchanged.
+
+**Error Response (404):**
+```json
+{"detail": "Predefined template not found"}
+```
+
+---
+
+### 9c. Import a Predefined Template
+
+**Endpoint:** `POST /predefined-templates/{slug}/import/`
+
+Creates the standard `DocumentType` for the caller's company if missing, then
+copies the package into a normal `DocumentTemplate`. No request body needed.
+
+**Success Response (201):** the created template, same shape as
+`POST /document-template/`.
+
+**Error Response (409) — already imported:**
+```json
+{
+    "detail": "This template has already been imported for your company.",
+    "code": "already_imported",
+    "template_id": 12
+}
+```
+
+Importing never overwrites user edits; use `PATCH /document-template/{id}` to
+change an imported template.
 
 ---
 
@@ -843,6 +1121,8 @@ curl -s -b cookies.txt -X POST http://localhost:8000/api/documents/ \
 | Endpoint | Isolation | Notes |
 |----------|-----------|-------|
 | `/auth/signup/` | N/A | Public |
+| `/auth/otp/verify/` | N/A | Public |
+| `/auth/otp/resend/` | N/A | Public |
 | `/auth/login/` | N/A | Public |
 | `/document-types/` | By Company | Only see own document types |
 | `/document-types/{id}/templates/` | By Company | See templates under a document type |

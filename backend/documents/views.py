@@ -2,9 +2,11 @@ from rest_framework import generics, status
 from rest_framework.permissions import IsAdminUser, IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from django.db import transaction
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.conf import settings
+from django.db.models import Prefetch
 from django.shortcuts import render
 from django.utils.timezone import now
 from .utils import render_certificate_html
@@ -23,6 +25,16 @@ from .serializers import (
     DocumentStatusUpdateSerializer,
 )
 from .authentication import CsrfExemptSessionAuthentication
+from .exceptions import DocumentLocked
+from . import predefined
+
+
+def ensure_document_editable(document):
+    """Reject writes on documents that have already been issued (ACTIVE)."""
+    if document.status == "ACTIVE":
+        raise DocumentLocked(
+            f"Document {document.pk} is ACTIVE and can no longer be modified."
+        )
 
 
 @method_decorator(csrf_exempt, name="dispatch")
@@ -33,8 +45,12 @@ class DocumentTypeListCreateAPIView(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return DocumentType.objects.filter(
-            company=self.request.user.company
+        company = self.request.user.company
+        return DocumentType.objects.filter(company=company).prefetch_related(
+            Prefetch(
+                "templates",
+                queryset=DocumentTemplate.objects.filter(company=company),
+            )
         )
 
     def get_serializer_context(self):
@@ -51,14 +67,72 @@ class DocumentTypeRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPI
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return DocumentType.objects.filter(
-            company=self.request.user.company
+        company = self.request.user.company
+        return DocumentType.objects.filter(company=company).prefetch_related(
+            Prefetch(
+                "templates",
+                queryset=DocumentTemplate.objects.filter(company=company),
+            )
         )
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
         context["request"] = self.request
         return context
+
+    def destroy(self, request, *args, **kwargs):
+        """
+        Delete a document type while keeping history that must survive.
+
+        - Documents with status ACTIVE are preserved and detached from the
+          document type (document_type = NULL).
+        - Documents in any other status (PENDING, EXPIRED, REVOKED) are deleted.
+        - Templates are preserved and detached from the document type so that
+          preserved documents can still be rendered with them.
+        """
+        from django.db import transaction
+
+        instance = self.get_object()
+        document_type_id = instance.pk
+        document_type_code = instance.code
+        document_type_name = instance.name
+
+        documents = CompanyDocument.objects.filter(document_type=instance)
+        active_documents = documents.filter(status="ACTIVE")
+        inactive_documents = documents.exclude(status="ACTIVE")
+        templates = DocumentTemplate.objects.filter(document_type=instance)
+
+        with transaction.atomic():
+            documents_preserved = active_documents.count()
+            documents_deleted = inactive_documents.count()
+            templates_detached = templates.count()
+
+            # Detach preserved documents before the type is removed. The FK is
+            # PROTECT, so this must happen before instance.delete().
+            active_documents.update(document_type=None)
+
+            # Non-active documents are discarded along with their fields.
+            inactive_documents.delete()
+
+            # Keep templates usable by the preserved documents.
+            templates.update(document_type=None)
+
+            instance.delete()
+
+        return Response(
+            {
+                "message": "Document type deleted successfully",
+                "document_type": {
+                    "id": document_type_id,
+                    "code": document_type_code,
+                    "name": document_type_name,
+                },
+                "documents_preserved": documents_preserved,
+                "documents_deleted": documents_deleted,
+                "templates_detached": templates_detached,
+            },
+            status=status.HTTP_200_OK,
+        )
 
 
 @method_decorator(csrf_exempt, name="dispatch")
@@ -96,6 +170,19 @@ class DocumentTemplateRetrieveUpdateDestroyAPIView(
         context = super().get_serializer_context()
         context["request"] = self.request
         return context
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+
+        # Templates cascade into CompanyDocument; deleting one that is used
+        # by ACTIVE documents would remove issued certificates.
+        if instance.template_documents.filter(status="ACTIVE").exists():
+            raise DocumentLocked(
+                "This template is used by ACTIVE documents and cannot be deleted."
+            )
+
+        instance.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 @method_decorator(csrf_exempt, name="dispatch")
@@ -274,6 +361,8 @@ class CompanyDocumentDetailView(APIView):
                 status=status.HTTP_404_NOT_FOUND
             )
 
+        ensure_document_editable(document)
+
         serializer = CompanyDocumentWithJsonSerializer(
             document,
             data=request.data,
@@ -293,6 +382,8 @@ class CompanyDocumentDetailView(APIView):
                 {"detail": "Document not found"},
                 status=status.HTTP_404_NOT_FOUND
             )
+
+        ensure_document_editable(document)
 
         document.delete()
 
@@ -339,7 +430,9 @@ class VerifyQRAPIView(APIView):
             {
                 "verified": True,
                 "company": document.company.organisation_name,
-                "document_type": document.document_type.name,
+                "document_type": (
+                    document.document_type.name if document.document_type else None
+                ),
                 "recipient": document.recipient,
                 "issued_date": document.issued_date,
                 "expiry_date": document.expiry_date,
@@ -396,6 +489,8 @@ class CompanyDocumentFieldUpdateView(APIView):
                 {"detail": "Document not found"},
                 status=status.HTTP_404_NOT_FOUND
             )
+
+        ensure_document_editable(document)
         
         serializer = PatchDocumentFieldSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -572,6 +667,110 @@ class CertificateRenderAPIView(APIView):
             {"rendered_html": rendered_html},
             status=status.HTTP_200_OK
         )
+
+
+@method_decorator(csrf_exempt, name="dispatch")
+class PredefinedTemplateListView(APIView):
+    """
+    GET /predefined-templates/
+
+    Catalog of the predefined template bundle shipped with the backend.
+    Returns metadata only; fetch a single package for its HTML and JSON.
+    """
+
+    authentication_classes = [CsrfExemptSessionAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        packages = predefined.list_packages()
+        return Response([predefined.summary(package) for package in packages])
+
+
+@method_decorator(csrf_exempt, name="dispatch")
+class PredefinedTemplateDetailView(APIView):
+    """
+    GET /predefined-templates/{slug}/
+
+    Full package (``template_html`` + ``template_json``) plus its metadata.
+    The payload can be posted as-is to /document-template/.
+    """
+
+    authentication_classes = [CsrfExemptSessionAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, slug):
+        package = predefined.get_package(slug)
+        if package is None:
+            return Response(
+                {"detail": "Predefined template not found"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+        return Response(predefined.detail(package))
+
+
+@method_decorator(csrf_exempt, name="dispatch")
+class PredefinedTemplateImportView(APIView):
+    """
+    POST /predefined-templates/{slug}/import/
+
+    Copies a predefined package into the caller's company as a regular
+    DocumentTemplate. The matching standard DocumentType is created for the
+    company if it does not exist yet. Importing the same package twice is
+    reported as a 409 instead of overwriting user edits.
+    """
+
+    authentication_classes = [CsrfExemptSessionAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, slug):
+        package = predefined.get_package(slug)
+        if package is None:
+            return Response(
+                {"detail": "Predefined template not found"},
+                status=status.HTTP_404_NOT_FOUND,
+            )
+
+        company = request.user.company
+        document_type_hint = package["document_type"]
+        max_length = DocumentTemplate._meta.get_field("template_name").max_length
+        template_name = package["name"][:max_length]
+
+        existing = DocumentTemplate.objects.filter(
+            company=company,
+            template_name=template_name,
+        ).first()
+        if existing is not None:
+            return Response(
+                {
+                    "detail": (
+                        "This template has already been imported for your "
+                        "company."
+                    ),
+                    "code": "already_imported",
+                    "template_id": existing.pk,
+                },
+                status=status.HTTP_409_CONFLICT,
+            )
+
+        with transaction.atomic():
+            document_type, _ = DocumentType.objects.get_or_create(
+                company=company,
+                code=document_type_hint["code"],
+                defaults={"name": document_type_hint["name"]},
+            )
+            template = DocumentTemplate.objects.create(
+                company=company,
+                document_type=document_type,
+                template_name=template_name,
+                template_json=package["json"],
+                template_html=package["html"],
+            )
+
+        serializer = DocumentTemplateSerializer(
+            template,
+            context={"request": request},
+        )
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 class HealthCheckAPIView(APIView):

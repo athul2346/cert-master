@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import CompanyProfile, CompanyVerificationDocument
+from .models import CompanyProfile, CompanyVerificationDocument, EmailOTP
 
 
 class VerificationDocInline(admin.TabularInline):
@@ -18,3 +18,11 @@ class CompanyProfileAdmin(admin.ModelAdmin):
 @admin.register(CompanyVerificationDocument)
 class CompanyVerificationDocumentAdmin(admin.ModelAdmin):
     list_display = ("company", "file", "uploaded_at")
+
+
+@admin.register(EmailOTP)
+class EmailOTPAdmin(admin.ModelAdmin):
+    list_display = ("user", "purpose", "created_at", "expires_at", "attempts", "consumed_at")
+    list_filter = ("purpose",)
+    search_fields = ("user__email",)
+    readonly_fields = ("code_hash", "created_at", "expires_at", "consumed_at")

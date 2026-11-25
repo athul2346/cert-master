@@ -53,6 +53,13 @@ INSTALLED_APPS = [
     "documents",
 ]
 
+REST_FRAMEWORK = {
+    # Turns duplicate-key / protected-row database errors into readable JSON
+    # conflicts instead of unhandled 500s. See backend/exception_handler.py.
+    "EXCEPTION_HANDLER": "backend.exception_handler.api_exception_handler",
+}
+
+
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
@@ -164,6 +171,47 @@ MEDIA_URL = ""
 MEDIA_ROOT = BASE_DIR / "media"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# Folder that holds the predefined template bundle (.html + .json packages).
+# See documents/predefined.py for the expected layout.
+PREDEFINED_TEMPLATES_DIR = BASE_DIR / "documents" / "predefined_templates"
+
+
+# ------------------------------------------------------------------
+# Email (SMTP) + signup OTP
+# ------------------------------------------------------------------
+
+# If EMAIL_HOST is not set we fall back to the console backend so local
+# development works without an SMTP server (codes are printed to the runserver
+# console). In production set EMAIL_HOST (and the other SMTP vars) in the env.
+EMAIL_BACKEND = os.getenv("EMAIL_BACKEND") or (
+    "django.core.mail.backends.smtp.EmailBackend"
+    if os.getenv("EMAIL_HOST")
+    else "django.core.mail.backends.console.EmailBackend"
+)
+
+EMAIL_HOST = os.getenv("EMAIL_HOST", "localhost")
+EMAIL_PORT = int(os.getenv("EMAIL_PORT", "587"))
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
+
+EMAIL_USE_SSL = os.getenv("EMAIL_USE_SSL", "false").lower() == "true"
+# TLS and SSL are mutually exclusive.
+EMAIL_USE_TLS = (
+    os.getenv("EMAIL_USE_TLS", "true").lower() == "true" and not EMAIL_USE_SSL
+)
+EMAIL_TIMEOUT = int(os.getenv("EMAIL_TIMEOUT", "10"))
+
+DEFAULT_FROM_EMAIL = os.getenv(
+    "DEFAULT_FROM_EMAIL", EMAIL_HOST_USER or "no-reply@localhost"
+)
+
+# OTP behaviour
+OTP_LENGTH = int(os.getenv("OTP_LENGTH", "6"))
+OTP_EXPIRY_MINUTES = int(os.getenv("OTP_EXPIRY_MINUTES", "10"))
+OTP_RESEND_COOLDOWN_SECONDS = int(os.getenv("OTP_RESEND_COOLDOWN_SECONDS", "60"))
+OTP_MAX_ATTEMPTS = int(os.getenv("OTP_MAX_ATTEMPTS", "5"))
+OTP_EMAIL_SUBJECT = os.getenv("OTP_EMAIL_SUBJECT", "Your verification code")
 
 
 # ------------------------------------------------------------------

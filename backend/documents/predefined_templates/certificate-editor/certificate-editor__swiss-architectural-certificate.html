@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="template-editor" content="certificate-editor">
+  <meta name="template-editor-label" content="Certificate Editor (Canvas)">
+  <meta name="template-page-size" content="Certificate (Standard)">
+  <meta name="template-dimensions-mm" content="297mm x 210mm">
+  <meta name="template-orientation" content="Landscape">
+  <meta name="template-total-pages" content="1">
+  <title>Swiss Architectural Credential (Certificate Editor (Canvas) | Certificate (Standard) Landscape)</title>
+  <!--
+    TEMPLATE METADATA & DYNAMIC VALUES (4 fields)
+    Editor: Certificate Editor (Canvas) (certificate-editor)
+    Page Size: Certificate (Standard) | Dimensions: 297mm x 210mm | Orientation: Landscape | Pages: 1
+    Logical Stage: 792px x 560px (scaled 1.417323x into 297mm x 210mm for 1:1 editor parity)
+    Render State: tokenized
+    {{Document ID}} | type: text | required: yes | sample: VERIFIED-425717
+    {{Recipient Name}} | type: text | required: yes | sample: Ananya Sharma
+    {{Course Title}} | type: text | required: yes | sample: Advanced Distributed Systems
+    {{Issue Date}} | type: date | required: yes | sample: 2026-11-21
+  -->
+  <script id="template-dynamic-values" type="application/json">
+{
+  "templateId": "t-swiss-arch",
+  "templateName": "Swiss Architectural Grid",
+  "documentTypeId": "dt-swiss-arch",
+  "documentTypeName": "Swiss Architectural Credential",
+  "editor": "certificate-editor",
+  "editorLabel": "Certificate Editor (Canvas)",
+  "mode": "canvas",
+  "renderState": "tokenized",
+  "pageSpec": {
+    "sizeName": "Certificate (Standard)",
+    "widthMm": 297,
+    "heightMm": 210,
+    "orientation": "Landscape",
+    "logicalStagePx": {
+      "width": 792,
+      "height": 560,
+      "scaleX": 1.417323,
+      "scaleY": 1.417323
+    },
+    "totalPages": 1
+  },
+  "pagination": {
+    "totalPages": 1,
+    "singleHtmlMultiPage": false,
+    "pageDelimiter": "\u003c!-- PAGE_BREAK -->",
+    "pageSelector": "section.doc-page[data-page-number]",
+    "pageCutSelector": ".doc-page-cut[data-page-break=\"true\"]",
+    "pageSizeMm": {
+      "sizeName": "Certificate (Standard)",
+      "width": 297,
+      "height": 210,
+      "orientation": "Landscape"
+    },
+    "pages": [
+      {
+        "pageNumber": 1,
+        "id": "page-1",
+        "hasHeader": false,
+        "hasFooter": false,
+        "hasQr": true
+      }
+    ]
+  },
+  "placeholders": [
+    "{{Document ID}}",
+    "{{Recipient Name}}",
+    "{{Course Title}}",
+    "{{Issue Date}}"
+  ],
+  "dynamicVariables": [
+    {
+      "placeholder": "{{Document ID}}",
+      "fieldName": "Document ID",
+      "type": "text",
+      "required": true,
+      "sampleValue": "VERIFIED-425717"
+    },
+    {
+      "placeholder": "{{Recipient Name}}",
+      "fieldName": "Recipient Name",
+      "type": "text",
+      "required": true,
+      "sampleValue": "Ananya Sharma"
+    },
+    {
+      "placeholder": "{{Course Title}}",
+      "fieldName": "Course Title",
+      "type": "text",
+      "required": true,
+      "sampleValue": "Advanced Distributed Systems"
+    },
+    {
+      "placeholder": "{{Issue Date}}",
+      "fieldName": "Issue Date",
+      "type": "date",
+      "required": true,
+      "sampleValue": "2026-11-21"
+    }
+  ],
+  "sampleData": {
+    "Document ID": "VERIFIED-425717",
+    "Recipient Name": "Ananya Sharma",
+    "Course Title": "Advanced Distributed Systems",
+    "Issue Date": "2026-11-21"
+  }
+}
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    /* CSS Reset for Exact 1:1 Vector Print & Headless PDF Generation (Puppeteer / WeasyPrint) */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    @page {
+      size: 297mm 210mm;
+      margin: 0;
+    }
+    html, body {
+      width: 100%;
+      min-height: 100vh;
+      background-color: #e2e8f0;
+      font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: #161616;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+      line-height: 1.4;
+    }
+    /* Framed Single-HTML Sheet Container (Screen Preview) */
+    .doc-pages {
+      width: 100%;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 20px 16px 32px 16px;
+    }
+    .doc-page {
+      width: 297mm;
+      min-height: 210mm;
+      height: 210mm;
+      background-color: #ffffff;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      flex-shrink: 0;
+      box-shadow: 0 6px 24px rgba(15, 23, 42, 0.14);
+      border: 1px solid #cbd5e1;
+    }
+    .canvas-page {
+      display: block;
+    }
+    .canvas-stage {
+      position: relative;
+      width: 792px;
+      height: 560px;
+      overflow: hidden;
+      background-color: #ffffff;
+      transform-origin: top left;
+    }
+    .canvas-element {
+      position: absolute;
+      box-sizing: border-box;
+    }
+    .canvas-text, .canvas-variable {
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .doc-body table {
+      max-width: 100%;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+    .doc-body tr, .doc-body thead {
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+    .doc-page-cut {
+      width: 297mm;
+      margin: 14px auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      flex-shrink: 0;
+    }
+    .doc-page-cut::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 50%;
+      border-top: 1.5px dashed #94a3b8;
+    }
+    .doc-page-cut-label {
+      position: relative;
+      z-index: 1;
+      background: #e2e8f0;
+      color: #475569;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 2px 10px;
+      border: 1px solid #cbd5e1;
+    }
+    .doc-container h1 { font-size: 20pt; font-weight: 700; margin-bottom: 12pt; }
+    .doc-container h2 { font-size: 15pt; font-weight: 600; margin-top: 14pt; margin-bottom: 8pt; }
+    .doc-container p { font-size: 10.5pt; margin-bottom: 10pt; line-height: 1.6; }
+    .page-break { page-break-after: always; break-after: page; height: 0; border: none; }
+    @media print {
+      html, body {
+        width: 297mm;
+        height: auto;
+        min-height: 0;
+        background-color: #ffffff !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+      .doc-pages {
+        display: block;
+        min-height: 0;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+      .doc-page {
+        margin: 0 !important;
+        border: none !important;
+        box-shadow: none !important;
+        page-break-after: always;
+        break-after: page;
+      }
+      .doc-page:last-of-type {
+        page-break-after: auto;
+        break-after: auto;
+      }
+      .doc-page-cut, .doc-page-cut-label {
+        display: none !important;
+        height: 0 !important;
+        margin: 0 !important;
+        border: none !important;
+      }
+    }
+  </style>
+</head>
+<body data-template-id="t-swiss-arch" data-document-type="dt-swiss-arch" data-editor="certificate-editor" data-template-mode="canvas" data-page-size="Certificate (Standard)" data-width-mm="297" data-height-mm="210" data-orientation="Landscape" data-total-pages="1" data-render-state="tokenized" data-dynamic-fields="Document ID, Recipient Name, Course Title, Issue Date">
+  
+<main class="doc-pages canvas-pages" data-editor="certificate-editor" data-total-pages="1" data-page-size="Certificate (Standard)" data-width-mm="297" data-height-mm="210" data-orientation="Landscape">
+  <!-- PAGE 1 OF 1 | Certificate Editor (Canvas) | Certificate (Standard) (297mm x 210mm, Landscape) -->
+  <section class="doc-page canvas-page" id="page-1" data-editor="certificate-editor" data-page-number="1" data-total-pages="1" data-page-size="Certificate (Standard)" data-width-mm="297" data-height-mm="210" data-orientation="Landscape" style="width: 297mm; height: 210mm; background-color: #ffffff; position: relative; overflow: hidden; box-sizing: border-box;">
+    
+    <div class="canvas-stage" data-logical-width-px="792" data-logical-height-px="560" data-scale-x="1.417323" data-scale-y="1.417323" style="position: relative; width: 792px; height: 560px; background-color: #ffffff; overflow: hidden; box-sizing: border-box; transform: scale(1.417323, 1.417323); transform-origin: top left;">
+      <div class="canvas-element canvas-shape" data-element-id="sm-frame" data-shape-type="rect" style="position: absolute; left: 4%; top: 5%; width: 92%; height: 90%; z-index: 0; transform: rotate(0deg); opacity: 1; background-color: transparent; border: none; border-radius: 0px; display: flex; align-items: center; justify-content: flex-start; box-sizing: border-box; overflow: hidden; padding: 0"><div style="width:100%;height:100%;background-color:transparent;border:1px solid #161616;border-radius:0px;box-sizing:border-box;"></div></div>
+      <div class="canvas-element canvas-text" data-element-id="sm-tag" style="position: absolute; left: 8%; top: 10%; width: 84%; height: 5%; z-index: 1; transform: rotate(0deg); opacity: 1; background-color: transparent; border: none; border-radius: 0px; display: flex; align-items: center; justify-content: flex-start; box-sizing: border-box; overflow: hidden; padding: 0 2px"><span style="width: 100%; display: block; font-size: 9px; font-family: 'IBM Plex Sans', sans-serif; font-weight: 700; font-style: normal; color: #161616; text-align: left; letter-spacing: 3px; line-height: 1.2; white-space: pre-wrap; word-break: break-word">YOUR ORGANIZATION NAME • OFFICIAL RECORD</span></div>
+      <div class="canvas-element canvas-shape" data-element-id="sm-line-top" data-shape-type="line" style="position: absolute; left: 8%; top: 17%; width: 84%; height: 0.5%; z-index: 1; transform: rotate(0deg); opacity: 1; background-color: transparent; border: none; border-radius: 0px; display: flex; align-items: center; justify-content: flex-start; box-sizing: border-box; overflow: hidden; padding: 0"><div style="width:100%;height:2px;background-color:#161616;"></div></div>
+      <div class="canvas-element canvas-text" data-element-id="sm-title" style="position: absolute; left: 8%; top: 22%; width: 84%; height: 8%; z-index: 1; transform: rotate(0deg); opacity: 1; background-color: transparent; border: none; border-radius: 0px; display: flex; align-items: center; justify-content: flex-start; box-sizing: border-box; overflow: hidden; padding: 0 2px"><span style="width: 100%; display: block; font-size: 28px; font-family: 'IBM Plex Sans', sans-serif; font-weight: 400; font-style: normal; color: #161616; text-align: left; letter-spacing: 1px; line-height: 1.2; white-space: pre-wrap; word-break: break-word">CERTIFICATION OF COMPLETION</span></div>
+      <div class="canvas-element canvas-variable" data-element-id="sm-recipient" data-dynamic-field="Recipient Name" data-dynamic-token="{{Recipient Name}}" data-sample-value="Ananya Sharma" style="position: absolute; left: 8%; top: 36%; width: 84%; height: 12%; z-index: 1; transform: rotate(0deg); opacity: 1; background-color: transparent; border: none; border-radius: 0px; display: flex; align-items: center; justify-content: flex-start; box-sizing: border-box; overflow: hidden; padding: 0 2px"><span style="width: 100%; display: block; font-size: 44px; font-family: 'IBM Plex Sans', sans-serif; font-weight: 700; font-style: normal; color: #161616; text-align: left; letter-spacing: normal; line-height: 1.2; white-space: pre-wrap; word-break: break-word">{{Recipient Name}}</span></div>
+      <div class="canvas-element canvas-variable" data-element-id="sm-course" data-dynamic-field="Course Title" data-dynamic-token="{{Course Title}}" data-sample-value="Advanced Distributed Systems" style="position: absolute; left: 8%; top: 52%; width: 84%; height: 7%; z-index: 1; transform: rotate(0deg); opacity: 1; background-color: transparent; border: none; border-radius: 0px; display: flex; align-items: center; justify-content: flex-start; box-sizing: border-box; overflow: hidden; padding: 0 2px"><span style="width: 100%; display: block; font-size: 18px; font-family: 'IBM Plex Sans', sans-serif; font-weight: 500; font-style: normal; color: #525252; text-align: left; letter-spacing: normal; line-height: 1.2; white-space: pre-wrap; word-break: break-word">{{Course Title}}</span></div>
+      <div class="canvas-element canvas-text" data-element-id="sm-desc" data-dynamic-field="Issue Date" data-dynamic-token="{{Issue Date}}" data-sample-value="In witness whereof, this certificate has been issued under the seal of the authority on 2026-11-21." style="position: absolute; left: 8%; top: 62%; width: 60%; height: 8%; z-index: 1; transform: rotate(0deg); opacity: 1; background-color: transparent; border: none; border-radius: 0px; display: flex; align-items: center; justify-content: flex-start; box-sizing: border-box; overflow: hidden; padding: 0 2px"><span style="width: 100%; display: block; font-size: 11px; font-family: 'IBM Plex Sans', sans-serif; font-weight: 400; font-style: normal; color: #8d8d8d; text-align: left; letter-spacing: normal; line-height: 1.2; white-space: pre-wrap; word-break: break-word">In witness whereof, this certificate has been issued under the seal of the authority on {{Issue Date}}.</span></div>
+      <div class="canvas-element canvas-shape" data-element-id="sm-seal" data-shape-type="star" style="position: absolute; left: 74%; top: 70%; width: 14%; height: 14%; z-index: 1; transform: rotate(0deg); opacity: 1; background-color: transparent; border: none; border-radius: 0px; display: flex; align-items: center; justify-content: flex-start; box-sizing: border-box; overflow: hidden; padding: 0"><svg viewBox="0 0 100 100" width="100%" height="100%" preserveAspectRatio="none" style="display:block;width:100%;height:100%;"><polygon points="50,2 61,35 98,35 68,57 79,91 50,70 21,91 32,57 2,35 39,35" fill="#161616" stroke="none" /></svg></div>
+      <div class="canvas-element canvas-qr" data-element-id="sm-qr" data-dynamic-field="Document ID" data-qr-target="https://authensia.com/verify/{{Document ID}}" data-sample-value="VERIFIED-425717" style="position: absolute; left: 8%; top: 74%; width: 14%; height: 14%; z-index: 1; transform: rotate(0deg); opacity: 1; background-color: #ffffff; border: 1px solid #161616; border-radius: 0px; display: flex; align-items: center; justify-content: flex-start; box-sizing: border-box; overflow: hidden; padding: 0">
+      <div style="width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box;">
+        
+        <div style="flex: 1; width: 100%; min-height: 0; box-sizing: border-box; display: flex; flex-direction: column;">
+          
+      <div style="width: 100%; height: 100%; display: flex; flex-direction: column; background: #ffffff; color: #161616; border: 0.5pt solid #e2e8f0; box-sizing: border-box; overflow: hidden; text-align: center;">
+        <div style="padding: 1mm 1.5mm; border-bottom: 0.5pt solid rgba(0,0,0,0.06); background: rgba(0,0,0,0.02); display: flex; justify-content: space-between; align-items: center; box-sizing: border-box;">
+          <span style="font-size: 3.8pt; font-family: 'IBM Plex Mono'; font-weight: 600; color: #64748b; text-transform: uppercase;">VERIFIED RECORD</span>
+          <span style="font-size: 4.5pt; font-family: 'IBM Plex Sans'; font-weight: 600; color: #334155;">Swiss Architectural Credential</span>
+        </div>
+        <div style="flex: 1; padding: 1.5mm; box-sizing: border-box; display: flex; align-items: center; justify-content: center;">
+          <div style="width: 82%; height: 82%; background: #ffffff; padding: 0.5mm; border: 0.5pt solid rgba(0,0,0,0.06); display: flex; align-items: center; justify-content: center;">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 35 35" shape-rendering="crispEdges" style="width:100%;height:100%;display:block;"><path fill="#ffffff" d="M0 0h35v35H0z"/><path fill="#000000" d="M1 1h1v1h-1zM2 1h1v1h-1zM3 1h1v1h-1zM4 1h1v1h-1zM5 1h1v1h-1zM6 1h1v1h-1zM7 1h1v1h-1zM9 1h1v1h-1zM11 1h1v1h-1zM13 1h1v1h-1zM14 1h1v1h-1zM15 1h1v1h-1zM17 1h1v1h-1zM18 1h1v1h-1zM19 1h1v1h-1zM20 1h1v1h-1zM24 1h1v1h-1zM27 1h1v1h-1zM28 1h1v1h-1zM29 1h1v1h-1zM30 1h1v1h-1zM31 1h1v1h-1zM32 1h1v1h-1zM33 1h1v1h-1zM1 2h1v1h-1zM7 2h1v1h-1zM9 2h1v1h-1zM12 2h1v1h-1zM13 2h1v1h-1zM14 2h1v1h-1zM17 2h1v1h-1zM19 2h1v1h-1zM22 2h1v1h-1zM23 2h1v1h-1zM24 2h1v1h-1zM25 2h1v1h-1zM27 2h1v1h-1zM33 2h1v1h-1zM1 3h1v1h-1zM3 3h1v1h-1zM4 3h1v1h-1zM5 3h1v1h-1zM7 3h1v1h-1zM11 3h1v1h-1zM12 3h1v1h-1zM16 3h1v1h-1zM18 3h1v1h-1zM20 3h1v1h-1zM21 3h1v1h-1zM22 3h1v1h-1zM23 3h1v1h-1zM25 3h1v1h-1zM27 3h1v1h-1zM29 3h1v1h-1zM30 3h1v1h-1zM31 3h1v1h-1zM33 3h1v1h-1zM1 4h1v1h-1zM3 4h1v1h-1zM4 4h1v1h-1zM5 4h1v1h-1zM7 4h1v1h-1zM9 4h1v1h-1zM10 4h1v1h-1zM11 4h1v1h-1zM12 4h1v1h-1zM13 4h1v1h-1zM15 4h1v1h-1zM17 4h1v1h-1zM20 4h1v1h-1zM21 4h1v1h-1zM22 4h1v1h-1zM23 4h1v1h-1zM25 4h1v1h-1zM27 4h1v1h-1zM29 4h1v1h-1zM30 4h1v1h-1zM31 4h1v1h-1zM33 4h1v1h-1zM1 5h1v1h-1zM3 5h1v1h-1zM4 5h1v1h-1zM5 5h1v1h-1zM7 5h1v1h-1zM11 5h1v1h-1zM12 5h1v1h-1zM13 5h1v1h-1zM14 5h1v1h-1zM15 5h1v1h-1zM21 5h1v1h-1zM22 5h1v1h-1zM24 5h1v1h-1zM27 5h1v1h-1zM29 5h1v1h-1zM30 5h1v1h-1zM31 5h1v1h-1zM33 5h1v1h-1zM1 6h1v1h-1zM7 6h1v1h-1zM10 6h1v1h-1zM12 6h1v1h-1zM18 6h1v1h-1zM19 6h1v1h-1zM20 6h1v1h-1zM21 6h1v1h-1zM22 6h1v1h-1zM25 6h1v1h-1zM27 6h1v1h-1zM33 6h1v1h-1zM1 7h1v1h-1zM2 7h1v1h-1zM3 7h1v1h-1zM4 7h1v1h-1zM5 7h1v1h-1zM6 7h1v1h-1zM7 7h1v1h-1zM9 7h1v1h-1zM11 7h1v1h-1zM13 7h1v1h-1zM15 7h1v1h-1zM17 7h1v1h-1zM19 7h1v1h-1zM21 7h1v1h-1zM23 7h1v1h-1zM25 7h1v1h-1zM27 7h1v1h-1zM28 7h1v1h-1zM29 7h1v1h-1zM30 7h1v1h-1zM31 7h1v1h-1zM32 7h1v1h-1zM33 7h1v1h-1zM9 8h1v1h-1zM12 8h1v1h-1zM13 8h1v1h-1zM18 8h1v1h-1zM19 8h1v1h-1zM21 8h1v1h-1zM24 8h1v1h-1zM25 8h1v1h-1zM1 9h1v1h-1zM3 9h1v1h-1zM4 9h1v1h-1zM6 9h1v1h-1zM7 9h1v1h-1zM8 9h1v1h-1zM11 9h1v1h-1zM12 9h1v1h-1zM15 9h1v1h-1zM17 9h1v1h-1zM18 9h1v1h-1zM19 9h1v1h-1zM20 9h1v1h-1zM22 9h1v1h-1zM24 9h1v1h-1zM27 9h1v1h-1zM30 9h1v1h-1zM32 9h1v1h-1zM33 9h1v1h-1zM2 10h1v1h-1zM3 10h1v1h-1zM4 10h1v1h-1zM6 10h1v1h-1zM9 10h1v1h-1zM10 10h1v1h-1zM12 10h1v1h-1zM15 10h1v1h-1zM20 10h1v1h-1zM21 10h1v1h-1zM22 10h1v1h-1zM23 10h1v1h-1zM24 10h1v1h-1zM27 10h1v1h-1zM28 10h1v1h-1zM30 10h1v1h-1zM31 10h1v1h-1zM33 10h1v1h-1zM2 11h1v1h-1zM4 11h1v1h-1zM5 11h1v1h-1zM7 11h1v1h-1zM8 11h1v1h-1zM9 11h1v1h-1zM11 11h1v1h-1zM12 11h1v1h-1zM15 11h1v1h-1zM17 11h1v1h-1zM18 11h1v1h-1zM24 11h1v1h-1zM26 11h1v1h-1zM27 11h1v1h-1zM28 11h1v1h-1zM29 11h1v1h-1zM30 11h1v1h-1zM32 11h1v1h-1zM33 11h1v1h-1zM1 12h1v1h-1zM3 12h1v1h-1zM5 12h1v1h-1zM6 12h1v1h-1zM9 12h1v1h-1zM10 12h1v1h-1zM12 12h1v1h-1zM13 12h1v1h-1zM14 12h1v1h-1zM15 12h1v1h-1zM17 12h1v1h-1zM19 12h1v1h-1zM21 12h1v1h-1zM26 12h1v1h-1zM28 12h1v1h-1zM30 12h1v1h-1zM33 12h1v1h-1zM7 13h1v1h-1zM9 13h1v1h-1zM12 13h1v1h-1zM19 13h1v1h-1zM20 13h1v1h-1zM22 13h1v1h-1zM24 13h1v1h-1zM29 13h1v1h-1zM30 13h1v1h-1zM32 13h1v1h-1zM33 13h1v1h-1zM2 14h1v1h-1zM3 14h1v1h-1zM4 14h1v1h-1zM6 14h1v1h-1zM8 14h1v1h-1zM11 14h1v1h-1zM12 14h1v1h-1zM14 14h1v1h-1zM17 14h1v1h-1zM18 14h1v1h-1zM19 14h1v1h-1zM23 14h1v1h-1zM25 14h1v1h-1zM28 14h1v1h-1zM30 14h1v1h-1zM32 14h1v1h-1zM1 15h1v1h-1zM2 15h1v1h-1zM3 15h1v1h-1zM4 15h1v1h-1zM5 15h1v1h-1zM7 15h1v1h-1zM9 15h1v1h-1zM11 15h1v1h-1zM12 15h1v1h-1zM13 15h1v1h-1zM16 15h1v1h-1zM17 15h1v1h-1zM18 15h1v1h-1zM19 15h1v1h-1zM22 15h1v1h-1zM23 15h1v1h-1zM25 15h1v1h-1zM27 15h1v1h-1zM30 15h1v1h-1zM31 15h1v1h-1zM2 16h1v1h-1zM3 16h1v1h-1zM4 16h1v1h-1zM9 16h1v1h-1zM10 16h1v1h-1zM11 16h1v1h-1zM12 16h1v1h-1zM13 16h1v1h-1zM14 16h1v1h-1zM15 16h1v1h-1zM17 16h1v1h-1zM19 16h1v1h-1zM20 16h1v1h-1zM21 16h1v1h-1zM22 16h1v1h-1zM23 16h1v1h-1zM26 16h1v1h-1zM27 16h1v1h-1zM29 16h1v1h-1zM30 16h1v1h-1zM31 16h1v1h-1zM1 17h1v1h-1zM7 17h1v1h-1zM9 17h1v1h-1zM10 17h1v1h-1zM13 17h1v1h-1zM14 17h1v1h-1zM15 17h1v1h-1zM16 17h1v1h-1zM17 17h1v1h-1zM19 17h1v1h-1zM20 17h1v1h-1zM21 17h1v1h-1zM22 17h1v1h-1zM23 17h1v1h-1zM26 17h1v1h-1zM27 17h1v1h-1zM29 17h1v1h-1zM31 17h1v1h-1zM1 18h1v1h-1zM4 18h1v1h-1zM5 18h1v1h-1zM6 18h1v1h-1zM11 18h1v1h-1zM12 18h1v1h-1zM16 18h1v1h-1zM18 18h1v1h-1zM21 18h1v1h-1zM22 18h1v1h-1zM23 18h1v1h-1zM24 18h1v1h-1zM25 18h1v1h-1zM26 18h1v1h-1zM27 18h1v1h-1zM29 18h1v1h-1zM30 18h1v1h-1zM32 18h1v1h-1zM33 18h1v1h-1zM4 19h1v1h-1zM7 19h1v1h-1zM8 19h1v1h-1zM13 19h1v1h-1zM14 19h1v1h-1zM15 19h1v1h-1zM16 19h1v1h-1zM18 19h1v1h-1zM21 19h1v1h-1zM23 19h1v1h-1zM25 19h1v1h-1zM28 19h1v1h-1zM29 19h1v1h-1zM31 19h1v1h-1zM32 19h1v1h-1zM1 20h1v1h-1zM5 20h1v1h-1zM6 20h1v1h-1zM10 20h1v1h-1zM12 20h1v1h-1zM15 20h1v1h-1zM16 20h1v1h-1zM17 20h1v1h-1zM20 20h1v1h-1zM21 20h1v1h-1zM22 20h1v1h-1zM24 20h1v1h-1zM25 20h1v1h-1zM27 20h1v1h-1zM29 20h1v1h-1zM33 20h1v1h-1zM2 21h1v1h-1zM3 21h1v1h-1zM7 21h1v1h-1zM9 21h1v1h-1zM10 21h1v1h-1zM11 21h1v1h-1zM14 21h1v1h-1zM15 21h1v1h-1zM19 21h1v1h-1zM20 21h1v1h-1zM21 21h1v1h-1zM25 21h1v1h-1zM30 21h1v1h-1zM31 21h1v1h-1zM1 22h1v1h-1zM3 22h1v1h-1zM4 22h1v1h-1zM8 22h1v1h-1zM9 22h1v1h-1zM10 22h1v1h-1zM11 22h1v1h-1zM12 22h1v1h-1zM13 22h1v1h-1zM14 22h1v1h-1zM16 22h1v1h-1zM19 22h1v1h-1zM24 22h1v1h-1zM30 22h1v1h-1zM31 22h1v1h-1zM33 22h1v1h-1zM3 23h1v1h-1zM4 23h1v1h-1zM5 23h1v1h-1zM6 23h1v1h-1zM7 23h1v1h-1zM9 23h1v1h-1zM15 23h1v1h-1zM17 23h1v1h-1zM18 23h1v1h-1zM19 23h1v1h-1zM24 23h1v1h-1zM27 23h1v1h-1zM28 23h1v1h-1zM32 23h1v1h-1zM33 23h1v1h-1zM2 24h1v1h-1zM11 24h1v1h-1zM14 24h1v1h-1zM17 24h1v1h-1zM19 24h1v1h-1zM20 24h1v1h-1zM25 24h1v1h-1zM28 24h1v1h-1zM29 24h1v1h-1zM30 24h1v1h-1zM32 24h1v1h-1zM1 25h1v1h-1zM5 25h1v1h-1zM7 25h1v1h-1zM8 25h1v1h-1zM11 25h1v1h-1zM12 25h1v1h-1zM13 25h1v1h-1zM15 25h1v1h-1zM16 25h1v1h-1zM18 25h1v1h-1zM23 25h1v1h-1zM25 25h1v1h-1zM26 25h1v1h-1zM27 25h1v1h-1zM28 25h1v1h-1zM29 25h1v1h-1zM32 25h1v1h-1zM33 25h1v1h-1zM9 26h1v1h-1zM11 26h1v1h-1zM12 26h1v1h-1zM16 26h1v1h-1zM17 26h1v1h-1zM18 26h1v1h-1zM19 26h1v1h-1zM20 26h1v1h-1zM25 26h1v1h-1zM29 26h1v1h-1zM30 26h1v1h-1zM33 26h1v1h-1zM1 27h1v1h-1zM2 27h1v1h-1zM3 27h1v1h-1zM4 27h1v1h-1zM5 27h1v1h-1zM6 27h1v1h-1zM7 27h1v1h-1zM9 27h1v1h-1zM20 27h1v1h-1zM23 27h1v1h-1zM24 27h1v1h-1zM25 27h1v1h-1zM27 27h1v1h-1zM29 27h1v1h-1zM1 28h1v1h-1zM7 28h1v1h-1zM9 28h1v1h-1zM10 28h1v1h-1zM13 28h1v1h-1zM14 28h1v1h-1zM16 28h1v1h-1zM20 28h1v1h-1zM21 28h1v1h-1zM22 28h1v1h-1zM23 28h1v1h-1zM24 28h1v1h-1zM25 28h1v1h-1zM29 28h1v1h-1zM30 28h1v1h-1zM31 28h1v1h-1zM32 28h1v1h-1zM33 28h1v1h-1zM1 29h1v1h-1zM3 29h1v1h-1zM4 29h1v1h-1zM5 29h1v1h-1zM7 29h1v1h-1zM10 29h1v1h-1zM15 29h1v1h-1zM16 29h1v1h-1zM18 29h1v1h-1zM20 29h1v1h-1zM21 29h1v1h-1zM24 29h1v1h-1zM25 29h1v1h-1zM26 29h1v1h-1zM27 29h1v1h-1zM28 29h1v1h-1zM29 29h1v1h-1zM31 29h1v1h-1zM1 30h1v1h-1zM3 30h1v1h-1zM4 30h1v1h-1zM5 30h1v1h-1zM7 30h1v1h-1zM9 30h1v1h-1zM11 30h1v1h-1zM12 30h1v1h-1zM13 30h1v1h-1zM15 30h1v1h-1zM19 30h1v1h-1zM20 30h1v1h-1zM21 30h1v1h-1zM24 30h1v1h-1zM28 30h1v1h-1zM30 30h1v1h-1zM31 30h1v1h-1zM32 30h1v1h-1zM33 30h1v1h-1zM1 31h1v1h-1zM3 31h1v1h-1zM4 31h1v1h-1zM5 31h1v1h-1zM7 31h1v1h-1zM9 31h1v1h-1zM14 31h1v1h-1zM18 31h1v1h-1zM19 31h1v1h-1zM20 31h1v1h-1zM22 31h1v1h-1zM24 31h1v1h-1zM25 31h1v1h-1zM26 31h1v1h-1zM27 31h1v1h-1zM28 31h1v1h-1zM30 31h1v1h-1zM31 31h1v1h-1zM1 32h1v1h-1zM7 32h1v1h-1zM10 32h1v1h-1zM14 32h1v1h-1zM16 32h1v1h-1zM17 32h1v1h-1zM18 32h1v1h-1zM20 32h1v1h-1zM23 32h1v1h-1zM24 32h1v1h-1zM28 32h1v1h-1zM29 32h1v1h-1zM33 32h1v1h-1zM1 33h1v1h-1zM2 33h1v1h-1zM3 33h1v1h-1zM4 33h1v1h-1zM5 33h1v1h-1zM6 33h1v1h-1zM7 33h1v1h-1zM9 33h1v1h-1zM10 33h1v1h-1zM12 33h1v1h-1zM14 33h1v1h-1zM16 33h1v1h-1zM17 33h1v1h-1zM18 33h1v1h-1zM19 33h1v1h-1zM22 33h1v1h-1zM23 33h1v1h-1zM24 33h1v1h-1zM29 33h1v1h-1zM31 33h1v1h-1z"/></svg>
+          </div>
+        </div>
+        <div style="padding: 1mm 1mm; border-top: 0.5pt solid rgba(0,0,0,0.06); background: rgba(0,0,0,0.02); box-sizing: border-box;">
+          <div style="font-size: 3.5pt; font-family: 'IBM Plex Mono'; color: #64748b;">REF: {{Document ID}}</div>
+          <div style="font-size: 4pt; font-family: 'IBM Plex Sans'; color: #475569; margin-top: 0.3mm;">Scan to verify credential authenticity</div>
+        </div>
+      </div>
+    
+        </div>
+        <div style="width: 100%; height: 3px; background-color: #0f62fe; flex-shrink: 0;"></div>
+      </div>
+    </div>
+    </div>
+  </section>
+</main>
+</body>
+</html>

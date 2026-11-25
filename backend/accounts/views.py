@@ -6,15 +6,26 @@ from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from django.contrib.auth import login, logout
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
+from django.db import transaction
 from django.db.models import Count, Q
 from django.utils.timezone import now
-from .models import CompanyProfile, CompanyVerificationDocument
+from .models import CompanyProfile, CompanyVerificationDocument, User
+from .otp import (
+    OTPCooldownError,
+    OTPDeliveryError,
+    OTPError,
+    OTPTooManyAttemptsError,
+    request_otp,
+    verify_otp,
+)
 from .serializers import (
     LoginSerializer,
     CompanySignupSerializer,
     EntitySerializer,
     VerificationQueueSerializer,
     VerificationActionSerializer,
+    OTPVerifySerializer,
+    OTPResendSerializer,
 )
 
 
@@ -75,24 +86,166 @@ class CompanySignupView(APIView):
     def post(self, request):
         serializer = CompanySignupSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        user = serializer.save()
 
-        # Attach any verification documents uploaded with the signup
-        # (multipart field name: "documents", repeatable)
-        docs = request.FILES.getlist("documents")
-        for f in docs:
-            CompanyVerificationDocument.objects.create(
-                company=user.company, file=f
+        with transaction.atomic():
+            user = serializer.save()
+
+            # Attach any verification documents uploaded with the signup
+            # (multipart field name: "documents", repeatable)
+            docs = request.FILES.getlist("documents")
+            for f in docs:
+                CompanyVerificationDocument.objects.create(
+                    company=user.company, file=f
+                )
+
+        # The account exists from here on, so an email failure must not roll it
+        # back. The client can retry via the OTP resend endpoint.
+        otp_sent = True
+        try:
+            request_otp(user)
+        except OTPDeliveryError:
+            otp_sent = False
+
+        message = (
+            "Company registered successfully. Please verify the OTP sent to "
+            "your email; your organisation will then await verification."
+        )
+        response_data = {
+            "message": message,
+            "email": user.email,
+            "status": user.company.status,
+            "docs_attached": len(docs),
+            "email_verified": False,
+            "otp_sent": otp_sent,
+        }
+        if not otp_sent:
+            response_data["warning"] = (
+                "We could not send the verification email. "
+                "Use the resend OTP endpoint to try again."
+            )
+
+        return Response(response_data, status=status.HTTP_201_CREATED)
+
+
+@method_decorator(csrf_exempt, name="dispatch")
+class OTPVerifyView(APIView):
+    """
+    POST /api/auth/otp/verify/
+    body: {"email": "company@example.com", "otp": "123456"}
+
+    Confirms the signup email. The organisation still needs admin approval
+    before login is allowed.
+    """
+    authentication_classes = []
+    permission_classes = []
+
+    def post(self, request):
+        serializer = OTPVerifySerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        try:
+            user = verify_otp(
+                email=serializer.validated_data["email"],
+                code=serializer.validated_data["otp"],
+            )
+        except OTPTooManyAttemptsError as exc:
+            return Response(
+                {"detail": str(exc)},
+                status=status.HTTP_429_TOO_MANY_REQUESTS,
+            )
+        except OTPError as exc:
+            return Response(
+                {"detail": str(exc)},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        company = getattr(user, "company", None)
+        company_status = company.status if company else None
+        can_login = company is None or company_status == CompanyProfile.STATUS_ACTIVE
+
+        if company and company_status == CompanyProfile.STATUS_PENDING:
+            message = (
+                "Email verified successfully. Your organisation is now "
+                "awaiting admin verification."
+            )
+        elif company and company_status == CompanyProfile.STATUS_SUSPENDED:
+            message = (
+                "Email verified successfully, but your organisation account "
+                "has been suspended."
+            )
+        else:
+            message = "Email verified successfully."
+
+        return Response(
+            {
+                "message": message,
+                "email": user.email,
+                "email_verified": True,
+                "can_login": can_login,
+                "company_status": company_status,
+            },
+            status=status.HTTP_200_OK,
+        )
+
+
+@method_decorator(csrf_exempt, name="dispatch")
+class OTPResendView(APIView):
+    """
+    POST /api/auth/otp/resend/
+    body: {"email": "company@example.com"}
+
+    Sends a fresh OTP. Rate limited by OTP_RESEND_COOLDOWN_SECONDS.
+    """
+    authentication_classes = []
+    permission_classes = []
+
+    def post(self, request):
+        serializer = OTPResendSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        email = serializer.validated_data["email"]
+        user = User.objects.filter(email__iexact=email).first()
+
+        # Do not reveal whether an email is registered.
+        if user is None:
+            return Response(
+                {
+                    "message": (
+                        "If that email is registered, a new verification "
+                        "code has been sent."
+                    )
+                },
+                status=status.HTTP_200_OK,
+            )
+
+        if user.email_verified:
+            return Response(
+                {"detail": "This email address is already verified."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        try:
+            otp = request_otp(user)
+        except OTPCooldownError as exc:
+            return Response(
+                {"detail": str(exc), "retry_after": exc.retry_after},
+                status=status.HTTP_429_TOO_MANY_REQUESTS,
+            )
+        except OTPDeliveryError as exc:
+            return Response(
+                {"detail": str(exc)},
+                status=status.HTTP_502_BAD_GATEWAY,
             )
 
         return Response(
             {
-                "message": "Company registered successfully. Awaiting verification.",
+                "message": "A new verification code has been sent.",
                 "email": user.email,
-                "status": user.company.status,
-                "docs_attached": len(docs),
+                "expires_in": int(
+                    (otp.expires_at - now()).total_seconds()
+                ),
             },
-            status=status.HTTP_201_CREATED,
+            status=status.HTTP_200_OK,
         )
 
 

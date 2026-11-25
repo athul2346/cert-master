@@ -3,10 +3,55 @@ from datetime import date
 from .models import DocumentType, CompanyDocument, DocumentTemplate, DocumentField
 
 
+class DocumentTemplateNestedSerializer(serializers.ModelSerializer):
+    """Template payload embedded in DocumentType responses."""
+
+    class Meta:
+        model = DocumentTemplate
+        fields = ["id", "template_name", "template_json", "template_html"]
+        read_only_fields = fields
+
+
 class DocumentTypeSerializer(serializers.ModelSerializer):
+    templates = DocumentTemplateNestedSerializer(many=True, read_only=True)
+
     class Meta:
         model = DocumentType
-        fields =  ["id", "code", "name", "description", "document_canvas", "is_mandatory"]
+        fields = [
+            "id",
+            "code",
+            "name",
+            "description",
+            "document_canvas",
+            "is_mandatory",
+            "templates",
+        ]
+
+    def validate_code(self, value):
+        """
+        Enforce the (company, code) uniqueness rule in the serializer.
+
+        ``company`` is not a serializer field (it comes from the request
+        user), so DRF never builds the automatic UniqueTogetherValidator.
+        Without this check a duplicate code reaches the database and raises
+        an IntegrityError / 500.
+        """
+        request = self.context.get("request")
+        if not request or not hasattr(request.user, "company"):
+            return value
+
+        duplicates = DocumentType.objects.filter(
+            company=request.user.company,
+            code=value,
+        )
+        if self.instance is not None:
+            duplicates = duplicates.exclude(pk=self.instance.pk)
+
+        if duplicates.exists():
+            raise serializers.ValidationError(
+                "A document type with this code already exists for your company."
+            )
+        return value
 
     def create(self, validated_data):
         request = self.context["request"]
@@ -21,7 +66,9 @@ class DocumentTypeSerializer(serializers.ModelSerializer):
 class DocumentTemplateSerializer(serializers.ModelSerializer):
     document_type = serializers.SlugRelatedField(
         slug_field="id",
-        queryset=DocumentType.objects.none()
+        queryset=DocumentType.objects.none(),
+        required=False,
+        allow_null=True,
     )
 
     def __init__(self, *args, **kwargs):
@@ -35,6 +82,34 @@ class DocumentTemplateSerializer(serializers.ModelSerializer):
     class Meta:
         model = DocumentTemplate
         fields = ["id", "document_type", "template_name", "template_json", "template_html"]
+
+    def validate_template_name(self, value):
+        """
+        Enforce the (company, template_name) uniqueness rule.
+
+        ``company`` is injected in ``create()`` instead of being a serializer
+        field, so DRF cannot build its automatic UniqueTogetherValidator and
+        a duplicate name would otherwise hit the database and raise an
+        IntegrityError (HTTP 500). Validating here turns that into a normal
+        400 with a readable message, for both create and update.
+        """
+        request = self.context.get("request")
+        if not request or not hasattr(request.user, "company"):
+            return value
+
+        duplicates = DocumentTemplate.objects.filter(
+            company=request.user.company,
+            template_name=value,
+        )
+        if self.instance is not None:
+            duplicates = duplicates.exclude(pk=self.instance.pk)
+
+        if duplicates.exists():
+            raise serializers.ValidationError(
+                "A template with this name already exists for your company. "
+                "Open the existing template to edit it, or choose a different name."
+            )
+        return value
 
     def create(self, validated_data):
         request = self.context["request"]
@@ -55,7 +130,8 @@ class DocumentFieldSerializer(serializers.ModelSerializer):
 class CompanyDocumentSerializer(serializers.ModelSerializer):
     document_type = serializers.SlugRelatedField(
         slug_field="id",
-        queryset=DocumentType.objects.none()
+        queryset=DocumentType.objects.none(),
+        allow_null=True,
     )
     template = serializers.SlugRelatedField(
         slug_field="id",
@@ -97,8 +173,13 @@ class CompanyDocumentSerializer(serializers.ModelSerializer):
         
         # Enforce that template's document_type matches selected document_type
         if document_type and template and template.document_type != document_type:
+            template_type = (
+                template.document_type.code
+                if template.document_type
+                else "none (the template is not linked to a document type)"
+            )
             raise serializers.ValidationError({
-                "document_type": f"Template is linked to document type '{template.document_type.code}'. Please use that document type or select a different template."
+                "document_type": f"Template is linked to document type '{template_type}'. Please use that document type or select a different template."
             })
         
         never_expires = attrs.get("never_expires", getattr(self.instance, "never_expires", False))
@@ -175,6 +256,11 @@ class CompanyDocumentSerializer(serializers.ModelSerializer):
                 "Another document already exists with this document type and recipient."
             )
 
+        # Apply the status change last: fields must be rewritten while the
+        # document is still editable (the DB lock only allows status changes
+        # on ACTIVE rows).
+        new_status = validated_data.pop("status", None)
+
         # Update ALL fields
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
@@ -193,6 +279,10 @@ class CompanyDocumentSerializer(serializers.ModelSerializer):
                     value=field_data.get("value")
                 )
 
+        if new_status is not None:
+            instance.status = new_status
+            instance.save(update_fields=["status", "updated_at"])
+
         return instance
 
 
@@ -203,7 +293,8 @@ class CompanyDocumentWithJsonSerializer(serializers.ModelSerializer):
     """
     document_type = serializers.SlugRelatedField(
         slug_field="id",
-        queryset=DocumentType.objects.none()
+        queryset=DocumentType.objects.none(),
+        allow_null=True,
     )
     template = serializers.SlugRelatedField(
         slug_field="id",
@@ -240,8 +331,13 @@ class CompanyDocumentWithJsonSerializer(serializers.ModelSerializer):
         
         # Enforce that template's document_type matches selected document_type
         if document_type and template and template.document_type != document_type:
+            template_type = (
+                template.document_type.code
+                if template.document_type
+                else "none (the template is not linked to a document type)"
+            )
             raise serializers.ValidationError({
-                "document_type": f"Template is linked to document type '{template.document_type.code}'. Please use that document type or select a different template."
+                "document_type": f"Template is linked to document type '{template_type}'. Please use that document type or select a different template."
             })
         
         return attrs
@@ -272,6 +368,11 @@ class CompanyDocumentWithJsonSerializer(serializers.ModelSerializer):
         company = self.context["request"].user.company
         document_json = validated_data.pop("document_json", None)
 
+        # Apply the status change last: fields must be rewritten while the
+        # document is still editable (the DB lock only allows status changes
+        # on ACTIVE rows).
+        new_status = validated_data.pop("status", None)
+
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
 
@@ -286,6 +387,10 @@ class CompanyDocumentWithJsonSerializer(serializers.ModelSerializer):
                     key=key,
                     value=str(value)
                 )
+
+        if new_status is not None:
+            instance.status = new_status
+            instance.save(update_fields=["status", "updated_at"])
 
         return instance
 

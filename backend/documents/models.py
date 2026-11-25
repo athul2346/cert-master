@@ -74,7 +74,9 @@ class CompanyDocument(models.Model):
     document_type = models.ForeignKey(
         DocumentType,
         on_delete=models.PROTECT,
-        related_name="company_documents"
+        related_name="company_documents",
+        null=True,
+        blank=True,
     )
 
     template = models.ForeignKey(
@@ -129,7 +131,8 @@ class CompanyDocument(models.Model):
         ]
 
     def __str__(self):
-        return f"{self.company.organisation_name} - {self.document_type.name} - {self.recipient}"
+        document_type_name = self.document_type.name if self.document_type else "No document type"
+        return f"{self.company.organisation_name} - {document_type_name} - {self.recipient}"
 
     def get_fields_dict(self):
         return {field.key: field.value for field in self.fields.all()}

@@ -1,0 +1,435 @@
+{
+  "schemaVersion": "1.0",
+  "format": "json-with-html",
+  "exportedAt": "2026-11-21T04:50:31.498Z",
+  "generator": "Document Blueprint Engine (v2.4)",
+  "documentType": {
+    "id": "dt-1",
+    "name": "Professional Certificate",
+    "description": "Standard certification for course completion.",
+    "size": {
+      "name": "Certificate (Standard)",
+      "width": 297,
+      "height": 210
+    },
+    "orientation": "Landscape",
+    "validityDays": 365,
+    "fields": [
+      {
+        "id": "f0",
+        "name": "Document ID",
+        "type": "text",
+        "required": true,
+        "system": true
+      },
+      {
+        "id": "f1",
+        "name": "Recipient Name",
+        "type": "text",
+        "required": true
+      },
+      {
+        "id": "f2",
+        "name": "Course Title",
+        "type": "text",
+        "required": true
+      },
+      {
+        "id": "f3",
+        "name": "Issue Date",
+        "type": "date",
+        "required": true
+      },
+      {
+        "id": "f4",
+        "name": "Grade",
+        "type": "text",
+        "required": false
+      }
+    ]
+  },
+  "template": {
+    "id": "t-minimal-executive",
+    "name": "Minimalist Executive (Master)",
+    "mode": "canvas",
+    "backgroundColor": "#ffffff",
+    "margins": {
+      "top": 12,
+      "right": 12,
+      "bottom": 12,
+      "left": 12
+    },
+    "html": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <meta name=\"template-editor\" content=\"certificate-editor\">\n  <meta name=\"template-editor-label\" content=\"Certificate Editor (Canvas)\">\n  <meta name=\"template-page-size\" content=\"Certificate (Standard)\">\n  <meta name=\"template-dimensions-mm\" content=\"297mm x 210mm\">\n  <meta name=\"template-orientation\" content=\"Landscape\">\n  <meta name=\"template-total-pages\" content=\"1\">\n  <title>Professional Certificate (Certificate Editor (Canvas) | Certificate (Standard) Landscape)</title>\n  <!--\n    TEMPLATE METADATA & DYNAMIC VALUES (5 fields)\n    Editor: Certificate Editor (Canvas) (certificate-editor)\n    Page Size: Certificate (Standard) | Dimensions: 297mm x 210mm | Orientation: Landscape | Pages: 1\n    Logical Stage: 792px x 560px (scaled 1.417323x into 297mm x 210mm for 1:1 editor parity)\n    Render State: tokenized\n    {{Document ID}} | type: text | required: yes | sample: VERIFIED-474705\n    {{Recipient Name}} | type: text | required: yes | sample: Ananya Sharma\n    {{Course Title}} | type: text | required: yes | sample: Advanced Distributed Systems\n    {{Issue Date}} | type: date | required: yes | sample: 2026-11-21\n    {{Grade}} | type: text | required: no | sample: Distinction (A+)\n  -->\n  <script id=\"template-dynamic-values\" type=\"application/json\">\n{\n  \"templateId\": \"t-minimal-executive\",\n  \"templateName\": \"Minimalist Executive (Master)\",\n  \"documentTypeId\": \"dt-1\",\n  \"documentTypeName\": \"Professional Certificate\",\n  \"editor\": \"certificate-editor\",\n  \"editorLabel\": \"Certificate Editor (Canvas)\",\n  \"mode\": \"canvas\",\n  \"renderState\": \"tokenized\",\n  \"pageSpec\": {\n    \"sizeName\": \"Certificate (Standard)\",\n    \"widthMm\": 297,\n    \"heightMm\": 210,\n    \"orientation\": \"Landscape\",\n    \"logicalStagePx\": {\n      \"width\": 792,\n      \"height\": 560,\n      \"scaleX\": 1.417323,\n      \"scaleY\": 1.417323\n    },\n    \"totalPages\": 1\n  },\n  \"pagination\": {\n    \"totalPages\": 1,\n    \"singleHtmlMultiPage\": false,\n    \"pageDelimiter\": \"\\u003c!-- PAGE_BREAK -->\",\n    \"pageSelector\": \"section.doc-page[data-page-number]\",\n    \"pageCutSelector\": \".doc-page-cut[data-page-break=\\\"true\\\"]\",\n    \"pageSizeMm\": {\n      \"sizeName\": \"Certificate (Standard)\",\n      \"width\": 297,\n      \"height\": 210,\n      \"orientation\": \"Landscape\"\n    },\n    \"pages\": [\n      {\n        \"pageNumber\": 1,\n        \"id\": \"page-1\",\n        \"hasHeader\": false,\n        \"hasFooter\": false,\n        \"hasQr\": true\n      }\n    ]\n  },\n  \"placeholders\": [\n    \"{{Document ID}}\",\n    \"{{Recipient Name}}\",\n    \"{{Course Title}}\",\n    \"{{Issue Date}}\",\n    \"{{Grade}}\"\n  ],\n  \"dynamicVariables\": [\n    {\n      \"placeholder\": \"{{Document ID}}\",\n      \"fieldName\": \"Document ID\",\n      \"type\": \"text\",\n      \"required\": true,\n      \"sampleValue\": \"VERIFIED-474705\"\n    },\n    {\n      \"placeholder\": \"{{Recipient Name}}\",\n      \"fieldName\": \"Recipient Name\",\n      \"type\": \"text\",\n      \"required\": true,\n      \"sampleValue\": \"Ananya Sharma\"\n    },\n    {\n      \"placeholder\": \"{{Course Title}}\",\n      \"fieldName\": \"Course Title\",\n      \"type\": \"text\",\n      \"required\": true,\n      \"sampleValue\": \"Advanced Distributed Systems\"\n    },\n    {\n      \"placeholder\": \"{{Issue Date}}\",\n      \"fieldName\": \"Issue Date\",\n      \"type\": \"date\",\n      \"required\": true,\n      \"sampleValue\": \"2026-11-21\"\n    },\n    {\n      \"placeholder\": \"{{Grade}}\",\n      \"fieldName\": \"Grade\",\n      \"type\": \"text\",\n      \"required\": false,\n      \"sampleValue\": \"Distinction (A+)\"\n    }\n  ],\n  \"sampleData\": {\n    \"Document ID\": \"VERIFIED-474705\",\n    \"Recipient Name\": \"Ananya Sharma\",\n    \"Course Title\": \"Advanced Distributed Systems\",\n    \"Issue Date\": \"2026-11-21\",\n    \"Grade\": \"Distinction (A+)\"\n  }\n}\n  </script>\n  <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">\n  <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>\n  <link href=\"https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap\" rel=\"stylesheet\">\n  <style>\n    /* CSS Reset for Exact 1:1 Vector Print & Headless PDF Generation (Puppeteer / WeasyPrint) */\n    *, *::before, *::after {\n      box-sizing: border-box;\n      margin: 0;\n      padding: 0;\n    }\n    @page {\n      size: 297mm 210mm;\n      margin: 0;\n    }\n    html, body {\n      width: 100%;\n      min-height: 100vh;\n      background-color: #e2e8f0;\n      font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;\n      color: #161616;\n      -webkit-print-color-adjust: exact;\n      print-color-adjust: exact;\n      line-height: 1.4;\n    }\n    /* Framed Single-HTML Sheet Container (Screen Preview) */\n    .doc-pages {\n      width: 100%;\n      min-height: 100vh;\n      display: flex;\n      flex-direction: column;\n      align-items: center;\n      justify-content: flex-start;\n      padding: 20px 16px 32px 16px;\n    }\n    .doc-page {\n      width: 297mm;\n      min-height: 210mm;\n      height: 210mm;\n      background-color: #ffffff;\n      position: relative;\n      display: flex;\n      flex-direction: column;\n      overflow: hidden;\n      flex-shrink: 0;\n      box-shadow: 0 6px 24px rgba(15, 23, 42, 0.14);\n      border: 1px solid #cbd5e1;\n    }\n    .canvas-page {\n      display: block;\n    }\n    .canvas-stage {\n      position: relative;\n      width: 792px;\n      height: 560px;\n      overflow: hidden;\n      background-color: #ffffff;\n      transform-origin: top left;\n    }\n    .canvas-element {\n      position: absolute;\n      box-sizing: border-box;\n    }\n    .canvas-text, .canvas-variable {\n      white-space: pre-wrap;\n      word-break: break-word;\n    }\n    .doc-body table {\n      max-width: 100%;\n      word-wrap: break-word;\n      overflow-wrap: break-word;\n    }\n    .doc-body tr, .doc-body thead {\n      break-inside: avoid;\n      page-break-inside: avoid;\n    }\n    .doc-page-cut {\n      width: 297mm;\n      margin: 14px auto;\n      display: flex;\n      align-items: center;\n      justify-content: center;\n      position: relative;\n      flex-shrink: 0;\n    }\n    .doc-page-cut::before {\n      content: '';\n      position: absolute;\n      left: 0;\n      right: 0;\n      top: 50%;\n      border-top: 1.5px dashed #94a3b8;\n    }\n    .doc-page-cut-label {\n      position: relative;\n      z-index: 1;\n      background: #e2e8f0;\n      color: #475569;\n      font-family: 'IBM Plex Mono', monospace;\n      font-size: 9px;\n      font-weight: 700;\n      letter-spacing: 0.08em;\n      text-transform: uppercase;\n      padding: 2px 10px;\n      border: 1px solid #cbd5e1;\n    }\n    .doc-container h1 { font-size: 20pt; font-weight: 700; margin-bottom: 12pt; }\n    .doc-container h2 { font-size: 15pt; font-weight: 600; margin-top: 14pt; margin-bottom: 8pt; }\n    .doc-container p { font-size: 10.5pt; margin-bottom: 10pt; line-height: 1.6; }\n    .page-break { page-break-after: always; break-after: page; height: 0; border: none; }\n    @media print {\n      html, body {\n        width: 297mm;\n        height: auto;\n        min-height: 0;\n        background-color: #ffffff !important;\n        margin: 0 !important;\n        padding: 0 !important;\n      }\n      .doc-pages {\n        display: block;\n        min-height: 0;\n        padding: 0 !important;\n        margin: 0 !important;\n      }\n      .doc-page {\n        margin: 0 !important;\n        border: none !important;\n        box-shadow: none !important;\n        page-break-after: always;\n        break-after: page;\n      }\n      .doc-page:last-of-type {\n        page-break-after: auto;\n        break-after: auto;\n      }\n      .doc-page-cut, .doc-page-cut-label {\n        display: none !important;\n        height: 0 !important;\n        margin: 0 !important;\n        border: none !important;\n      }\n    }\n  </style>\n</head>\n<body data-template-id=\"t-minimal-executive\" data-document-type=\"dt-1\" data-editor=\"certificate-editor\" data-template-mode=\"canvas\" data-page-size=\"Certificate (Standard)\" data-width-mm=\"297\" data-height-mm=\"210\" data-orientation=\"Landscape\" data-total-pages=\"1\" data-render-state=\"tokenized\" data-dynamic-fields=\"Document ID, Recipient Name, Course Title, Issue Date, Grade\">\n  \n<main class=\"doc-pages canvas-pages\" data-editor=\"certificate-editor\" data-total-pages=\"1\" data-page-size=\"Certificate (Standard)\" data-width-mm=\"297\" data-height-mm=\"210\" data-orientation=\"Landscape\">\n  <!-- PAGE 1 OF 1 | Certificate Editor (Canvas) | Certificate (Standard) (297mm x 210mm, Landscape) -->\n  <section class=\"doc-page canvas-page\" id=\"page-1\" data-editor=\"certificate-editor\" data-page-number=\"1\" data-total-pages=\"1\" data-page-size=\"Certificate (Standard)\" data-width-mm=\"297\" data-height-mm=\"210\" data-orientation=\"Landscape\" style=\"width: 297mm; height: 210mm; background-color: #ffffff; position: relative; overflow: hidden; box-sizing: border-box;\">\n    \n    <div class=\"canvas-stage\" data-logical-width-px=\"792\" data-logical-height-px=\"560\" data-scale-x=\"1.417323\" data-scale-y=\"1.417323\" style=\"position: relative; width: 792px; height: 560px; background-color: #ffffff; overflow: hidden; box-sizing: border-box; transform: scale(1.417323, 1.417323); transform-origin: top left;\">\n      <div class=\"canvas-element canvas-shape\" data-element-id=\"m-border-outer\" data-shape-type=\"rect\" style=\"position: absolute; left: 3.2%; top: 4.2%; width: 93.6%; height: 91.6%; z-index: 1; transform: rotate(0deg); opacity: 1; background-color: transparent; border: none; border-radius: 0px; display: flex; align-items: center; justify-content: flex-start; box-sizing: border-box; overflow: hidden; padding: 0\"><div style=\"width:100%;height:100%;background-color:transparent;border:1px solid #0f172a;border-radius:0px;box-sizing:border-box;\"></div></div>\n      <div class=\"canvas-element canvas-shape\" data-element-id=\"m-border-inner\" data-shape-type=\"rect\" style=\"position: absolute; left: 4.4%; top: 5.8%; width: 91.2%; height: 88.4%; z-index: 1; transform: rotate(0deg); opacity: 1; background-color: transparent; border: none; border-radius: 0px; display: flex; align-items: center; justify-content: flex-start; box-sizing: border-box; overflow: hidden; padding: 0\"><div style=\"width:100%;height:100%;background-color:transparent;border:0.5px solid #cbd5e1;border-radius:0px;box-sizing:border-box;\"></div></div>\n      <div class=\"canvas-element canvas-text\" data-element-id=\"m-issuer\" style=\"position: absolute; left: 10%; top: 10%; width: 80%; height: 3.5%; z-index: 2; transform: rotate(0deg); opacity: 1; background-color: transparent; border: none; border-radius: 0px; display: flex; align-items: center; justify-content: center; box-sizing: border-box; overflow: hidden; padding: 0 2px\"><span style=\"width: 100%; display: block; font-size: 8.5px; font-family: 'IBM Plex Sans', sans-serif; font-weight: 700; font-style: normal; color: #64748b; text-align: center; letter-spacing: 3.5px; line-height: 1.2; white-space: pre-wrap; word-break: break-word\">YOUR ORGANIZATION OR INSTITUTION NAME</span></div>\n      <div class=\"canvas-element canvas-text\" data-element-id=\"m-title\" style=\"position: absolute; left: 10%; top: 15.2%; width: 80%; height: 8.5%; z-index: 2; transform: rotate(0deg); opacity: 1; background-color: transparent; border: none; border-radius: 0px; display: flex; align-items: center; justify-content: center; box-sizing: border-box; overflow: hidden; padding: 0 2px\"><span style=\"width: 100%; display: block; font-size: 32px; font-family: 'Playfair Display', Georgia, serif; font-weight: 700; font-style: normal; color: #0f172a; text-align: center; letter-spacing: 1.5px; line-height: 1.2; white-space: pre-wrap; word-break: break-word\">CERTIFICATE OF EXCELLENCE</span></div>\n      <div class=\"canvas-element canvas-text\" data-element-id=\"m-conferred\" style=\"position: absolute; left: 10%; top: 25.8%; width: 80%; height: 3.5%; z-index: 2; transform: rotate(0deg); opacity: 1; background-color: transparent; border: none; border-radius: 0px; display: flex; align-items: center; justify-content: center; box-sizing: border-box; overflow: hidden; padding: 0 2px\"><span style=\"width: 100%; display: block; font-size: 8.5px; font-family: 'IBM Plex Sans', sans-serif; font-weight: 600; font-style: normal; color: #94a3b8; text-align: center; letter-spacing: 2.8px; line-height: 1.2; white-space: pre-wrap; word-break: break-word\">THIS CREDENTIAL IS PROUDLY CONFERRED UPON</span></div>\n      <div class=\"canvas-element canvas-variable\" data-element-id=\"m-recipient\" data-dynamic-field=\"Recipient Name\" data-dynamic-token=\"{{Recipient Name}}\" data-sample-value=\"Ananya Sharma\" style=\"position: absolute; left: 10%; top: 31%; width: 80%; height: 11%; z-index: 2; transform: rotate(0deg); opacity: 1; background-color: transparent; border: none; border-radius: 0px; display: flex; align-items: center; justify-content: center; box-sizing: border-box; overflow: hidden; padding: 0 2px\"><span style=\"width: 100%; display: block; font-size: 38px; font-family: 'Playfair Display', Georgia, serif; font-weight: 700; font-style: normal; color: #0f172a; text-align: center; letter-spacing: 0.5px; line-height: 1.2; white-space: pre-wrap; word-break: break-word\">{{Recipient Name}}</span></div>\n      <div class=\"canvas-element canvas-shape\" data-element-id=\"m-divider\" data-shape-type=\"line\" style=\"position: absolute; left: 38%; top: 44%; width: 24%; height: 0.2%; z-index: 2; transform: rotate(0deg); opacity: 1; background-color: transparent; border: none; border-radius: 0px; display: flex; align-items: center; justify-content: flex-start; box-sizing: border-box; overflow: hidden; padding: 0\"><div style=\"width:100%;height:2px;background-color:#cbd5e1;\"></div></div>\n      <div class=\"canvas-element canvas-text\" data-element-id=\"m-desc\" style=\"position: absolute; left: 12%; top: 46.5%; width: 76%; height: 5.5%; z-index: 2; transform: rotate(0deg); opacity: 1; background-color: transparent; border: none; border-radius: 0px; display: flex; align-items: center; justify-content: center; box-sizing: border-box; overflow: hidden; padding: 0 2px\"><span style=\"width: 100%; display: block; font-size: 10.5px; font-family: 'IBM Plex Sans', sans-serif; font-weight: 400; font-style: normal; color: #475569; text-align: center; letter-spacing: normal; line-height: 1.5; white-space: pre-wrap; word-break: break-word\">In formal recognition of fulfilling all prescribed milestones with superior distinction in the executive curriculum:</span></div>\n      <div class=\"canvas-element canvas-variable\" data-element-id=\"m-course\" data-dynamic-field=\"Course Title\" data-dynamic-token=\"{{Course Title}}\" data-sample-value=\"Advanced Distributed Systems\" style=\"position: absolute; left: 10%; top: 53.5%; width: 80%; height: 6%; z-index: 2; transform: rotate(0deg); opacity: 1; background-color: transparent; border: none; border-radius: 0px; display: flex; align-items: center; justify-content: center; box-sizing: border-box; overflow: hidden; padding: 0 2px\"><span style=\"width: 100%; display: block; font-size: 18px; font-family: 'IBM Plex Sans', sans-serif; font-weight: 700; font-style: normal; color: #0f172a; text-align: center; letter-spacing: 0.5px; line-height: 1.2; white-space: pre-wrap; word-break: break-word\">{{Course Title}}</span></div>\n      <div class=\"canvas-element canvas-shape\" data-element-id=\"m-sig1-line\" data-shape-type=\"line\" style=\"position: absolute; left: 12%; top: 71%; width: 22%; height: 0.25%; z-index: 2; transform: rotate(0deg); opacity: 1; background-color: transparent; border: none; border-radius: 0px; display: flex; align-items: center; justify-content: flex-start; box-sizing: border-box; overflow: hidden; padding: 0\"><div style=\"width:100%;height:2px;background-color:#94a3b8;\"></div></div>\n      <div class=\"canvas-element canvas-text\" data-element-id=\"m-sig1-name\" style=\"position: absolute; left: 12%; top: 72.5%; width: 22%; height: 3.5%; z-index: 2; transform: rotate(0deg); opacity: 1; background-color: transparent; border: none; border-radius: 0px; display: flex; align-items: center; justify-content: center; box-sizing: border-box; overflow: hidden; padding: 0 2px\"><span style=\"width: 100%; display: block; font-size: 9.5px; font-family: 'IBM Plex Sans', sans-serif; font-weight: 700; font-style: normal; color: #0f172a; text-align: center; letter-spacing: normal; line-height: 1.2; white-space: pre-wrap; word-break: break-word\">Authorized Signatory</span></div>\n      <div class=\"canvas-element canvas-text\" data-element-id=\"m-sig1-title\" style=\"position: absolute; left: 12%; top: 76.2%; width: 22%; height: 3%; z-index: 2; transform: rotate(0deg); opacity: 1; background-color: transparent; border: none; border-radius: 0px; display: flex; align-items: center; justify-content: center; box-sizing: border-box; overflow: hidden; padding: 0 2px\"><span style=\"width: 100%; display: block; font-size: 7.5px; font-family: 'IBM Plex Mono', monospace; font-weight: 400; font-style: normal; color: #64748b; text-align: center; letter-spacing: 1px; line-height: 1.2; white-space: pre-wrap; word-break: break-word\">PROGRAM DIRECTOR</span></div>\n      <div class=\"canvas-element canvas-qr\" data-element-id=\"m-qr\" data-dynamic-field=\"Document ID\" data-qr-target=\"https://authensia.com/verify/{{Document ID}}\" data-sample-value=\"VERIFIED-474705\" style=\"position: absolute; left: 44%; top: 64%; width: 12%; height: 16%; z-index: 2; transform: rotate(0deg); opacity: 1; background-color: #ffffff; border: 0.5px solid #e2e8f0; border-radius: 0px; display: flex; align-items: center; justify-content: flex-start; box-sizing: border-box; overflow: hidden; padding: 0\">\n    <div style=\"width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; box-sizing: border-box; padding: 1mm; background: #ffffff;\">\n      <div style=\"width: 88%; height: 88%; background: #ffffff; padding: 0.5mm; border: 0.5pt solid rgba(0,0,0,0.06); display: flex; align-items: center; justify-content: center;\">\n        <svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 35 35\" shape-rendering=\"crispEdges\" style=\"width:100%;height:100%;display:block;\"><path fill=\"#ffffff\" d=\"M0 0h35v35H0z\"/><path fill=\"#000000\" d=\"M1 1h1v1h-1zM2 1h1v1h-1zM3 1h1v1h-1zM4 1h1v1h-1zM5 1h1v1h-1zM6 1h1v1h-1zM7 1h1v1h-1zM9 1h1v1h-1zM11 1h1v1h-1zM13 1h1v1h-1zM14 1h1v1h-1zM15 1h1v1h-1zM17 1h1v1h-1zM18 1h1v1h-1zM19 1h1v1h-1zM20 1h1v1h-1zM24 1h1v1h-1zM27 1h1v1h-1zM28 1h1v1h-1zM29 1h1v1h-1zM30 1h1v1h-1zM31 1h1v1h-1zM32 1h1v1h-1zM33 1h1v1h-1zM1 2h1v1h-1zM7 2h1v1h-1zM9 2h1v1h-1zM12 2h1v1h-1zM13 2h1v1h-1zM14 2h1v1h-1zM17 2h1v1h-1zM19 2h1v1h-1zM22 2h1v1h-1zM23 2h1v1h-1zM24 2h1v1h-1zM25 2h1v1h-1zM27 2h1v1h-1zM33 2h1v1h-1zM1 3h1v1h-1zM3 3h1v1h-1zM4 3h1v1h-1zM5 3h1v1h-1zM7 3h1v1h-1zM11 3h1v1h-1zM12 3h1v1h-1zM16 3h1v1h-1zM18 3h1v1h-1zM20 3h1v1h-1zM21 3h1v1h-1zM22 3h1v1h-1zM23 3h1v1h-1zM25 3h1v1h-1zM27 3h1v1h-1zM29 3h1v1h-1zM30 3h1v1h-1zM31 3h1v1h-1zM33 3h1v1h-1zM1 4h1v1h-1zM3 4h1v1h-1zM4 4h1v1h-1zM5 4h1v1h-1zM7 4h1v1h-1zM9 4h1v1h-1zM10 4h1v1h-1zM11 4h1v1h-1zM12 4h1v1h-1zM13 4h1v1h-1zM15 4h1v1h-1zM17 4h1v1h-1zM20 4h1v1h-1zM21 4h1v1h-1zM22 4h1v1h-1zM23 4h1v1h-1zM25 4h1v1h-1zM27 4h1v1h-1zM29 4h1v1h-1zM30 4h1v1h-1zM31 4h1v1h-1zM33 4h1v1h-1zM1 5h1v1h-1zM3 5h1v1h-1zM4 5h1v1h-1zM5 5h1v1h-1zM7 5h1v1h-1zM11 5h1v1h-1zM12 5h1v1h-1zM13 5h1v1h-1zM14 5h1v1h-1zM15 5h1v1h-1zM21 5h1v1h-1zM22 5h1v1h-1zM24 5h1v1h-1zM27 5h1v1h-1zM29 5h1v1h-1zM30 5h1v1h-1zM31 5h1v1h-1zM33 5h1v1h-1zM1 6h1v1h-1zM7 6h1v1h-1zM10 6h1v1h-1zM12 6h1v1h-1zM18 6h1v1h-1zM19 6h1v1h-1zM20 6h1v1h-1zM21 6h1v1h-1zM22 6h1v1h-1zM25 6h1v1h-1zM27 6h1v1h-1zM33 6h1v1h-1zM1 7h1v1h-1zM2 7h1v1h-1zM3 7h1v1h-1zM4 7h1v1h-1zM5 7h1v1h-1zM6 7h1v1h-1zM7 7h1v1h-1zM9 7h1v1h-1zM11 7h1v1h-1zM13 7h1v1h-1zM15 7h1v1h-1zM17 7h1v1h-1zM19 7h1v1h-1zM21 7h1v1h-1zM23 7h1v1h-1zM25 7h1v1h-1zM27 7h1v1h-1zM28 7h1v1h-1zM29 7h1v1h-1zM30 7h1v1h-1zM31 7h1v1h-1zM32 7h1v1h-1zM33 7h1v1h-1zM9 8h1v1h-1zM12 8h1v1h-1zM13 8h1v1h-1zM18 8h1v1h-1zM19 8h1v1h-1zM21 8h1v1h-1zM24 8h1v1h-1zM25 8h1v1h-1zM1 9h1v1h-1zM3 9h1v1h-1zM4 9h1v1h-1zM6 9h1v1h-1zM7 9h1v1h-1zM8 9h1v1h-1zM11 9h1v1h-1zM12 9h1v1h-1zM15 9h1v1h-1zM17 9h1v1h-1zM18 9h1v1h-1zM19 9h1v1h-1zM20 9h1v1h-1zM22 9h1v1h-1zM24 9h1v1h-1zM27 9h1v1h-1zM30 9h1v1h-1zM32 9h1v1h-1zM33 9h1v1h-1zM2 10h1v1h-1zM3 10h1v1h-1zM4 10h1v1h-1zM6 10h1v1h-1zM9 10h1v1h-1zM10 10h1v1h-1zM12 10h1v1h-1zM15 10h1v1h-1zM20 10h1v1h-1zM21 10h1v1h-1zM22 10h1v1h-1zM23 10h1v1h-1zM24 10h1v1h-1zM27 10h1v1h-1zM28 10h1v1h-1zM30 10h1v1h-1zM31 10h1v1h-1zM33 10h1v1h-1zM2 11h1v1h-1zM4 11h1v1h-1zM5 11h1v1h-1zM7 11h1v1h-1zM8 11h1v1h-1zM9 11h1v1h-1zM11 11h1v1h-1zM12 11h1v1h-1zM15 11h1v1h-1zM17 11h1v1h-1zM18 11h1v1h-1zM24 11h1v1h-1zM26 11h1v1h-1zM27 11h1v1h-1zM28 11h1v1h-1zM29 11h1v1h-1zM30 11h1v1h-1zM32 11h1v1h-1zM33 11h1v1h-1zM1 12h1v1h-1zM3 12h1v1h-1zM5 12h1v1h-1zM6 12h1v1h-1zM9 12h1v1h-1zM10 12h1v1h-1zM12 12h1v1h-1zM13 12h1v1h-1zM14 12h1v1h-1zM15 12h1v1h-1zM17 12h1v1h-1zM19 12h1v1h-1zM21 12h1v1h-1zM26 12h1v1h-1zM28 12h1v1h-1zM30 12h1v1h-1zM33 12h1v1h-1zM7 13h1v1h-1zM9 13h1v1h-1zM12 13h1v1h-1zM19 13h1v1h-1zM20 13h1v1h-1zM22 13h1v1h-1zM24 13h1v1h-1zM29 13h1v1h-1zM30 13h1v1h-1zM32 13h1v1h-1zM33 13h1v1h-1zM2 14h1v1h-1zM3 14h1v1h-1zM4 14h1v1h-1zM6 14h1v1h-1zM8 14h1v1h-1zM11 14h1v1h-1zM12 14h1v1h-1zM14 14h1v1h-1zM17 14h1v1h-1zM18 14h1v1h-1zM19 14h1v1h-1zM23 14h1v1h-1zM25 14h1v1h-1zM28 14h1v1h-1zM30 14h1v1h-1zM32 14h1v1h-1zM1 15h1v1h-1zM2 15h1v1h-1zM3 15h1v1h-1zM4 15h1v1h-1zM5 15h1v1h-1zM7 15h1v1h-1zM9 15h1v1h-1zM11 15h1v1h-1zM12 15h1v1h-1zM13 15h1v1h-1zM16 15h1v1h-1zM17 15h1v1h-1zM18 15h1v1h-1zM19 15h1v1h-1zM22 15h1v1h-1zM23 15h1v1h-1zM25 15h1v1h-1zM27 15h1v1h-1zM30 15h1v1h-1zM31 15h1v1h-1zM2 16h1v1h-1zM3 16h1v1h-1zM4 16h1v1h-1zM9 16h1v1h-1zM10 16h1v1h-1zM11 16h1v1h-1zM12 16h1v1h-1zM13 16h1v1h-1zM14 16h1v1h-1zM15 16h1v1h-1zM17 16h1v1h-1zM19 16h1v1h-1zM20 16h1v1h-1zM21 16h1v1h-1zM22 16h1v1h-1zM23 16h1v1h-1zM26 16h1v1h-1zM27 16h1v1h-1zM29 16h1v1h-1zM30 16h1v1h-1zM31 16h1v1h-1zM1 17h1v1h-1zM7 17h1v1h-1zM9 17h1v1h-1zM10 17h1v1h-1zM13 17h1v1h-1zM14 17h1v1h-1zM15 17h1v1h-1zM16 17h1v1h-1zM17 17h1v1h-1zM19 17h1v1h-1zM20 17h1v1h-1zM21 17h1v1h-1zM22 17h1v1h-1zM23 17h1v1h-1zM26 17h1v1h-1zM27 17h1v1h-1zM29 17h1v1h-1zM31 17h1v1h-1zM1 18h1v1h-1zM4 18h1v1h-1zM5 18h1v1h-1zM6 18h1v1h-1zM11 18h1v1h-1zM12 18h1v1h-1zM16 18h1v1h-1zM18 18h1v1h-1zM21 18h1v1h-1zM22 18h1v1h-1zM23 18h1v1h-1zM24 18h1v1h-1zM25 18h1v1h-1zM26 18h1v1h-1zM27 18h1v1h-1zM29 18h1v1h-1zM30 18h1v1h-1zM32 18h1v1h-1zM33 18h1v1h-1zM4 19h1v1h-1zM7 19h1v1h-1zM8 19h1v1h-1zM13 19h1v1h-1zM14 19h1v1h-1zM15 19h1v1h-1zM16 19h1v1h-1zM18 19h1v1h-1zM21 19h1v1h-1zM23 19h1v1h-1zM25 19h1v1h-1zM28 19h1v1h-1zM29 19h1v1h-1zM31 19h1v1h-1zM32 19h1v1h-1zM1 20h1v1h-1zM5 20h1v1h-1zM6 20h1v1h-1zM10 20h1v1h-1zM12 20h1v1h-1zM15 20h1v1h-1zM16 20h1v1h-1zM17 20h1v1h-1zM20 20h1v1h-1zM21 20h1v1h-1zM22 20h1v1h-1zM24 20h1v1h-1zM25 20h1v1h-1zM27 20h1v1h-1zM29 20h1v1h-1zM33 20h1v1h-1zM2 21h1v1h-1zM3 21h1v1h-1zM7 21h1v1h-1zM9 21h1v1h-1zM10 21h1v1h-1zM11 21h1v1h-1zM14 21h1v1h-1zM15 21h1v1h-1zM19 21h1v1h-1zM20 21h1v1h-1zM21 21h1v1h-1zM25 21h1v1h-1zM30 21h1v1h-1zM31 21h1v1h-1zM1 22h1v1h-1zM3 22h1v1h-1zM4 22h1v1h-1zM8 22h1v1h-1zM9 22h1v1h-1zM10 22h1v1h-1zM11 22h1v1h-1zM12 22h1v1h-1zM13 22h1v1h-1zM14 22h1v1h-1zM16 22h1v1h-1zM19 22h1v1h-1zM24 22h1v1h-1zM30 22h1v1h-1zM31 22h1v1h-1zM33 22h1v1h-1zM3 23h1v1h-1zM4 23h1v1h-1zM5 23h1v1h-1zM6 23h1v1h-1zM7 23h1v1h-1zM9 23h1v1h-1zM15 23h1v1h-1zM17 23h1v1h-1zM18 23h1v1h-1zM19 23h1v1h-1zM24 23h1v1h-1zM27 23h1v1h-1zM28 23h1v1h-1zM32 23h1v1h-1zM33 23h1v1h-1zM2 24h1v1h-1zM11 24h1v1h-1zM14 24h1v1h-1zM17 24h1v1h-1zM19 24h1v1h-1zM20 24h1v1h-1zM25 24h1v1h-1zM28 24h1v1h-1zM29 24h1v1h-1zM30 24h1v1h-1zM32 24h1v1h-1zM1 25h1v1h-1zM5 25h1v1h-1zM7 25h1v1h-1zM8 25h1v1h-1zM11 25h1v1h-1zM12 25h1v1h-1zM13 25h1v1h-1zM15 25h1v1h-1zM16 25h1v1h-1zM18 25h1v1h-1zM23 25h1v1h-1zM25 25h1v1h-1zM26 25h1v1h-1zM27 25h1v1h-1zM28 25h1v1h-1zM29 25h1v1h-1zM32 25h1v1h-1zM33 25h1v1h-1zM9 26h1v1h-1zM11 26h1v1h-1zM12 26h1v1h-1zM16 26h1v1h-1zM17 26h1v1h-1zM18 26h1v1h-1zM19 26h1v1h-1zM20 26h1v1h-1zM25 26h1v1h-1zM29 26h1v1h-1zM30 26h1v1h-1zM33 26h1v1h-1zM1 27h1v1h-1zM2 27h1v1h-1zM3 27h1v1h-1zM4 27h1v1h-1zM5 27h1v1h-1zM6 27h1v1h-1zM7 27h1v1h-1zM9 27h1v1h-1zM20 27h1v1h-1zM23 27h1v1h-1zM24 27h1v1h-1zM25 27h1v1h-1zM27 27h1v1h-1zM29 27h1v1h-1zM1 28h1v1h-1zM7 28h1v1h-1zM9 28h1v1h-1zM10 28h1v1h-1zM13 28h1v1h-1zM14 28h1v1h-1zM16 28h1v1h-1zM20 28h1v1h-1zM21 28h1v1h-1zM22 28h1v1h-1zM23 28h1v1h-1zM24 28h1v1h-1zM25 28h1v1h-1zM29 28h1v1h-1zM30 28h1v1h-1zM31 28h1v1h-1zM32 28h1v1h-1zM33 28h1v1h-1zM1 29h1v1h-1zM3 29h1v1h-1zM4 29h1v1h-1zM5 29h1v1h-1zM7 29h1v1h-1zM10 29h1v1h-1zM15 29h1v1h-1zM16 29h1v1h-1zM18 29h1v1h-1zM20 29h1v1h-1zM21 29h1v1h-1zM24 29h1v1h-1zM25 29h1v1h-1zM26 29h1v1h-1zM27 29h1v1h-1zM28 29h1v1h-1zM29 29h1v1h-1zM31 29h1v1h-1zM1 30h1v1h-1zM3 30h1v1h-1zM4 30h1v1h-1zM5 30h1v1h-1zM7 30h1v1h-1zM9 30h1v1h-1zM11 30h1v1h-1zM12 30h1v1h-1zM13 30h1v1h-1zM15 30h1v1h-1zM19 30h1v1h-1zM20 30h1v1h-1zM21 30h1v1h-1zM24 30h1v1h-1zM28 30h1v1h-1zM30 30h1v1h-1zM31 30h1v1h-1zM32 30h1v1h-1zM33 30h1v1h-1zM1 31h1v1h-1zM3 31h1v1h-1zM4 31h1v1h-1zM5 31h1v1h-1zM7 31h1v1h-1zM9 31h1v1h-1zM14 31h1v1h-1zM18 31h1v1h-1zM19 31h1v1h-1zM20 31h1v1h-1zM22 31h1v1h-1zM24 31h1v1h-1zM25 31h1v1h-1zM26 31h1v1h-1zM27 31h1v1h-1zM28 31h1v1h-1zM30 31h1v1h-1zM31 31h1v1h-1zM1 32h1v1h-1zM7 32h1v1h-1zM10 32h1v1h-1zM14 32h1v1h-1zM16 32h1v1h-1zM17 32h1v1h-1zM18 32h1v1h-1zM20 32h1v1h-1zM23 32h1v1h-1zM24 32h1v1h-1zM28 32h1v1h-1zM29 32h1v1h-1zM33 32h1v1h-1zM1 33h1v1h-1zM2 33h1v1h-1zM3 33h1v1h-1zM4 33h1v1h-1zM5 33h1v1h-1zM6 33h1v1h-1zM7 33h1v1h-1zM9 33h1v1h-1zM10 33h1v1h-1zM12 33h1v1h-1zM14 33h1v1h-1zM16 33h1v1h-1zM17 33h1v1h-1zM18 33h1v1h-1zM19 33h1v1h-1zM22 33h1v1h-1zM23 33h1v1h-1zM24 33h1v1h-1zM29 33h1v1h-1zM31 33h1v1h-1z\"/></svg>\n      </div>\n      <div style=\"font-size: 3.5pt; font-family: 'IBM Plex Mono'; color: #64748b; text-transform: uppercase; text-align: center; margin-top: 0.5mm;\">Scan to verify credential authenticity</div>\n    </div>\n  </div>\n      <div class=\"canvas-element canvas-text\" data-element-id=\"m-qr-label\" style=\"position: absolute; left: 38%; top: 80.5%; width: 24%; height: 2.5%; z-index: 2; transform: rotate(0deg); opacity: 1; background-color: transparent; border: none; border-radius: 0px; display: flex; align-items: center; justify-content: center; box-sizing: border-box; overflow: hidden; padding: 0 2px\"><span style=\"width: 100%; display: block; font-size: 7px; font-family: 'IBM Plex Mono', monospace; font-weight: 700; font-style: normal; color: #94a3b8; text-align: center; letter-spacing: 1.5px; line-height: 1.2; white-space: pre-wrap; word-break: break-word\">VERIFIED CREDENTIAL</span></div>\n      <div class=\"canvas-element canvas-shape\" data-element-id=\"m-sig2-line\" data-shape-type=\"line\" style=\"position: absolute; left: 66%; top: 71%; width: 22%; height: 0.25%; z-index: 2; transform: rotate(0deg); opacity: 1; background-color: transparent; border: none; border-radius: 0px; display: flex; align-items: center; justify-content: flex-start; box-sizing: border-box; overflow: hidden; padding: 0\"><div style=\"width:100%;height:2px;background-color:#94a3b8;\"></div></div>\n      <div class=\"canvas-element canvas-text\" data-element-id=\"m-sig2-name\" style=\"position: absolute; left: 66%; top: 72.5%; width: 22%; height: 3.5%; z-index: 2; transform: rotate(0deg); opacity: 1; background-color: transparent; border: none; border-radius: 0px; display: flex; align-items: center; justify-content: center; box-sizing: border-box; overflow: hidden; padding: 0 2px\"><span style=\"width: 100%; display: block; font-size: 9.5px; font-family: 'IBM Plex Sans', sans-serif; font-weight: 700; font-style: normal; color: #0f172a; text-align: center; letter-spacing: normal; line-height: 1.2; white-space: pre-wrap; word-break: break-word\">Authorized Signatory</span></div>\n      <div class=\"canvas-element canvas-text\" data-element-id=\"m-sig2-title\" style=\"position: absolute; left: 66%; top: 76.2%; width: 22%; height: 3%; z-index: 2; transform: rotate(0deg); opacity: 1; background-color: transparent; border: none; border-radius: 0px; display: flex; align-items: center; justify-content: center; box-sizing: border-box; overflow: hidden; padding: 0 2px\"><span style=\"width: 100%; display: block; font-size: 7.5px; font-family: 'IBM Plex Mono', monospace; font-weight: 400; font-style: normal; color: #64748b; text-align: center; letter-spacing: 1px; line-height: 1.2; white-space: pre-wrap; word-break: break-word\">REGISTRAR / ISSUING OFFICE</span></div>\n      <div class=\"canvas-element canvas-text\" data-element-id=\"m-footer\" data-dynamic-field=\"Document ID, Issue Date\" data-dynamic-token=\"{{Document ID}}, {{Issue Date}}\" data-sample-value=\"CREDENTIAL ID: VERIFIED-474705   •   ISSUED: 2026-11-21   •   STATUS: VERIFIED\" style=\"position: absolute; left: 8%; top: 88%; width: 84%; height: 2.5%; z-index: 2; transform: rotate(0deg); opacity: 1; background-color: transparent; border: none; border-radius: 0px; display: flex; align-items: center; justify-content: center; box-sizing: border-box; overflow: hidden; padding: 0 2px\"><span style=\"width: 100%; display: block; font-size: 8px; font-family: 'IBM Plex Mono', monospace; font-weight: 400; font-style: normal; color: #94a3b8; text-align: center; letter-spacing: 1.6px; line-height: 1.2; white-space: pre-wrap; word-break: break-word\">CREDENTIAL ID: {{Document ID}}   •   ISSUED: {{Issue Date}}   •   STATUS: VERIFIED</span></div>\n    </div>\n  </section>\n</main>\n</body>\n</html>",
+    "previewHtml": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n  <meta name=\"template-editor\" content=\"certificate-editor\">\n  <meta name=\"template-editor-label\" content=\"Certificate Editor (Canvas)\">\n  <meta name=\"template-page-size\" content=\"Certificate (Standard)\">\n  <meta name=\"template-dimensions-mm\" content=\"297mm x 210mm\">\n  <meta name=\"template-orientation\" content=\"Landscape\">\n  <meta name=\"template-total-pages\" content=\"1\">\n  <title>Professional Certificate (Certificate Editor (Canvas) | Certificate (Standard) Landscape)</title>\n  <!--\n    TEMPLATE METADATA & DYNAMIC VALUES (5 fields)\n    Editor: Certificate Editor (Canvas) (certificate-editor)\n    Page Size: Certificate (Standard) | Dimensions: 297mm x 210mm | Orientation: Landscape | Pages: 1\n    Logical Stage: 792px x 560px (scaled 1.417323x into 297mm x 210mm for 1:1 editor parity)\n    Render State: sample-populated\n    {{Document ID}} | type: text | required: yes | sample: VERIFIED-474705\n    {{Recipient Name}} | type: text | required: yes | sample: Ananya Sharma\n    {{Course Title}} | type: text | required: yes | sample: Advanced Distributed Systems\n    {{Issue Date}} | type: date | required: yes | sample: 2026-11-21\n    {{Grade}} | type: text | required: no | sample: Distinction (A+)\n  -->\n  <script id=\"template-dynamic-values\" type=\"application/json\">\n{\n  \"templateId\": \"t-minimal-executive\",\n  \"templateName\": \"Minimalist Executive (Master)\",\n  \"documentTypeId\": \"dt-1\",\n  \"documentTypeName\": \"Professional Certificate\",\n  \"editor\": \"certificate-editor\",\n  \"editorLabel\": \"Certificate Editor (Canvas)\",\n  \"mode\": \"canvas\",\n  \"renderState\": \"sample-populated\",\n  \"pageSpec\": {\n    \"sizeName\": \"Certificate (Standard)\",\n    \"widthMm\": 297,\n    \"heightMm\": 210,\n    \"orientation\": \"Landscape\",\n    \"logicalStagePx\": {\n      \"width\": 792,\n      \"height\": 560,\n      \"scaleX\": 1.417323,\n      \"scaleY\": 1.417323\n    },\n    \"totalPages\": 1\n  },\n  \"pagination\": {\n    \"totalPages\": 1,\n    \"singleHtmlMultiPage\": false,\n    \"pageDelimiter\": \"\\u003c!-- PAGE_BREAK -->\",\n    \"pageSelector\": \"section.doc-page[data-page-number]\",\n    \"pageCutSelector\": \".doc-page-cut[data-page-break=\\\"true\\\"]\",\n    \"pageSizeMm\": {\n      \"sizeName\": \"Certificate (Standard)\",\n      \"width\": 297,\n      \"height\": 210,\n      \"orientation\": \"Landscape\"\n    },\n    \"pages\": [\n      {\n        \"pageNumber\": 1,\n        \"id\": \"page-1\",\n        \"hasHeader\": false,\n        \"hasFooter\": false,\n        \"hasQr\": true\n      }\n    ]\n  },\n  \"placeholders\": [\n    \"{{Document ID}}\",\n    \"{{Recipient Name}}\",\n    \"{{Course Title}}\",\n    \"{{Issue Date}}\",\n    \"{{Grade}}\"\n  ],\n  \"dynamicVariables\": [\n    {\n      \"placeholder\": \"{{Document ID}}\",\n      \"fieldName\": \"Document ID\",\n      \"type\": \"text\",\n      \"required\": true,\n      \"sampleValue\": \"VERIFIED-474705\"\n    },\n    {\n      \"placeholder\": \"{{Recipient Name}}\",\n      \"fieldName\": \"Recipient Name\",\n      \"type\": \"text\",\n      \"required\": true,\n      \"sampleValue\": \"Ananya Sharma\"\n    },\n    {\n      \"placeholder\": \"{{Course Title}}\",\n      \"fieldName\": \"Course Title\",\n      \"type\": \"text\",\n      \"required\": true,\n      \"sampleValue\": \"Advanced Distributed Systems\"\n    },\n    {\n      \"placeholder\": \"{{Issue Date}}\",\n      \"fieldName\": \"Issue Date\",\n      \"type\": \"date\",\n      \"required\": true,\n      \"sampleValue\": \"2026-11-21\"\n    },\n    {\n      \"placeholder\": \"{{Grade}}\",\n      \"fieldName\": \"Grade\",\n      \"type\": \"text\",\n      \"required\": false,\n      \"sampleValue\": \"Distinction (A+)\"\n    }\n  ],\n  \"sampleData\": {\n    \"Document ID\": \"VERIFIED-474705\",\n    \"Recipient Name\": \"Ananya Sharma\",\n    \"Course Title\": \"Advanced Distributed Systems\",\n    \"Issue Date\": \"2026-11-21\",\n    \"Grade\": \"Distinction (A+)\"\n  }\n}\n  </script>\n  <link rel=\"preconnect\" href=\"https://fonts.googleapis.com\">\n  <link rel=\"preconnect\" href=\"https://fonts.gstatic.com\" crossorigin>\n  <link href=\"https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap\" rel=\"stylesheet\">\n  <style>\n    /* CSS Reset for Exact 1:1 Vector Print & Headless PDF Generation (Puppeteer / WeasyPrint) */\n    *, *::before, *::after {\n      box-sizing: border-box;\n      margin: 0;\n      padding: 0;\n    }\n    @page {\n      size: 297mm 210mm;\n      margin: 0;\n    }\n    html, body {\n      width: 100%;\n      min-height: 100vh;\n      background-color: #e2e8f0;\n      font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;\n      color: #161616;\n      -webkit-print-color-adjust: exact;\n      print-color-adjust: exact;\n      line-height: 1.4;\n    }\n    /* Framed Single-HTML Sheet Container (Screen Preview) */\n    .doc-pages {\n      width: 100%;\n      min-height: 100vh;\n      display: flex;\n      flex-direction: column;\n      align-items: center;\n      justify-content: flex-start;\n      padding: 20px 16px 32px 16px;\n    }\n    .doc-page {\n      width: 297mm;\n      min-height: 210mm;\n      height: 210mm;\n      background-color: #ffffff;\n      position: relative;\n      display: flex;\n      flex-direction: column;\n      overflow: hidden;\n      flex-shrink: 0;\n      box-shadow: 0 6px 24px rgba(15, 23, 42, 0.14);\n      border: 1px solid #cbd5e1;\n    }\n    .canvas-page {\n      display: block;\n    }\n    .canvas-stage {\n      position: relative;\n      width: 792px;\n      height: 560px;\n      overflow: hidden;\n      background-color: #ffffff;\n      transform-origin: top left;\n    }\n    .canvas-element {\n      position: absolute;\n      box-sizing: border-box;\n    }\n    .canvas-text, .canvas-variable {\n      white-space: pre-wrap;\n      word-break: break-word;\n    }\n    .doc-body table {\n      max-width: 100%;\n      word-wrap: break-word;\n      overflow-wrap: break-word;\n    }\n    .doc-body tr, .doc-body thead {\n      break-inside: avoid;\n      page-break-inside: avoid;\n    }\n    .doc-page-cut {\n      width: 297mm;\n      margin: 14px auto;\n      display: flex;\n      align-items: center;\n      justify-content: center;\n      position: relative;\n      flex-shrink: 0;\n    }\n    .doc-page-cut::before {\n      content: '';\n      position: absolute;\n      left: 0;\n      right: 0;\n      top: 50%;\n      border-top: 1.5px dashed #94a3b8;\n    }\n    .doc-page-cut-label {\n      position: relative;\n      z-index: 1;\n      background: #e2e8f0;\n      color: #475569;\n      font-family: 'IBM Plex Mono', monospace;\n      font-size: 9px;\n      font-weight: 700;\n      letter-spacing: 0.08em;\n      text-transform: uppercase;\n      padding: 2px 10px;\n      border: 1px solid #cbd5e1;\n    }\n    .doc-container h1 { font-size: 20pt; font-weight: 700; margin-bottom: 12pt; }\n    .doc-container h2 { font-size: 15pt; font-weight: 600; margin-top: 14pt; margin-bottom: 8pt; }\n    .doc-container p { font-size: 10.5pt; margin-bottom: 10pt; line-height: 1.6; }\n    .page-break { page-break-after: always; break-after: page; height: 0; border: none; }\n    @media print {\n      html, body {\n        width: 297mm;\n        height: auto;\n        min-height: 0;\n        background-color: #ffffff !important;\n        margin: 0 !important;\n        padding: 0 !important;\n      }\n      .doc-pages {\n        display: block;\n        min-height: 0;\n        padding: 0 !important;\n        margin: 0 !important;\n      }\n      .doc-page {\n        margin: 0 !important;\n        border: none !important;\n        box-shadow: none !important;\n        page-break-after: always;\n        break-after: page;\n      }\n      .doc-page:last-of-type {\n        page-break-after: auto;\n        break-after: auto;\n      }\n      .doc-page-cut, .doc-page-cut-label {\n        display: none !important;\n        height: 0 !important;\n        margin: 0 !important;\n        border: none !important;\n      }\n    }\n  </style>\n</head>\n<body data-template-id=\"t-minimal-executive\" data-document-type=\"dt-1\" data-editor=\"certificate-editor\" data-template-mode=\"canvas\" data-page-size=\"Certificate (Standard)\" data-width-mm=\"297\" data-height-mm=\"210\" data-orientation=\"Landscape\" data-total-pages=\"1\" data-render-state=\"sample-populated\" data-dynamic-fields=\"Document ID, Recipient Name, Course Title, Issue Date, Grade\">\n  \n<main class=\"doc-pages canvas-pages\" data-editor=\"certificate-editor\" data-total-pages=\"1\" data-page-size=\"Certificate (Standard)\" data-width-mm=\"297\" data-height-mm=\"210\" data-orientation=\"Landscape\">\n  <!-- PAGE 1 OF 1 | Certificate Editor (Canvas) | Certificate (Standard) (297mm x 210mm, Landscape) -->\n  <section class=\"doc-page canvas-page\" id=\"page-1\" data-editor=\"certificate-editor\" data-page-number=\"1\" data-total-pages=\"1\" data-page-size=\"Certificate (Standard)\" data-width-mm=\"297\" data-height-mm=\"210\" data-orientation=\"Landscape\" style=\"width: 297mm; height: 210mm; background-color: #ffffff; position: relative; overflow: hidden; box-sizing: border-box;\">\n    \n    <div class=\"canvas-stage\" data-logical-width-px=\"792\" data-logical-height-px=\"560\" data-scale-x=\"1.417323\" data-scale-y=\"1.417323\" style=\"position: relative; width: 792px; height: 560px; background-color: #ffffff; overflow: hidden; box-sizing: border-box; transform: scale(1.417323, 1.417323); transform-origin: top left;\">\n      <div class=\"canvas-element canvas-shape\" data-element-id=\"m-border-outer\" data-shape-type=\"rect\" style=\"position: absolute; left: 3.2%; top: 4.2%; width: 93.6%; height: 91.6%; z-index: 1; transform: rotate(0deg); opacity: 1; background-color: transparent; border: none; border-radius: 0px; display: flex; align-items: center; justify-content: flex-start; box-sizing: border-box; overflow: hidden; padding: 0\"><div style=\"width:100%;height:100%;background-color:transparent;border:1px solid #0f172a;border-radius:0px;box-sizing:border-box;\"></div></div>\n      <div class=\"canvas-element canvas-shape\" data-element-id=\"m-border-inner\" data-shape-type=\"rect\" style=\"position: absolute; left: 4.4%; top: 5.8%; width: 91.2%; height: 88.4%; z-index: 1; transform: rotate(0deg); opacity: 1; background-color: transparent; border: none; border-radius: 0px; display: flex; align-items: center; justify-content: flex-start; box-sizing: border-box; overflow: hidden; padding: 0\"><div style=\"width:100%;height:100%;background-color:transparent;border:0.5px solid #cbd5e1;border-radius:0px;box-sizing:border-box;\"></div></div>\n      <div class=\"canvas-element canvas-text\" data-element-id=\"m-issuer\" style=\"position: absolute; left: 10%; top: 10%; width: 80%; height: 3.5%; z-index: 2; transform: rotate(0deg); opacity: 1; background-color: transparent; border: none; border-radius: 0px; display: flex; align-items: center; justify-content: center; box-sizing: border-box; overflow: hidden; padding: 0 2px\"><span style=\"width: 100%; display: block; font-size: 8.5px; font-family: 'IBM Plex Sans', sans-serif; font-weight: 700; font-style: normal; color: #64748b; text-align: center; letter-spacing: 3.5px; line-height: 1.2; white-space: pre-wrap; word-break: break-word\">YOUR ORGANIZATION OR INSTITUTION NAME</span></div>\n      <div class=\"canvas-element canvas-text\" data-element-id=\"m-title\" style=\"position: absolute; left: 10%; top: 15.2%; width: 80%; height: 8.5%; z-index: 2; transform: rotate(0deg); opacity: 1; background-color: transparent; border: none; border-radius: 0px; display: flex; align-items: center; justify-content: center; box-sizing: border-box; overflow: hidden; padding: 0 2px\"><span style=\"width: 100%; display: block; font-size: 32px; font-family: 'Playfair Display', Georgia, serif; font-weight: 700; font-style: normal; color: #0f172a; text-align: center; letter-spacing: 1.5px; line-height: 1.2; white-space: pre-wrap; word-break: break-word\">CERTIFICATE OF EXCELLENCE</span></div>\n      <div class=\"canvas-element canvas-text\" data-element-id=\"m-conferred\" style=\"position: absolute; left: 10%; top: 25.8%; width: 80%; height: 3.5%; z-index: 2; transform: rotate(0deg); opacity: 1; background-color: transparent; border: none; border-radius: 0px; display: flex; align-items: center; justify-content: center; box-sizing: border-box; overflow: hidden; padding: 0 2px\"><span style=\"width: 100%; display: block; font-size: 8.5px; font-family: 'IBM Plex Sans', sans-serif; font-weight: 600; font-style: normal; color: #94a3b8; text-align: center; letter-spacing: 2.8px; line-height: 1.2; white-space: pre-wrap; word-break: break-word\">THIS CREDENTIAL IS PROUDLY CONFERRED UPON</span></div>\n      <div class=\"canvas-element canvas-variable\" data-element-id=\"m-recipient\" data-dynamic-field=\"Recipient Name\" data-dynamic-token=\"{{Recipient Name}}\" data-sample-value=\"Ananya Sharma\" style=\"position: absolute; left: 10%; top: 31%; width: 80%; height: 11%; z-index: 2; transform: rotate(0deg); opacity: 1; background-color: transparent; border: none; border-radius: 0px; display: flex; align-items: center; justify-content: center; box-sizing: border-box; overflow: hidden; padding: 0 2px\"><span style=\"width: 100%; display: block; font-size: 38px; font-family: 'Playfair Display', Georgia, serif; font-weight: 700; font-style: normal; color: #0f172a; text-align: center; letter-spacing: 0.5px; line-height: 1.2; white-space: pre-wrap; word-break: break-word\">Ananya Sharma</span></div>\n      <div class=\"canvas-element canvas-shape\" data-element-id=\"m-divider\" data-shape-type=\"line\" style=\"position: absolute; left: 38%; top: 44%; width: 24%; height: 0.2%; z-index: 2; transform: rotate(0deg); opacity: 1; background-color: transparent; border: none; border-radius: 0px; display: flex; align-items: center; justify-content: flex-start; box-sizing: border-box; overflow: hidden; padding: 0\"><div style=\"width:100%;height:2px;background-color:#cbd5e1;\"></div></div>\n      <div class=\"canvas-element canvas-text\" data-element-id=\"m-desc\" style=\"position: absolute; left: 12%; top: 46.5%; width: 76%; height: 5.5%; z-index: 2; transform: rotate(0deg); opacity: 1; background-color: transparent; border: none; border-radius: 0px; display: flex; align-items: center; justify-content: center; box-sizing: border-box; overflow: hidden; padding: 0 2px\"><span style=\"width: 100%; display: block; font-size: 10.5px; font-family: 'IBM Plex Sans', sans-serif; font-weight: 400; font-style: normal; color: #475569; text-align: center; letter-spacing: normal; line-height: 1.5; white-space: pre-wrap; word-break: break-word\">In formal recognition of fulfilling all prescribed milestones with superior distinction in the executive curriculum:</span></div>\n      <div class=\"canvas-element canvas-variable\" data-element-id=\"m-course\" data-dynamic-field=\"Course Title\" data-dynamic-token=\"{{Course Title}}\" data-sample-value=\"Advanced Distributed Systems\" style=\"position: absolute; left: 10%; top: 53.5%; width: 80%; height: 6%; z-index: 2; transform: rotate(0deg); opacity: 1; background-color: transparent; border: none; border-radius: 0px; display: flex; align-items: center; justify-content: center; box-sizing: border-box; overflow: hidden; padding: 0 2px\"><span style=\"width: 100%; display: block; font-size: 18px; font-family: 'IBM Plex Sans', sans-serif; font-weight: 700; font-style: normal; color: #0f172a; text-align: center; letter-spacing: 0.5px; line-height: 1.2; white-space: pre-wrap; word-break: break-word\">Advanced Distributed Systems</span></div>\n      <div class=\"canvas-element canvas-shape\" data-element-id=\"m-sig1-line\" data-shape-type=\"line\" style=\"position: absolute; left: 12%; top: 71%; width: 22%; height: 0.25%; z-index: 2; transform: rotate(0deg); opacity: 1; background-color: transparent; border: none; border-radius: 0px; display: flex; align-items: center; justify-content: flex-start; box-sizing: border-box; overflow: hidden; padding: 0\"><div style=\"width:100%;height:2px;background-color:#94a3b8;\"></div></div>\n      <div class=\"canvas-element canvas-text\" data-element-id=\"m-sig1-name\" style=\"position: absolute; left: 12%; top: 72.5%; width: 22%; height: 3.5%; z-index: 2; transform: rotate(0deg); opacity: 1; background-color: transparent; border: none; border-radius: 0px; display: flex; align-items: center; justify-content: center; box-sizing: border-box; overflow: hidden; padding: 0 2px\"><span style=\"width: 100%; display: block; font-size: 9.5px; font-family: 'IBM Plex Sans', sans-serif; font-weight: 700; font-style: normal; color: #0f172a; text-align: center; letter-spacing: normal; line-height: 1.2; white-space: pre-wrap; word-break: break-word\">Authorized Signatory</span></div>\n      <div class=\"canvas-element canvas-text\" data-element-id=\"m-sig1-title\" style=\"position: absolute; left: 12%; top: 76.2%; width: 22%; height: 3%; z-index: 2; transform: rotate(0deg); opacity: 1; background-color: transparent; border: none; border-radius: 0px; display: flex; align-items: center; justify-content: center; box-sizing: border-box; overflow: hidden; padding: 0 2px\"><span style=\"width: 100%; display: block; font-size: 7.5px; font-family: 'IBM Plex Mono', monospace; font-weight: 400; font-style: normal; color: #64748b; text-align: center; letter-spacing: 1px; line-height: 1.2; white-space: pre-wrap; word-break: break-word\">PROGRAM DIRECTOR</span></div>\n      <div class=\"canvas-element canvas-qr\" data-element-id=\"m-qr\" data-dynamic-field=\"Document ID\" data-qr-target=\"https://authensia.com/verify/VERIFIED-474705\" data-sample-value=\"VERIFIED-474705\" style=\"position: absolute; left: 44%; top: 64%; width: 12%; height: 16%; z-index: 2; transform: rotate(0deg); opacity: 1; background-color: #ffffff; border: 0.5px solid #e2e8f0; border-radius: 0px; display: flex; align-items: center; justify-content: flex-start; box-sizing: border-box; overflow: hidden; padding: 0\">\n    <div style=\"width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; box-sizing: border-box; padding: 1mm; background: #ffffff;\">\n      <div style=\"width: 88%; height: 88%; background: #ffffff; padding: 0.5mm; border: 0.5pt solid rgba(0,0,0,0.06); display: flex; align-items: center; justify-content: center;\">\n        <svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 31 31\" shape-rendering=\"crispEdges\" style=\"width:100%;height:100%;display:block;\"><path fill=\"#ffffff\" d=\"M0 0h31v31H0z\"/><path fill=\"#000000\" d=\"M1 1h1v1h-1zM2 1h1v1h-1zM3 1h1v1h-1zM4 1h1v1h-1zM5 1h1v1h-1zM6 1h1v1h-1zM7 1h1v1h-1zM9 1h1v1h-1zM10 1h1v1h-1zM14 1h1v1h-1zM15 1h1v1h-1zM16 1h1v1h-1zM23 1h1v1h-1zM24 1h1v1h-1zM25 1h1v1h-1zM26 1h1v1h-1zM27 1h1v1h-1zM28 1h1v1h-1zM29 1h1v1h-1zM1 2h1v1h-1zM7 2h1v1h-1zM10 2h1v1h-1zM11 2h1v1h-1zM12 2h1v1h-1zM13 2h1v1h-1zM14 2h1v1h-1zM15 2h1v1h-1zM17 2h1v1h-1zM18 2h1v1h-1zM20 2h1v1h-1zM23 2h1v1h-1zM29 2h1v1h-1zM1 3h1v1h-1zM3 3h1v1h-1zM4 3h1v1h-1zM5 3h1v1h-1zM7 3h1v1h-1zM10 3h1v1h-1zM11 3h1v1h-1zM12 3h1v1h-1zM15 3h1v1h-1zM18 3h1v1h-1zM20 3h1v1h-1zM21 3h1v1h-1zM23 3h1v1h-1zM25 3h1v1h-1zM26 3h1v1h-1zM27 3h1v1h-1zM29 3h1v1h-1zM1 4h1v1h-1zM3 4h1v1h-1zM4 4h1v1h-1zM5 4h1v1h-1zM7 4h1v1h-1zM9 4h1v1h-1zM11 4h1v1h-1zM13 4h1v1h-1zM14 4h1v1h-1zM15 4h1v1h-1zM16 4h1v1h-1zM17 4h1v1h-1zM19 4h1v1h-1zM20 4h1v1h-1zM23 4h1v1h-1zM25 4h1v1h-1zM26 4h1v1h-1zM27 4h1v1h-1zM29 4h1v1h-1zM1 5h1v1h-1zM3 5h1v1h-1zM4 5h1v1h-1zM5 5h1v1h-1zM7 5h1v1h-1zM9 5h1v1h-1zM10 5h1v1h-1zM11 5h1v1h-1zM12 5h1v1h-1zM14 5h1v1h-1zM16 5h1v1h-1zM19 5h1v1h-1zM21 5h1v1h-1zM23 5h1v1h-1zM25 5h1v1h-1zM26 5h1v1h-1zM27 5h1v1h-1zM29 5h1v1h-1zM1 6h1v1h-1zM7 6h1v1h-1zM9 6h1v1h-1zM10 6h1v1h-1zM12 6h1v1h-1zM13 6h1v1h-1zM20 6h1v1h-1zM23 6h1v1h-1zM29 6h1v1h-1zM1 7h1v1h-1zM2 7h1v1h-1zM3 7h1v1h-1zM4 7h1v1h-1zM5 7h1v1h-1zM6 7h1v1h-1zM7 7h1v1h-1zM9 7h1v1h-1zM11 7h1v1h-1zM13 7h1v1h-1zM15 7h1v1h-1zM17 7h1v1h-1zM19 7h1v1h-1zM21 7h1v1h-1zM23 7h1v1h-1zM24 7h1v1h-1zM25 7h1v1h-1zM26 7h1v1h-1zM27 7h1v1h-1zM28 7h1v1h-1zM29 7h1v1h-1zM9 8h1v1h-1zM12 8h1v1h-1zM13 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM19 8h1v1h-1zM21 8h1v1h-1zM1 9h1v1h-1zM5 9h1v1h-1zM7 9h1v1h-1zM8 9h1v1h-1zM9 9h1v1h-1zM10 9h1v1h-1zM11 9h1v1h-1zM13 9h1v1h-1zM15 9h1v1h-1zM16 9h1v1h-1zM17 9h1v1h-1zM18 9h1v1h-1zM21 9h1v1h-1zM22 9h1v1h-1zM23 9h1v1h-1zM24 9h1v1h-1zM25 9h1v1h-1zM26 9h1v1h-1zM29 9h1v1h-1zM2 10h1v1h-1zM3 10h1v1h-1zM5 10h1v1h-1zM6 10h1v1h-1zM11 10h1v1h-1zM13 10h1v1h-1zM15 10h1v1h-1zM23 10h1v1h-1zM24 10h1v1h-1zM25 10h1v1h-1zM26 10h1v1h-1zM27 10h1v1h-1zM28 10h1v1h-1zM29 10h1v1h-1zM3 11h1v1h-1zM4 11h1v1h-1zM7 11h1v1h-1zM8 11h1v1h-1zM11 11h1v1h-1zM14 11h1v1h-1zM15 11h1v1h-1zM21 11h1v1h-1zM23 11h1v1h-1zM24 11h1v1h-1zM29 11h1v1h-1zM1 12h1v1h-1zM2 12h1v1h-1zM3 12h1v1h-1zM5 12h1v1h-1zM10 12h1v1h-1zM11 12h1v1h-1zM13 12h1v1h-1zM14 12h1v1h-1zM16 12h1v1h-1zM18 12h1v1h-1zM20 12h1v1h-1zM21 12h1v1h-1zM23 12h1v1h-1zM24 12h1v1h-1zM25 12h1v1h-1zM26 12h1v1h-1zM28 12h1v1h-1zM29 12h1v1h-1zM1 13h1v1h-1zM3 13h1v1h-1zM5 13h1v1h-1zM6 13h1v1h-1zM7 13h1v1h-1zM8 13h1v1h-1zM9 13h1v1h-1zM10 13h1v1h-1zM11 13h1v1h-1zM12 13h1v1h-1zM14 13h1v1h-1zM18 13h1v1h-1zM21 13h1v1h-1zM22 13h1v1h-1zM28 13h1v1h-1zM2 14h1v1h-1zM3 14h1v1h-1zM4 14h1v1h-1zM5 14h1v1h-1zM6 14h1v1h-1zM10 14h1v1h-1zM14 14h1v1h-1zM15 14h1v1h-1zM16 14h1v1h-1zM17 14h1v1h-1zM18 14h1v1h-1zM19 14h1v1h-1zM23 14h1v1h-1zM24 14h1v1h-1zM25 14h1v1h-1zM26 14h1v1h-1zM27 14h1v1h-1zM28 14h1v1h-1zM29 14h1v1h-1zM4 15h1v1h-1zM7 15h1v1h-1zM8 15h1v1h-1zM9 15h1v1h-1zM11 15h1v1h-1zM17 15h1v1h-1zM18 15h1v1h-1zM21 15h1v1h-1zM24 15h1v1h-1zM26 15h1v1h-1zM27 15h1v1h-1zM29 15h1v1h-1zM2 16h1v1h-1zM5 16h1v1h-1zM6 16h1v1h-1zM9 16h1v1h-1zM12 16h1v1h-1zM13 16h1v1h-1zM16 16h1v1h-1zM18 16h1v1h-1zM19 16h1v1h-1zM20 16h1v1h-1zM22 16h1v1h-1zM28 16h1v1h-1zM29 16h1v1h-1zM1 17h1v1h-1zM3 17h1v1h-1zM4 17h1v1h-1zM5 17h1v1h-1zM6 17h1v1h-1zM7 17h1v1h-1zM9 17h1v1h-1zM12 17h1v1h-1zM13 17h1v1h-1zM15 17h1v1h-1zM16 17h1v1h-1zM18 17h1v1h-1zM20 17h1v1h-1zM21 17h1v1h-1zM22 17h1v1h-1zM24 17h1v1h-1zM28 17h1v1h-1zM1 18h1v1h-1zM3 18h1v1h-1zM4 18h1v1h-1zM8 18h1v1h-1zM9 18h1v1h-1zM10 18h1v1h-1zM12 18h1v1h-1zM15 18h1v1h-1zM16 18h1v1h-1zM19 18h1v1h-1zM22 18h1v1h-1zM23 18h1v1h-1zM24 18h1v1h-1zM25 18h1v1h-1zM26 18h1v1h-1zM28 18h1v1h-1zM29 18h1v1h-1zM5 19h1v1h-1zM7 19h1v1h-1zM11 19h1v1h-1zM12 19h1v1h-1zM16 19h1v1h-1zM17 19h1v1h-1zM19 19h1v1h-1zM22 19h1v1h-1zM23 19h1v1h-1zM27 19h1v1h-1zM29 19h1v1h-1zM3 20h1v1h-1zM4 20h1v1h-1zM5 20h1v1h-1zM6 20h1v1h-1zM11 20h1v1h-1zM12 20h1v1h-1zM17 20h1v1h-1zM18 20h1v1h-1zM20 20h1v1h-1zM21 20h1v1h-1zM28 20h1v1h-1zM29 20h1v1h-1zM1 21h1v1h-1zM2 21h1v1h-1zM6 21h1v1h-1zM7 21h1v1h-1zM8 21h1v1h-1zM12 21h1v1h-1zM13 21h1v1h-1zM14 21h1v1h-1zM15 21h1v1h-1zM17 21h1v1h-1zM18 21h1v1h-1zM21 21h1v1h-1zM22 21h1v1h-1zM23 21h1v1h-1zM24 21h1v1h-1zM25 21h1v1h-1zM26 21h1v1h-1zM29 21h1v1h-1zM9 22h1v1h-1zM10 22h1v1h-1zM11 22h1v1h-1zM13 22h1v1h-1zM15 22h1v1h-1zM17 22h1v1h-1zM18 22h1v1h-1zM20 22h1v1h-1zM21 22h1v1h-1zM25 22h1v1h-1zM29 22h1v1h-1zM1 23h1v1h-1zM2 23h1v1h-1zM3 23h1v1h-1zM4 23h1v1h-1zM5 23h1v1h-1zM6 23h1v1h-1zM7 23h1v1h-1zM9 23h1v1h-1zM10 23h1v1h-1zM14 23h1v1h-1zM15 23h1v1h-1zM16 23h1v1h-1zM17 23h1v1h-1zM18 23h1v1h-1zM20 23h1v1h-1zM21 23h1v1h-1zM23 23h1v1h-1zM25 23h1v1h-1zM26 23h1v1h-1zM27 23h1v1h-1zM29 23h1v1h-1zM1 24h1v1h-1zM7 24h1v1h-1zM11 24h1v1h-1zM14 24h1v1h-1zM18 24h1v1h-1zM19 24h1v1h-1zM21 24h1v1h-1zM25 24h1v1h-1zM28 24h1v1h-1zM29 24h1v1h-1zM1 25h1v1h-1zM3 25h1v1h-1zM4 25h1v1h-1zM5 25h1v1h-1zM7 25h1v1h-1zM9 25h1v1h-1zM10 25h1v1h-1zM14 25h1v1h-1zM16 25h1v1h-1zM18 25h1v1h-1zM19 25h1v1h-1zM20 25h1v1h-1zM21 25h1v1h-1zM22 25h1v1h-1zM23 25h1v1h-1zM24 25h1v1h-1zM25 25h1v1h-1zM26 25h1v1h-1zM28 25h1v1h-1zM29 25h1v1h-1zM1 26h1v1h-1zM3 26h1v1h-1zM4 26h1v1h-1zM5 26h1v1h-1zM7 26h1v1h-1zM10 26h1v1h-1zM12 26h1v1h-1zM13 26h1v1h-1zM14 26h1v1h-1zM15 26h1v1h-1zM16 26h1v1h-1zM19 26h1v1h-1zM21 26h1v1h-1zM22 26h1v1h-1zM24 26h1v1h-1zM28 26h1v1h-1zM1 27h1v1h-1zM3 27h1v1h-1zM4 27h1v1h-1zM5 27h1v1h-1zM7 27h1v1h-1zM11 27h1v1h-1zM14 27h1v1h-1zM15 27h1v1h-1zM18 27h1v1h-1zM22 27h1v1h-1zM26 27h1v1h-1zM27 27h1v1h-1zM28 27h1v1h-1zM29 27h1v1h-1zM1 28h1v1h-1zM7 28h1v1h-1zM14 28h1v1h-1zM21 28h1v1h-1zM22 28h1v1h-1zM26 28h1v1h-1zM28 28h1v1h-1zM29 28h1v1h-1zM1 29h1v1h-1zM2 29h1v1h-1zM3 29h1v1h-1zM4 29h1v1h-1zM5 29h1v1h-1zM6 29h1v1h-1zM7 29h1v1h-1zM9 29h1v1h-1zM10 29h1v1h-1zM13 29h1v1h-1zM19 29h1v1h-1zM21 29h1v1h-1zM22 29h1v1h-1zM25 29h1v1h-1zM26 29h1v1h-1zM28 29h1v1h-1z\"/></svg>\n      </div>\n      <div style=\"font-size: 3.5pt; font-family: 'IBM Plex Mono'; color: #64748b; text-transform: uppercase; text-align: center; margin-top: 0.5mm;\">Scan to verify credential authenticity</div>\n    </div>\n  </div>\n      <div class=\"canvas-element canvas-text\" data-element-id=\"m-qr-label\" style=\"position: absolute; left: 38%; top: 80.5%; width: 24%; height: 2.5%; z-index: 2; transform: rotate(0deg); opacity: 1; background-color: transparent; border: none; border-radius: 0px; display: flex; align-items: center; justify-content: center; box-sizing: border-box; overflow: hidden; padding: 0 2px\"><span style=\"width: 100%; display: block; font-size: 7px; font-family: 'IBM Plex Mono', monospace; font-weight: 700; font-style: normal; color: #94a3b8; text-align: center; letter-spacing: 1.5px; line-height: 1.2; white-space: pre-wrap; word-break: break-word\">VERIFIED CREDENTIAL</span></div>\n      <div class=\"canvas-element canvas-shape\" data-element-id=\"m-sig2-line\" data-shape-type=\"line\" style=\"position: absolute; left: 66%; top: 71%; width: 22%; height: 0.25%; z-index: 2; transform: rotate(0deg); opacity: 1; background-color: transparent; border: none; border-radius: 0px; display: flex; align-items: center; justify-content: flex-start; box-sizing: border-box; overflow: hidden; padding: 0\"><div style=\"width:100%;height:2px;background-color:#94a3b8;\"></div></div>\n      <div class=\"canvas-element canvas-text\" data-element-id=\"m-sig2-name\" style=\"position: absolute; left: 66%; top: 72.5%; width: 22%; height: 3.5%; z-index: 2; transform: rotate(0deg); opacity: 1; background-color: transparent; border: none; border-radius: 0px; display: flex; align-items: center; justify-content: center; box-sizing: border-box; overflow: hidden; padding: 0 2px\"><span style=\"width: 100%; display: block; font-size: 9.5px; font-family: 'IBM Plex Sans', sans-serif; font-weight: 700; font-style: normal; color: #0f172a; text-align: center; letter-spacing: normal; line-height: 1.2; white-space: pre-wrap; word-break: break-word\">Authorized Signatory</span></div>\n      <div class=\"canvas-element canvas-text\" data-element-id=\"m-sig2-title\" style=\"position: absolute; left: 66%; top: 76.2%; width: 22%; height: 3%; z-index: 2; transform: rotate(0deg); opacity: 1; background-color: transparent; border: none; border-radius: 0px; display: flex; align-items: center; justify-content: center; box-sizing: border-box; overflow: hidden; padding: 0 2px\"><span style=\"width: 100%; display: block; font-size: 7.5px; font-family: 'IBM Plex Mono', monospace; font-weight: 400; font-style: normal; color: #64748b; text-align: center; letter-spacing: 1px; line-height: 1.2; white-space: pre-wrap; word-break: break-word\">REGISTRAR / ISSUING OFFICE</span></div>\n      <div class=\"canvas-element canvas-text\" data-element-id=\"m-footer\" data-dynamic-field=\"Document ID, Issue Date\" data-dynamic-token=\"{{Document ID}}, {{Issue Date}}\" data-sample-value=\"CREDENTIAL ID: VERIFIED-474705   •   ISSUED: 2026-11-21   •   STATUS: VERIFIED\" style=\"position: absolute; left: 8%; top: 88%; width: 84%; height: 2.5%; z-index: 2; transform: rotate(0deg); opacity: 1; background-color: transparent; border: none; border-radius: 0px; display: flex; align-items: center; justify-content: center; box-sizing: border-box; overflow: hidden; padding: 0 2px\"><span style=\"width: 100%; display: block; font-size: 8px; font-family: 'IBM Plex Mono', monospace; font-weight: 400; font-style: normal; color: #94a3b8; text-align: center; letter-spacing: 1.6px; line-height: 1.2; white-space: pre-wrap; word-break: break-word\">CREDENTIAL ID: VERIFIED-474705   •   ISSUED: 2026-11-21   •   STATUS: VERIFIED</span></div>\n    </div>\n  </section>\n</main>\n</body>\n</html>",
+    "totalPages": 1,
+    "elements": [
+      {
+        "id": "m-border-outer",
+        "type": "shape",
+        "x": 3.2,
+        "y": 4.2,
+        "width": 93.6,
+        "height": 91.6,
+        "zIndex": 1,
+        "content": "rect",
+        "style": {
+          "borderWidth": 1,
+          "borderColor": "#0f172a",
+          "backgroundColor": "transparent"
+        }
+      },
+      {
+        "id": "m-border-inner",
+        "type": "shape",
+        "x": 4.4,
+        "y": 5.8,
+        "width": 91.2,
+        "height": 88.4,
+        "zIndex": 1,
+        "content": "rect",
+        "style": {
+          "borderWidth": 0.5,
+          "borderColor": "#cbd5e1",
+          "backgroundColor": "transparent"
+        }
+      },
+      {
+        "id": "m-issuer",
+        "type": "text",
+        "x": 10,
+        "y": 10,
+        "width": 80,
+        "height": 3.5,
+        "zIndex": 2,
+        "content": "YOUR ORGANIZATION OR INSTITUTION NAME",
+        "style": {
+          "fontSize": 8.5,
+          "fontFamily": "\"IBM Plex Sans\", sans-serif",
+          "fontWeight": "bold",
+          "color": "#64748b",
+          "letterSpacing": 3.5,
+          "textAlign": "center"
+        }
+      },
+      {
+        "id": "m-title",
+        "type": "text",
+        "x": 10,
+        "y": 15.2,
+        "width": 80,
+        "height": 8.5,
+        "zIndex": 2,
+        "content": "CERTIFICATE OF EXCELLENCE",
+        "style": {
+          "fontSize": 32,
+          "fontFamily": "\"Playfair Display\", Georgia, serif",
+          "fontWeight": "bold",
+          "color": "#0f172a",
+          "letterSpacing": 1.5,
+          "textAlign": "center"
+        }
+      },
+      {
+        "id": "m-conferred",
+        "type": "text",
+        "x": 10,
+        "y": 25.8,
+        "width": 80,
+        "height": 3.5,
+        "zIndex": 2,
+        "content": "THIS CREDENTIAL IS PROUDLY CONFERRED UPON",
+        "style": {
+          "fontSize": 8.5,
+          "fontFamily": "\"IBM Plex Sans\", sans-serif",
+          "fontWeight": "semibold",
+          "color": "#94a3b8",
+          "letterSpacing": 2.8,
+          "textAlign": "center"
+        }
+      },
+      {
+        "id": "m-recipient",
+        "type": "variable",
+        "x": 10,
+        "y": 31,
+        "width": 80,
+        "height": 11,
+        "zIndex": 2,
+        "content": "{{Recipient Name}}",
+        "style": {
+          "fontSize": 38,
+          "fontFamily": "\"Playfair Display\", Georgia, serif",
+          "fontWeight": "bold",
+          "color": "#0f172a",
+          "textAlign": "center",
+          "letterSpacing": 0.5
+        }
+      },
+      {
+        "id": "m-divider",
+        "type": "shape",
+        "x": 38,
+        "y": 44,
+        "width": 24,
+        "height": 0.2,
+        "zIndex": 2,
+        "content": "line",
+        "style": {
+          "backgroundColor": "#cbd5e1"
+        }
+      },
+      {
+        "id": "m-desc",
+        "type": "text",
+        "x": 12,
+        "y": 46.5,
+        "width": 76,
+        "height": 5.5,
+        "zIndex": 2,
+        "content": "In formal recognition of fulfilling all prescribed milestones with superior distinction in the executive curriculum:",
+        "style": {
+          "fontSize": 10.5,
+          "fontFamily": "\"IBM Plex Sans\", sans-serif",
+          "fontWeight": "normal",
+          "color": "#475569",
+          "textAlign": "center",
+          "lineHeight": 1.5
+        }
+      },
+      {
+        "id": "m-course",
+        "type": "variable",
+        "x": 10,
+        "y": 53.5,
+        "width": 80,
+        "height": 6,
+        "zIndex": 2,
+        "content": "{{Course Title}}",
+        "style": {
+          "fontSize": 18,
+          "fontFamily": "\"IBM Plex Sans\", sans-serif",
+          "fontWeight": "bold",
+          "color": "#0f172a",
+          "textAlign": "center",
+          "letterSpacing": 0.5
+        }
+      },
+      {
+        "id": "m-sig1-line",
+        "type": "shape",
+        "x": 12,
+        "y": 71,
+        "width": 22,
+        "height": 0.25,
+        "zIndex": 2,
+        "content": "line",
+        "style": {
+          "backgroundColor": "#94a3b8"
+        }
+      },
+      {
+        "id": "m-sig1-name",
+        "type": "text",
+        "x": 12,
+        "y": 72.5,
+        "width": 22,
+        "height": 3.5,
+        "zIndex": 2,
+        "content": "Authorized Signatory",
+        "style": {
+          "fontSize": 9.5,
+          "fontFamily": "\"IBM Plex Sans\", sans-serif",
+          "fontWeight": "bold",
+          "color": "#0f172a",
+          "textAlign": "center"
+        }
+      },
+      {
+        "id": "m-sig1-title",
+        "type": "text",
+        "x": 12,
+        "y": 76.2,
+        "width": 22,
+        "height": 3,
+        "zIndex": 2,
+        "content": "PROGRAM DIRECTOR",
+        "style": {
+          "fontSize": 7.5,
+          "fontFamily": "\"IBM Plex Mono\", monospace",
+          "color": "#64748b",
+          "letterSpacing": 1,
+          "textAlign": "center"
+        }
+      },
+      {
+        "id": "m-qr",
+        "type": "qr",
+        "x": 44,
+        "y": 64,
+        "width": 12,
+        "height": 16,
+        "zIndex": 2,
+        "content": "https://authensia.com/verify/{{Document ID}}",
+        "style": {
+          "backgroundColor": "#ffffff",
+          "borderColor": "#e2e8f0",
+          "borderWidth": 0.5
+        },
+        "qrOptions": {
+          "variant": "minimal",
+          "layout": "vertical",
+          "companyName": "Official Attestation",
+          "headerText": "",
+          "subText": "",
+          "showDocId": false,
+          "accentColor": "#0f172a",
+          "backgroundColor": "#ffffff",
+          "showBeam": false,
+          "darkTheme": false
+        }
+      },
+      {
+        "id": "m-qr-label",
+        "type": "text",
+        "x": 38,
+        "y": 80.5,
+        "width": 24,
+        "height": 2.5,
+        "zIndex": 2,
+        "content": "VERIFIED CREDENTIAL",
+        "style": {
+          "fontSize": 7,
+          "fontFamily": "\"IBM Plex Mono\", monospace",
+          "fontWeight": "bold",
+          "color": "#94a3b8",
+          "letterSpacing": 1.5,
+          "textAlign": "center"
+        }
+      },
+      {
+        "id": "m-sig2-line",
+        "type": "shape",
+        "x": 66,
+        "y": 71,
+        "width": 22,
+        "height": 0.25,
+        "zIndex": 2,
+        "content": "line",
+        "style": {
+          "backgroundColor": "#94a3b8"
+        }
+      },
+      {
+        "id": "m-sig2-name",
+        "type": "text",
+        "x": 66,
+        "y": 72.5,
+        "width": 22,
+        "height": 3.5,
+        "zIndex": 2,
+        "content": "Authorized Signatory",
+        "style": {
+          "fontSize": 9.5,
+          "fontFamily": "\"IBM Plex Sans\", sans-serif",
+          "fontWeight": "bold",
+          "color": "#0f172a",
+          "textAlign": "center"
+        }
+      },
+      {
+        "id": "m-sig2-title",
+        "type": "text",
+        "x": 66,
+        "y": 76.2,
+        "width": 22,
+        "height": 3,
+        "zIndex": 2,
+        "content": "REGISTRAR / ISSUING OFFICE",
+        "style": {
+          "fontSize": 7.5,
+          "fontFamily": "\"IBM Plex Mono\", monospace",
+          "color": "#64748b",
+          "letterSpacing": 1,
+          "textAlign": "center"
+        }
+      },
+      {
+        "id": "m-footer",
+        "type": "text",
+        "x": 8,
+        "y": 88,
+        "width": 84,
+        "height": 2.5,
+        "zIndex": 2,
+        "content": "CREDENTIAL ID: {{Document ID}}   •   ISSUED: {{Issue Date}}   •   STATUS: VERIFIED",
+        "style": {
+          "fontSize": 8,
+          "fontFamily": "\"IBM Plex Mono\", monospace",
+          "color": "#94a3b8",
+          "letterSpacing": 1.6,
+          "textAlign": "center"
+        }
+      }
+    ]
+  },
+  "placeholders": [
+    "{{Document ID}}",
+    "{{Recipient Name}}",
+    "{{Course Title}}",
+    "{{Issue Date}}",
+    "{{Grade}}"
+  ],
+  "dynamicVariables": [
+    {
+      "placeholder": "{{Document ID}}",
+      "fieldName": "Document ID",
+      "type": "text",
+      "required": true,
+      "sampleValue": "VERIFIED-474705"
+    },
+    {
+      "placeholder": "{{Recipient Name}}",
+      "fieldName": "Recipient Name",
+      "type": "text",
+      "required": true,
+      "sampleValue": "Ananya Sharma"
+    },
+    {
+      "placeholder": "{{Course Title}}",
+      "fieldName": "Course Title",
+      "type": "text",
+      "required": true,
+      "sampleValue": "Advanced Distributed Systems"
+    },
+    {
+      "placeholder": "{{Issue Date}}",
+      "fieldName": "Issue Date",
+      "type": "date",
+      "required": true,
+      "sampleValue": "2026-11-21"
+    },
+    {
+      "placeholder": "{{Grade}}",
+      "fieldName": "Grade",
+      "type": "text",
+      "required": false,
+      "sampleValue": "Distinction (A+)"
+    }
+  ],
+  "sampleData": {
+    "Document ID": "VERIFIED-474705",
+    "Recipient Name": "Ananya Sharma",
+    "Course Title": "Advanced Distributed Systems",
+    "Issue Date": "2026-11-21",
+    "Grade": "Distinction (A+)"
+  },
+  "backendIntegration": {
+    "format": "json-with-html",
+    "description": "Production-ready blueprint export adhering to minimal executive aesthetic standards for backend services (Node.js Puppeteer, Python WeasyPrint, or microservices).",
+    "replacementGuide": "Replace each {{Field Name}} token in template.html with your database row value, or parse <script id=\"template-dynamic-values\" type=\"application/json\"> directly from the HTML source to inspect editor type, exact page size (mm), orientation, dynamic variables, sample values, and multi-page structure.",
+    "codeSnippets": {
+      "nodejs": "// Node.js Backend Integration with Puppeteer (certificate-editor)\nimport puppeteer from 'puppeteer';\nimport templatePackage from './certificate-editor__professional-certificate.json';\n\nexport async function generateDocumentPdf(recordData) {\n  // 1. Ingest template HTML from JSON package (exact @page size 297mm x 210mm)\n  let html = templatePackage.template.html;\n\n  // 2. Replace dynamic placeholders\n  Object.entries(recordData).forEach(([key, val]) => {\n    const token = new RegExp(`{{\\s*${key}\\s*}}`, 'g');\n    html = html.replace(token, String(val ?? ''));\n  });\n\n  // 3. Render 1:1 vector PDF using headless Chrome (honors @page size & Portrait/Landscape automatically)\n  const browser = await puppeteer.launch({ headless: true });\n  const page = await browser.newPage();\n  await page.setContent(html, { waitUntil: 'networkidle0' });\n\n  const pdfBuffer = await page.pdf({\n    preferCSSPageSize: true,\n    width: '297mm',\n    height: '210mm',\n    printBackground: true,\n    margin: { top: 0, right: 0, bottom: 0, left: 0 }\n  });\n\n  await browser.close();\n  return pdfBuffer;\n}",
+      "python": "# Python Backend Integration with WeasyPrint (certificate-editor)\nfrom weasyprint import HTML\nimport json\nimport re\n\nwith open('certificate-editor__professional-certificate.json', 'r', encoding='utf-8') as f:\n    template_pkg = json.load(f)\n\ndef render_document(record_data):\n    html = template_pkg['template']['html']\n    for key, val in record_data.items():\n        pattern = re.compile(rf'\\{{\\{{\\s*{re.escape(key)}\\s*\\}}\\}}')\n        html = pattern.sub(str(val or ''), html)\n    \n    # Generate high-fidelity 1:1 vector PDF (honors @page 297mm x 210mm)\n    pdf_bytes = HTML(string=html).write_pdf()\n    return pdf_bytes\n"
+    }
+  }
+}

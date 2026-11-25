@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="template-editor" content="certificate-editor">
+  <meta name="template-editor-label" content="Certificate Editor (Canvas)">
+  <meta name="template-page-size" content="ID Badge (Standard)">
+  <meta name="template-dimensions-mm" content="54mm x 86mm">
+  <meta name="template-orientation" content="Portrait">
+  <meta name="template-total-pages" content="1">
+  <title>Corporate Employee ID Card (Certificate Editor (Canvas) | ID Badge (Standard) Portrait)</title>
+  <!--
+    TEMPLATE METADATA & DYNAMIC VALUES (8 fields)
+    Editor: Certificate Editor (Canvas) (certificate-editor)
+    Page Size: ID Badge (Standard) | Dimensions: 54mm x 86mm | Orientation: Portrait | Pages: 1
+    Logical Stage: 360px x 572px (scaled 0.566929x into 54mm x 86mm for 1:1 editor parity)
+    Render State: tokenized
+    {{Document ID}} | type: text | required: yes | sample: VERIFIED-725088
+    {{Employee Name}} | type: text | required: yes | sample: Ananya Sharma
+    {{Position}} | type: text | required: yes | sample: Senior Platform Architect
+    {{Department}} | type: text | required: yes | sample: Platform & Trust Engineering
+    {{Issue Date}} | type: date | required: yes | sample: 2026-11-21
+    {{Expiry Date}} | type: date | required: no | sample: 2027-11-19
+    {{Blood Group}} | type: text | required: no | sample: O+
+    {{Photo}} | type: image | required: no | sample: https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80
+  -->
+  <script id="template-dynamic-values" type="application/json">
+{
+  "templateId": "t-id-card",
+  "templateName": "Executive Security Badge",
+  "documentTypeId": "dt-id-card",
+  "documentTypeName": "Corporate Employee ID Card",
+  "editor": "certificate-editor",
+  "editorLabel": "Certificate Editor (Canvas)",
+  "mode": "canvas",
+  "renderState": "tokenized",
+  "pageSpec": {
+    "sizeName": "ID Badge (Standard)",
+    "widthMm": 54,
+    "heightMm": 86,
+    "orientation": "Portrait",
+    "logicalStagePx": {
+      "width": 360,
+      "height": 572,
+      "scaleX": 0.566929,
+      "scaleY": 0.568251
+    },
+    "totalPages": 1
+  },
+  "pagination": {
+    "totalPages": 1,
+    "singleHtmlMultiPage": false,
+    "pageDelimiter": "\u003c!-- PAGE_BREAK -->",
+    "pageSelector": "section.doc-page[data-page-number]",
+    "pageCutSelector": ".doc-page-cut[data-page-break=\"true\"]",
+    "pageSizeMm": {
+      "sizeName": "ID Badge (Standard)",
+      "width": 54,
+      "height": 86,
+      "orientation": "Portrait"
+    },
+    "pages": [
+      {
+        "pageNumber": 1,
+        "id": "page-1",
+        "hasHeader": false,
+        "hasFooter": false,
+        "hasQr": true
+      }
+    ]
+  },
+  "placeholders": [
+    "{{Document ID}}",
+    "{{Employee Name}}",
+    "{{Position}}",
+    "{{Department}}",
+    "{{Issue Date}}",
+    "{{Expiry Date}}",
+    "{{Blood Group}}",
+    "{{Photo}}"
+  ],
+  "dynamicVariables": [
+    {
+      "placeholder": "{{Document ID}}",
+      "fieldName": "Document ID",
+      "type": "text",
+      "required": true,
+      "sampleValue": "VERIFIED-725088"
+    },
+    {
+      "placeholder": "{{Employee Name}}",
+      "fieldName": "Employee Name",
+      "type": "text",
+      "required": true,
+      "sampleValue": "Ananya Sharma"
+    },
+    {
+      "placeholder": "{{Position}}",
+      "fieldName": "Position",
+      "type": "text",
+      "required": true,
+      "sampleValue": "Senior Platform Architect"
+    },
+    {
+      "placeholder": "{{Department}}",
+      "fieldName": "Department",
+      "type": "text",
+      "required": true,
+      "sampleValue": "Platform & Trust Engineering"
+    },
+    {
+      "placeholder": "{{Issue Date}}",
+      "fieldName": "Issue Date",
+      "type": "date",
+      "required": true,
+      "sampleValue": "2026-11-21"
+    },
+    {
+      "placeholder": "{{Expiry Date}}",
+      "fieldName": "Expiry Date",
+      "type": "date",
+      "required": false,
+      "sampleValue": "2027-11-19"
+    },
+    {
+      "placeholder": "{{Blood Group}}",
+      "fieldName": "Blood Group",
+      "type": "text",
+      "required": false,
+      "sampleValue": "O+"
+    },
+    {
+      "placeholder": "{{Photo}}",
+      "fieldName": "Photo",
+      "type": "image",
+      "required": false,
+      "sampleValue": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80"
+    }
+  ],
+  "sampleData": {
+    "Document ID": "VERIFIED-725088",
+    "Employee Name": "Ananya Sharma",
+    "Position": "Senior Platform Architect",
+    "Department": "Platform & Trust Engineering",
+    "Issue Date": "2026-11-21",
+    "Expiry Date": "2027-11-19",
+    "Blood Group": "O+",
+    "Photo": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80"
+  }
+}
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    /* CSS Reset for Exact 1:1 Vector Print & Headless PDF Generation (Puppeteer / WeasyPrint) */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    @page {
+      size: 54mm 86mm;
+      margin: 0;
+    }
+    html, body {
+      width: 100%;
+      min-height: 100vh;
+      background-color: #e2e8f0;
+      font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: #161616;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+      line-height: 1.4;
+    }
+    /* Framed Single-HTML Sheet Container (Screen Preview) */
+    .doc-pages {
+      width: 100%;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 20px 16px 32px 16px;
+    }
+    .doc-page {
+      width: 54mm;
+      min-height: 86mm;
+      height: 86mm;
+      background-color: #ffffff;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      flex-shrink: 0;
+      box-shadow: 0 6px 24px rgba(15, 23, 42, 0.14);
+      border: 1px solid #cbd5e1;
+    }
+    .canvas-page {
+      display: block;
+    }
+    .canvas-stage {
+      position: relative;
+      width: 360px;
+      height: 572px;
+      overflow: hidden;
+      background-color: #ffffff;
+      transform-origin: top left;
+    }
+    .canvas-element {
+      position: absolute;
+      box-sizing: border-box;
+    }
+    .canvas-text, .canvas-variable {
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .doc-body table {
+      max-width: 100%;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+    .doc-body tr, .doc-body thead {
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+    .doc-page-cut {
+      width: 54mm;
+      margin: 14px auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      flex-shrink: 0;
+    }
+    .doc-page-cut::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 50%;
+      border-top: 1.5px dashed #94a3b8;
+    }
+    .doc-page-cut-label {
+      position: relative;
+      z-index: 1;
+      background: #e2e8f0;
+      color: #475569;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 2px 10px;
+      border: 1px solid #cbd5e1;
+    }
+    .doc-container h1 { font-size: 20pt; font-weight: 700; margin-bottom: 12pt; }
+    .doc-container h2 { font-size: 15pt; font-weight: 600; margin-top: 14pt; margin-bottom: 8pt; }
+    .doc-container p { font-size: 10.5pt; margin-bottom: 10pt; line-height: 1.6; }
+    .page-break { page-break-after: always; break-after: page; height: 0; border: none; }
+    @media print {
+      html, body {
+        width: 54mm;
+        height: auto;
+        min-height: 0;
+        background-color: #ffffff !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+      .doc-pages {
+        display: block;
+        min-height: 0;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+      .doc-page {
+        margin: 0 !important;
+        border: none !important;
+        box-shadow: none !important;
+        page-break-after: always;
+        break-after: page;
+      }
+      .doc-page:last-of-type {
+        page-break-after: auto;
+        break-after: auto;
+      }
+      .doc-page-cut, .doc-page-cut-label {
+        display: none !important;
+        height: 0 !important;
+        margin: 0 !important;
+        border: none !important;
+      }
+    }
+  </style>
+</head>
+<body data-template-id="t-id-card" data-document-type="dt-id-card" data-editor="certificate-editor" data-template-mode="canvas" data-page-size="ID Badge (Standard)" data-width-mm="54" data-height-mm="86" data-orientation="Portrait" data-total-pages="1" data-render-state="tokenized" data-dynamic-fields="Document ID, Employee Name, Position, Department, Issue Date, Expiry Date, Blood Group, Photo">
+  
+<main class="doc-pages canvas-pages" data-editor="certificate-editor" data-total-pages="1" data-page-size="ID Badge (Standard)" data-width-mm="54" data-height-mm="86" data-orientation="Portrait">
+  <!-- PAGE 1 OF 1 | Certificate Editor (Canvas) | ID Badge (Standard) (54mm x 86mm, Portrait) -->
+  <section class="doc-page canvas-page" id="page-1" data-editor="certificate-editor" data-page-number="1" data-total-pages="1" data-page-size="ID Badge (Standard)" data-width-mm="54" data-height-mm="86" data-orientation="Portrait" style="width: 54mm; height: 86mm; background-color: #ffffff; position: relative; overflow: hidden; box-sizing: border-box;">
+    
+    <div class="canvas-stage" data-logical-width-px="360" data-logical-height-px="572" data-scale-x="0.566929" data-scale-y="0.568251" style="position: relative; width: 360px; height: 572px; background-color: #ffffff; overflow: hidden; box-sizing: border-box; transform: scale(0.566929, 0.568251); transform-origin: top left;">
+      <div class="canvas-element canvas-shape" data-element-id="id-top-bar" data-shape-type="rect" style="position: absolute; left: 0%; top: 0%; width: 100%; height: 16%; z-index: 0; transform: rotate(0deg); opacity: 1; background-color: transparent; border: none; border-radius: 0px; display: flex; align-items: center; justify-content: flex-start; box-sizing: border-box; overflow: hidden; padding: 0"><div style="width:100%;height:100%;background-color:#0f172a;border:none;border-radius:0px;box-sizing:border-box;"></div></div>
+      <div class="canvas-element canvas-shape" data-element-id="id-brand-accent" data-shape-type="line" style="position: absolute; left: 0%; top: 16%; width: 100%; height: 0.8%; z-index: 1; transform: rotate(0deg); opacity: 1; background-color: transparent; border: none; border-radius: 0px; display: flex; align-items: center; justify-content: flex-start; box-sizing: border-box; overflow: hidden; padding: 0"><div style="width:100%;height:2px;background-color:#7c3aed;"></div></div>
+      <div class="canvas-element canvas-text" data-element-id="id-brand-title" style="position: absolute; left: 5%; top: 4%; width: 90%; height: 6%; z-index: 2; transform: rotate(0deg); opacity: 1; background-color: transparent; border: none; border-radius: 0px; display: flex; align-items: center; justify-content: center; box-sizing: border-box; overflow: hidden; padding: 0 2px"><span style="width: 100%; display: block; font-size: 13px; font-family: 'IBM Plex Sans', sans-serif; font-weight: 700; font-style: normal; color: #ffffff; text-align: center; letter-spacing: 2px; line-height: 1.2; white-space: pre-wrap; word-break: break-word">ORGANIZATION IDENTITY</span></div>
+      <div class="canvas-element canvas-text" data-element-id="id-brand-sub" style="position: absolute; left: 5%; top: 10%; width: 90%; height: 4%; z-index: 2; transform: rotate(0deg); opacity: 1; background-color: transparent; border: none; border-radius: 0px; display: flex; align-items: center; justify-content: center; box-sizing: border-box; overflow: hidden; padding: 0 2px"><span style="width: 100%; display: block; font-size: 7px; font-family: 'IBM Plex Mono', monospace; font-weight: 500; font-style: normal; color: #a78bfa; text-align: center; letter-spacing: 1.5px; line-height: 1.2; white-space: pre-wrap; word-break: break-word">SECURITY ACCESS PROTOCOL</span></div>
+      <div class="canvas-element canvas-shape" data-element-id="id-photo-frame" data-shape-type="rect" style="position: absolute; left: 26%; top: 19.5%; width: 48%; height: 32%; z-index: 1; transform: rotate(0deg); opacity: 1; background-color: transparent; border: none; border-radius: 0px; display: flex; align-items: center; justify-content: flex-start; box-sizing: border-box; overflow: hidden; padding: 0"><div style="width:100%;height:100%;background-color:#f1f5f9;border:2px solid #7c3aed;border-radius:4px;box-sizing:border-box;"></div></div>
+      <div class="canvas-element canvas-image" data-element-id="id-photo-img" data-dynamic-field="Photo" data-dynamic-token="{{Photo}}" data-sample-value="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&amp;fit=crop&amp;w=400&amp;q=80" style="position: absolute; left: 27%; top: 20.5%; width: 46%; height: 30%; z-index: 2; transform: rotate(0deg); opacity: 1; background-color: transparent; border: none; border-radius: 2px; display: flex; align-items: center; justify-content: flex-start; box-sizing: border-box; overflow: hidden; padding: 0"><img src="{{Photo}}" style="width: 100%; height: 100%; object-fit: cover; border-radius: inherit; display: block;" alt="" /></div>
+      <div class="canvas-element canvas-variable" data-element-id="id-name" data-dynamic-field="Employee Name" data-dynamic-token="{{Employee Name}}" data-sample-value="Ananya Sharma" style="position: absolute; left: 4%; top: 53.5%; width: 92%; height: 7%; z-index: 2; transform: rotate(0deg); opacity: 1; background-color: transparent; border: none; border-radius: 0px; display: flex; align-items: center; justify-content: center; box-sizing: border-box; overflow: hidden; padding: 0 2px"><span style="width: 100%; display: block; font-size: 18px; font-family: 'IBM Plex Sans', sans-serif; font-weight: 700; font-style: normal; color: #0f172a; text-align: center; letter-spacing: normal; line-height: 1.2; white-space: pre-wrap; word-break: break-word">{{Employee Name}}</span></div>
+      <div class="canvas-element canvas-variable" data-element-id="id-role" data-dynamic-field="Position" data-dynamic-token="{{Position}}" data-sample-value="Senior Platform Architect" style="position: absolute; left: 4%; top: 60.5%; width: 92%; height: 4%; z-index: 2; transform: rotate(0deg); opacity: 1; background-color: transparent; border: none; border-radius: 0px; display: flex; align-items: center; justify-content: center; box-sizing: border-box; overflow: hidden; padding: 0 2px"><span style="width: 100%; display: block; font-size: 10px; font-family: 'IBM Plex Sans', sans-serif; font-weight: 700; font-style: normal; color: #7c3aed; text-align: center; letter-spacing: 0.5px; line-height: 1.2; white-space: pre-wrap; word-break: break-word">{{Position}}</span></div>
+      <div class="canvas-element canvas-variable" data-element-id="id-dept" data-dynamic-field="Department" data-dynamic-token="{{Department}}" data-sample-value="Platform &amp; Trust Engineering" style="position: absolute; left: 4%; top: 65%; width: 92%; height: 4%; z-index: 2; transform: rotate(0deg); opacity: 1; background-color: transparent; border: none; border-radius: 0px; display: flex; align-items: center; justify-content: center; box-sizing: border-box; overflow: hidden; padding: 0 2px"><span style="width: 100%; display: block; font-size: 9px; font-family: 'IBM Plex Sans', sans-serif; font-weight: 500; font-style: normal; color: #64748b; text-align: center; letter-spacing: normal; line-height: 1.2; white-space: pre-wrap; word-break: break-word">{{Department}}</span></div>
+      <div class="canvas-element canvas-shape" data-element-id="id-meta-bar" data-shape-type="rect" style="position: absolute; left: 6%; top: 69.5%; width: 88%; height: 9%; z-index: 1; transform: rotate(0deg); opacity: 1; background-color: transparent; border: none; border-radius: 0px; display: flex; align-items: center; justify-content: flex-start; box-sizing: border-box; overflow: hidden; padding: 0"><div style="width:100%;height:100%;background-color:#f8fafc;border:1px solid #e2e8f0;border-radius:2px;box-sizing:border-box;"></div></div>
+      <div class="canvas-element canvas-text" data-element-id="id-blood" data-dynamic-field="Blood Group" data-dynamic-token="{{Blood Group}}" data-sample-value="BLOOD: O+" style="position: absolute; left: 8%; top: 70.5%; width: 40%; height: 3.5%; z-index: 2; transform: rotate(0deg); opacity: 1; background-color: transparent; border: none; border-radius: 0px; display: flex; align-items: center; justify-content: flex-start; box-sizing: border-box; overflow: hidden; padding: 0 2px"><span style="width: 100%; display: block; font-size: 8px; font-family: 'IBM Plex Mono', monospace; font-weight: 700; font-style: normal; color: #475569; text-align: left; letter-spacing: normal; line-height: 1.2; white-space: pre-wrap; word-break: break-word">BLOOD: {{Blood Group}}</span></div>
+      <div class="canvas-element canvas-text" data-element-id="id-date" data-dynamic-field="Expiry Date" data-dynamic-token="{{Expiry Date}}" data-sample-value="EXP: 2027-11-19" style="position: absolute; left: 50%; top: 70.5%; width: 42%; height: 3.5%; z-index: 2; transform: rotate(0deg); opacity: 1; background-color: transparent; border: none; border-radius: 0px; display: flex; align-items: center; justify-content: flex-end; box-sizing: border-box; overflow: hidden; padding: 0 2px"><span style="width: 100%; display: block; font-size: 8px; font-family: 'IBM Plex Mono', monospace; font-weight: 700; font-style: normal; color: #475569; text-align: right; letter-spacing: normal; line-height: 1.2; white-space: pre-wrap; word-break: break-word">EXP: {{Expiry Date}}</span></div>
+      <div class="canvas-element canvas-text" data-element-id="id-empid" data-dynamic-field="Document ID" data-dynamic-token="{{Document ID}}" data-sample-value="ID: VERIFIED-725088" style="position: absolute; left: 8%; top: 74%; width: 84%; height: 3.5%; z-index: 2; transform: rotate(0deg); opacity: 1; background-color: transparent; border: none; border-radius: 0px; display: flex; align-items: center; justify-content: center; box-sizing: border-box; overflow: hidden; padding: 0 2px"><span style="width: 100%; display: block; font-size: 8px; font-family: 'IBM Plex Mono', monospace; font-weight: 700; font-style: normal; color: #7c3aed; text-align: center; letter-spacing: normal; line-height: 1.2; white-space: pre-wrap; word-break: break-word">ID: {{Document ID}}</span></div>
+      <div class="canvas-element canvas-qr" data-element-id="id-qr" data-dynamic-field="Document ID" data-qr-target="https://authensia.com/verify/{{Document ID}}" data-sample-value="VERIFIED-725088" style="position: absolute; left: 34%; top: 80%; width: 32%; height: 16.5%; z-index: 2; transform: rotate(0deg); opacity: 1; background-color: #ffffff; border: 1px solid #cbd5e1; border-radius: 0px; display: flex; align-items: center; justify-content: flex-start; box-sizing: border-box; overflow: hidden; padding: 0">
+      <div style="width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: space-between; box-sizing: border-box;">
+        
+        <div style="flex: 1; width: 100%; min-height: 0; box-sizing: border-box; display: flex; flex-direction: column;">
+          
+      <div style="width: 100%; height: 100%; display: flex; flex-direction: column; background: #ffffff; color: #161616; border: 0.5pt solid #e2e8f0; box-sizing: border-box; overflow: hidden; text-align: center;">
+        <div style="padding: 1mm 1.5mm; border-bottom: 0.5pt solid rgba(0,0,0,0.06); background: rgba(0,0,0,0.02); display: flex; justify-content: space-between; align-items: center; box-sizing: border-box;">
+          <span style="font-size: 3.8pt; font-family: 'IBM Plex Mono'; font-weight: 600; color: #64748b; text-transform: uppercase;">VERIFIED RECORD</span>
+          <span style="font-size: 4.5pt; font-family: 'IBM Plex Sans'; font-weight: 600; color: #334155;">Corporate Employee ID Card</span>
+        </div>
+        <div style="flex: 1; padding: 1.5mm; box-sizing: border-box; display: flex; align-items: center; justify-content: center;">
+          <div style="width: 82%; height: 82%; background: #ffffff; padding: 0.5mm; border: 0.5pt solid rgba(0,0,0,0.06); display: flex; align-items: center; justify-content: center;">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 35 35" shape-rendering="crispEdges" style="width:100%;height:100%;display:block;"><path fill="#ffffff" d="M0 0h35v35H0z"/><path fill="#000000" d="M1 1h1v1h-1zM2 1h1v1h-1zM3 1h1v1h-1zM4 1h1v1h-1zM5 1h1v1h-1zM6 1h1v1h-1zM7 1h1v1h-1zM9 1h1v1h-1zM11 1h1v1h-1zM13 1h1v1h-1zM14 1h1v1h-1zM15 1h1v1h-1zM17 1h1v1h-1zM18 1h1v1h-1zM19 1h1v1h-1zM20 1h1v1h-1zM24 1h1v1h-1zM27 1h1v1h-1zM28 1h1v1h-1zM29 1h1v1h-1zM30 1h1v1h-1zM31 1h1v1h-1zM32 1h1v1h-1zM33 1h1v1h-1zM1 2h1v1h-1zM7 2h1v1h-1zM9 2h1v1h-1zM12 2h1v1h-1zM13 2h1v1h-1zM14 2h1v1h-1zM17 2h1v1h-1zM19 2h1v1h-1zM22 2h1v1h-1zM23 2h1v1h-1zM24 2h1v1h-1zM25 2h1v1h-1zM27 2h1v1h-1zM33 2h1v1h-1zM1 3h1v1h-1zM3 3h1v1h-1zM4 3h1v1h-1zM5 3h1v1h-1zM7 3h1v1h-1zM11 3h1v1h-1zM12 3h1v1h-1zM16 3h1v1h-1zM18 3h1v1h-1zM20 3h1v1h-1zM21 3h1v1h-1zM22 3h1v1h-1zM23 3h1v1h-1zM25 3h1v1h-1zM27 3h1v1h-1zM29 3h1v1h-1zM30 3h1v1h-1zM31 3h1v1h-1zM33 3h1v1h-1zM1 4h1v1h-1zM3 4h1v1h-1zM4 4h1v1h-1zM5 4h1v1h-1zM7 4h1v1h-1zM9 4h1v1h-1zM10 4h1v1h-1zM11 4h1v1h-1zM12 4h1v1h-1zM13 4h1v1h-1zM15 4h1v1h-1zM17 4h1v1h-1zM20 4h1v1h-1zM21 4h1v1h-1zM22 4h1v1h-1zM23 4h1v1h-1zM25 4h1v1h-1zM27 4h1v1h-1zM29 4h1v1h-1zM30 4h1v1h-1zM31 4h1v1h-1zM33 4h1v1h-1zM1 5h1v1h-1zM3 5h1v1h-1zM4 5h1v1h-1zM5 5h1v1h-1zM7 5h1v1h-1zM11 5h1v1h-1zM12 5h1v1h-1zM13 5h1v1h-1zM14 5h1v1h-1zM15 5h1v1h-1zM21 5h1v1h-1zM22 5h1v1h-1zM24 5h1v1h-1zM27 5h1v1h-1zM29 5h1v1h-1zM30 5h1v1h-1zM31 5h1v1h-1zM33 5h1v1h-1zM1 6h1v1h-1zM7 6h1v1h-1zM10 6h1v1h-1zM12 6h1v1h-1zM18 6h1v1h-1zM19 6h1v1h-1zM20 6h1v1h-1zM21 6h1v1h-1zM22 6h1v1h-1zM25 6h1v1h-1zM27 6h1v1h-1zM33 6h1v1h-1zM1 7h1v1h-1zM2 7h1v1h-1zM3 7h1v1h-1zM4 7h1v1h-1zM5 7h1v1h-1zM6 7h1v1h-1zM7 7h1v1h-1zM9 7h1v1h-1zM11 7h1v1h-1zM13 7h1v1h-1zM15 7h1v1h-1zM17 7h1v1h-1zM19 7h1v1h-1zM21 7h1v1h-1zM23 7h1v1h-1zM25 7h1v1h-1zM27 7h1v1h-1zM28 7h1v1h-1zM29 7h1v1h-1zM30 7h1v1h-1zM31 7h1v1h-1zM32 7h1v1h-1zM33 7h1v1h-1zM9 8h1v1h-1zM12 8h1v1h-1zM13 8h1v1h-1zM18 8h1v1h-1zM19 8h1v1h-1zM21 8h1v1h-1zM24 8h1v1h-1zM25 8h1v1h-1zM1 9h1v1h-1zM3 9h1v1h-1zM4 9h1v1h-1zM6 9h1v1h-1zM7 9h1v1h-1zM8 9h1v1h-1zM11 9h1v1h-1zM12 9h1v1h-1zM15 9h1v1h-1zM17 9h1v1h-1zM18 9h1v1h-1zM19 9h1v1h-1zM20 9h1v1h-1zM22 9h1v1h-1zM24 9h1v1h-1zM27 9h1v1h-1zM30 9h1v1h-1zM32 9h1v1h-1zM33 9h1v1h-1zM2 10h1v1h-1zM3 10h1v1h-1zM4 10h1v1h-1zM6 10h1v1h-1zM9 10h1v1h-1zM10 10h1v1h-1zM12 10h1v1h-1zM15 10h1v1h-1zM20 10h1v1h-1zM21 10h1v1h-1zM22 10h1v1h-1zM23 10h1v1h-1zM24 10h1v1h-1zM27 10h1v1h-1zM28 10h1v1h-1zM30 10h1v1h-1zM31 10h1v1h-1zM33 10h1v1h-1zM2 11h1v1h-1zM4 11h1v1h-1zM5 11h1v1h-1zM7 11h1v1h-1zM8 11h1v1h-1zM9 11h1v1h-1zM11 11h1v1h-1zM12 11h1v1h-1zM15 11h1v1h-1zM17 11h1v1h-1zM18 11h1v1h-1zM24 11h1v1h-1zM26 11h1v1h-1zM27 11h1v1h-1zM28 11h1v1h-1zM29 11h1v1h-1zM30 11h1v1h-1zM32 11h1v1h-1zM33 11h1v1h-1zM1 12h1v1h-1zM3 12h1v1h-1zM5 12h1v1h-1zM6 12h1v1h-1zM9 12h1v1h-1zM10 12h1v1h-1zM12 12h1v1h-1zM13 12h1v1h-1zM14 12h1v1h-1zM15 12h1v1h-1zM17 12h1v1h-1zM19 12h1v1h-1zM21 12h1v1h-1zM26 12h1v1h-1zM28 12h1v1h-1zM30 12h1v1h-1zM33 12h1v1h-1zM7 13h1v1h-1zM9 13h1v1h-1zM12 13h1v1h-1zM19 13h1v1h-1zM20 13h1v1h-1zM22 13h1v1h-1zM24 13h1v1h-1zM29 13h1v1h-1zM30 13h1v1h-1zM32 13h1v1h-1zM33 13h1v1h-1zM2 14h1v1h-1zM3 14h1v1h-1zM4 14h1v1h-1zM6 14h1v1h-1zM8 14h1v1h-1zM11 14h1v1h-1zM12 14h1v1h-1zM14 14h1v1h-1zM17 14h1v1h-1zM18 14h1v1h-1zM19 14h1v1h-1zM23 14h1v1h-1zM25 14h1v1h-1zM28 14h1v1h-1zM30 14h1v1h-1zM32 14h1v1h-1zM1 15h1v1h-1zM2 15h1v1h-1zM3 15h1v1h-1zM4 15h1v1h-1zM5 15h1v1h-1zM7 15h1v1h-1zM9 15h1v1h-1zM11 15h1v1h-1zM12 15h1v1h-1zM13 15h1v1h-1zM16 15h1v1h-1zM17 15h1v1h-1zM18 15h1v1h-1zM19 15h1v1h-1zM22 15h1v1h-1zM23 15h1v1h-1zM25 15h1v1h-1zM27 15h1v1h-1zM30 15h1v1h-1zM31 15h1v1h-1zM2 16h1v1h-1zM3 16h1v1h-1zM4 16h1v1h-1zM9 16h1v1h-1zM10 16h1v1h-1zM11 16h1v1h-1zM12 16h1v1h-1zM13 16h1v1h-1zM14 16h1v1h-1zM15 16h1v1h-1zM17 16h1v1h-1zM19 16h1v1h-1zM20 16h1v1h-1zM21 16h1v1h-1zM22 16h1v1h-1zM23 16h1v1h-1zM26 16h1v1h-1zM27 16h1v1h-1zM29 16h1v1h-1zM30 16h1v1h-1zM31 16h1v1h-1zM1 17h1v1h-1zM7 17h1v1h-1zM9 17h1v1h-1zM10 17h1v1h-1zM13 17h1v1h-1zM14 17h1v1h-1zM15 17h1v1h-1zM16 17h1v1h-1zM17 17h1v1h-1zM19 17h1v1h-1zM20 17h1v1h-1zM21 17h1v1h-1zM22 17h1v1h-1zM23 17h1v1h-1zM26 17h1v1h-1zM27 17h1v1h-1zM29 17h1v1h-1zM31 17h1v1h-1zM1 18h1v1h-1zM4 18h1v1h-1zM5 18h1v1h-1zM6 18h1v1h-1zM11 18h1v1h-1zM12 18h1v1h-1zM16 18h1v1h-1zM18 18h1v1h-1zM21 18h1v1h-1zM22 18h1v1h-1zM23 18h1v1h-1zM24 18h1v1h-1zM25 18h1v1h-1zM26 18h1v1h-1zM27 18h1v1h-1zM29 18h1v1h-1zM30 18h1v1h-1zM32 18h1v1h-1zM33 18h1v1h-1zM4 19h1v1h-1zM7 19h1v1h-1zM8 19h1v1h-1zM13 19h1v1h-1zM14 19h1v1h-1zM15 19h1v1h-1zM16 19h1v1h-1zM18 19h1v1h-1zM21 19h1v1h-1zM23 19h1v1h-1zM25 19h1v1h-1zM28 19h1v1h-1zM29 19h1v1h-1zM31 19h1v1h-1zM32 19h1v1h-1zM1 20h1v1h-1zM5 20h1v1h-1zM6 20h1v1h-1zM10 20h1v1h-1zM12 20h1v1h-1zM15 20h1v1h-1zM16 20h1v1h-1zM17 20h1v1h-1zM20 20h1v1h-1zM21 20h1v1h-1zM22 20h1v1h-1zM24 20h1v1h-1zM25 20h1v1h-1zM27 20h1v1h-1zM29 20h1v1h-1zM33 20h1v1h-1zM2 21h1v1h-1zM3 21h1v1h-1zM7 21h1v1h-1zM9 21h1v1h-1zM10 21h1v1h-1zM11 21h1v1h-1zM14 21h1v1h-1zM15 21h1v1h-1zM19 21h1v1h-1zM20 21h1v1h-1zM21 21h1v1h-1zM25 21h1v1h-1zM30 21h1v1h-1zM31 21h1v1h-1zM1 22h1v1h-1zM3 22h1v1h-1zM4 22h1v1h-1zM8 22h1v1h-1zM9 22h1v1h-1zM10 22h1v1h-1zM11 22h1v1h-1zM12 22h1v1h-1zM13 22h1v1h-1zM14 22h1v1h-1zM16 22h1v1h-1zM19 22h1v1h-1zM24 22h1v1h-1zM30 22h1v1h-1zM31 22h1v1h-1zM33 22h1v1h-1zM3 23h1v1h-1zM4 23h1v1h-1zM5 23h1v1h-1zM6 23h1v1h-1zM7 23h1v1h-1zM9 23h1v1h-1zM15 23h1v1h-1zM17 23h1v1h-1zM18 23h1v1h-1zM19 23h1v1h-1zM24 23h1v1h-1zM27 23h1v1h-1zM28 23h1v1h-1zM32 23h1v1h-1zM33 23h1v1h-1zM2 24h1v1h-1zM11 24h1v1h-1zM14 24h1v1h-1zM17 24h1v1h-1zM19 24h1v1h-1zM20 24h1v1h-1zM25 24h1v1h-1zM28 24h1v1h-1zM29 24h1v1h-1zM30 24h1v1h-1zM32 24h1v1h-1zM1 25h1v1h-1zM5 25h1v1h-1zM7 25h1v1h-1zM8 25h1v1h-1zM11 25h1v1h-1zM12 25h1v1h-1zM13 25h1v1h-1zM15 25h1v1h-1zM16 25h1v1h-1zM18 25h1v1h-1zM23 25h1v1h-1zM25 25h1v1h-1zM26 25h1v1h-1zM27 25h1v1h-1zM28 25h1v1h-1zM29 25h1v1h-1zM32 25h1v1h-1zM33 25h1v1h-1zM9 26h1v1h-1zM11 26h1v1h-1zM12 26h1v1h-1zM16 26h1v1h-1zM17 26h1v1h-1zM18 26h1v1h-1zM19 26h1v1h-1zM20 26h1v1h-1zM25 26h1v1h-1zM29 26h1v1h-1zM30 26h1v1h-1zM33 26h1v1h-1zM1 27h1v1h-1zM2 27h1v1h-1zM3 27h1v1h-1zM4 27h1v1h-1zM5 27h1v1h-1zM6 27h1v1h-1zM7 27h1v1h-1zM9 27h1v1h-1zM20 27h1v1h-1zM23 27h1v1h-1zM24 27h1v1h-1zM25 27h1v1h-1zM27 27h1v1h-1zM29 27h1v1h-1zM1 28h1v1h-1zM7 28h1v1h-1zM9 28h1v1h-1zM10 28h1v1h-1zM13 28h1v1h-1zM14 28h1v1h-1zM16 28h1v1h-1zM20 28h1v1h-1zM21 28h1v1h-1zM22 28h1v1h-1zM23 28h1v1h-1zM24 28h1v1h-1zM25 28h1v1h-1zM29 28h1v1h-1zM30 28h1v1h-1zM31 28h1v1h-1zM32 28h1v1h-1zM33 28h1v1h-1zM1 29h1v1h-1zM3 29h1v1h-1zM4 29h1v1h-1zM5 29h1v1h-1zM7 29h1v1h-1zM10 29h1v1h-1zM15 29h1v1h-1zM16 29h1v1h-1zM18 29h1v1h-1zM20 29h1v1h-1zM21 29h1v1h-1zM24 29h1v1h-1zM25 29h1v1h-1zM26 29h1v1h-1zM27 29h1v1h-1zM28 29h1v1h-1zM29 29h1v1h-1zM31 29h1v1h-1zM1 30h1v1h-1zM3 30h1v1h-1zM4 30h1v1h-1zM5 30h1v1h-1zM7 30h1v1h-1zM9 30h1v1h-1zM11 30h1v1h-1zM12 30h1v1h-1zM13 30h1v1h-1zM15 30h1v1h-1zM19 30h1v1h-1zM20 30h1v1h-1zM21 30h1v1h-1zM24 30h1v1h-1zM28 30h1v1h-1zM30 30h1v1h-1zM31 30h1v1h-1zM32 30h1v1h-1zM33 30h1v1h-1zM1 31h1v1h-1zM3 31h1v1h-1zM4 31h1v1h-1zM5 31h1v1h-1zM7 31h1v1h-1zM9 31h1v1h-1zM14 31h1v1h-1zM18 31h1v1h-1zM19 31h1v1h-1zM20 31h1v1h-1zM22 31h1v1h-1zM24 31h1v1h-1zM25 31h1v1h-1zM26 31h1v1h-1zM27 31h1v1h-1zM28 31h1v1h-1zM30 31h1v1h-1zM31 31h1v1h-1zM1 32h1v1h-1zM7 32h1v1h-1zM10 32h1v1h-1zM14 32h1v1h-1zM16 32h1v1h-1zM17 32h1v1h-1zM18 32h1v1h-1zM20 32h1v1h-1zM23 32h1v1h-1zM24 32h1v1h-1zM28 32h1v1h-1zM29 32h1v1h-1zM33 32h1v1h-1zM1 33h1v1h-1zM2 33h1v1h-1zM3 33h1v1h-1zM4 33h1v1h-1zM5 33h1v1h-1zM6 33h1v1h-1zM7 33h1v1h-1zM9 33h1v1h-1zM10 33h1v1h-1zM12 33h1v1h-1zM14 33h1v1h-1zM16 33h1v1h-1zM17 33h1v1h-1zM18 33h1v1h-1zM19 33h1v1h-1zM22 33h1v1h-1zM23 33h1v1h-1zM24 33h1v1h-1zM29 33h1v1h-1zM31 33h1v1h-1z"/></svg>
+          </div>
+        </div>
+        <div style="padding: 1mm 1mm; border-top: 0.5pt solid rgba(0,0,0,0.06); background: rgba(0,0,0,0.02); box-sizing: border-box;">
+          <div style="font-size: 3.5pt; font-family: 'IBM Plex Mono'; color: #64748b;">REF: {{Document ID}}</div>
+          <div style="font-size: 4pt; font-family: 'IBM Plex Sans'; color: #475569; margin-top: 0.3mm;">Scan to verify credential authenticity</div>
+        </div>
+      </div>
+    
+        </div>
+        <div style="width: 100%; height: 3px; background-color: #0f62fe; flex-shrink: 0;"></div>
+      </div>
+    </div>
+      <div class="canvas-element canvas-shape" data-element-id="id-bottom-stripe" data-shape-type="rect" style="position: absolute; left: 0%; top: 98%; width: 100%; height: 2%; z-index: 1; transform: rotate(0deg); opacity: 1; background-color: transparent; border: none; border-radius: 0px; display: flex; align-items: center; justify-content: flex-start; box-sizing: border-box; overflow: hidden; padding: 0"><div style="width:100%;height:100%;background-color:#0f172a;border:none;border-radius:0px;box-sizing:border-box;"></div></div>
+    </div>
+  </section>
+</main>
+</body>
+</html>

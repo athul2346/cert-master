@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.db import models
+from django.utils import timezone
 from .managers import UserManager
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -7,6 +8,9 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
+
+    # Set to True once the signup email OTP has been verified.
+    email_verified = models.BooleanField(default=False)
 
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -101,3 +105,42 @@ class CompanyVerificationDocument(models.Model):
 
     def __str__(self):
         return f"{self.company.organisation_name} - {self.file.name}"
+
+
+class EmailOTP(models.Model):
+    """One-time code emailed to a user to verify their email address."""
+
+    PURPOSE_SIGNUP = "signup"
+    PURPOSE_CHOICES = [
+        (PURPOSE_SIGNUP, "Signup / email verification"),
+    ]
+
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="email_otps",
+    )
+    # Codes are stored hashed; the plaintext only ever exists in the email.
+    code_hash = models.CharField(max_length=128)
+    purpose = models.CharField(
+        max_length=32,
+        choices=PURPOSE_CHOICES,
+        default=PURPOSE_SIGNUP,
+    )
+    attempts = models.PositiveSmallIntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    expires_at = models.DateTimeField()
+    consumed_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        indexes = [
+            models.Index(fields=["user", "purpose", "consumed_at"]),
+        ]
+
+    def __str__(self):
+        return f"{self.user.email} - {self.purpose} ({self.created_at:%Y-%m-%d %H:%M})"
+
+    @property
+    def is_expired(self):
+        return timezone.now() >= self.expires_at

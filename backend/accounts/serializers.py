@@ -25,6 +25,11 @@ class LoginSerializer(serializers.Serializer):
         if not user.is_active:
             raise serializers.ValidationError("User account is disabled")
 
+        if not user.email_verified:
+            raise serializers.ValidationError(
+                "Please verify your email address before logging in."
+            )
+
         company = getattr(user, "company", None)
         if company is not None and company.status != CompanyProfile.STATUS_ACTIVE:
             if company.status == CompanyProfile.STATUS_PENDING:
@@ -65,7 +70,7 @@ class CompanySignupSerializer(serializers.Serializer):
     company_url = serializers.URLField(required=True, allow_null=False, allow_blank=True)
 
     def validate_email(self, value):
-        if User.objects.filter(email=value).exists():
+        if User.objects.filter(email__iexact=value).exists():
             raise serializers.ValidationError("Email already exists")
         return value
 
@@ -75,10 +80,11 @@ class CompanySignupSerializer(serializers.Serializer):
         return value
 
     def create(self, validated_data):
-        # 1. Create User (auth) - inactive-for-login until verified via status check
+        # 1. Create User (auth) - email stays unverified until the OTP is confirmed
         user = User.objects.create_user(
             email=validated_data["email"],
             password=validated_data["password"],
+            email_verified=False,
         )
 
         # 2. Create Company Profile - starts PENDING, awaiting admin verification
@@ -167,3 +173,18 @@ class VerificationQueueSerializer(serializers.ModelSerializer):
 class VerificationActionSerializer(serializers.Serializer):
     action = serializers.ChoiceField(choices=["approve", "reject"])
     reason = serializers.CharField(required=False, allow_blank=True)
+
+
+class OTPVerifySerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    otp = serializers.CharField(min_length=4, max_length=10, trim_whitespace=True)
+
+    def validate_otp(self, value):
+        value = value.strip()
+        if not value.isdigit():
+            raise serializers.ValidationError("OTP must contain digits only.")
+        return value
+
+
+class OTPResendSerializer(serializers.Serializer):
+    email = serializers.EmailField()
