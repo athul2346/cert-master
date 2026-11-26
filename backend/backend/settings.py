@@ -57,6 +57,15 @@ REST_FRAMEWORK = {
     # Turns duplicate-key / protected-row database errors into readable JSON
     # conflicts instead of unhandled 500s. See backend/exception_handler.py.
     "EXCEPTION_HANDLER": "backend.exception_handler.api_exception_handler",
+    # SessionAuthentication enforces CSRF on every unsafe request made with a
+    # session cookie. Do NOT re-introduce a CSRF-exempt subclass here.
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.SessionAuthentication",
+    ],
+    # Fail closed: any view that forgets to declare permissions requires auth.
+    "DEFAULT_PERMISSION_CLASSES": [
+        "rest_framework.permissions.IsAuthenticated",
+    ],
 }
 
 
@@ -273,6 +282,10 @@ if DEBUG:
     CSRF_COOKIE_SAMESITE = "Lax"
     CSRF_COOKIE_SECURE = False
 else:
+    # The SPA is served from a different site (e.g. *.vercel.app), so the
+    # session cookie must be SameSite=None to be sent on cross-site requests.
+    # Cross-site request forgery is prevented by DRF's CSRF enforcement (see
+    # REST_FRAMEWORK.DEFAULT_AUTHENTICATION_CLASSES), not by SameSite.
     SESSION_COOKIE_SAMESITE = "None"
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SAMESITE = "None"

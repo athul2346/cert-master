@@ -1,9 +1,11 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, generics, filters
+from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import IsAdminUser
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 from django.contrib.auth import login, logout
+from django.middleware.csrf import get_token
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.db import transaction
@@ -64,9 +66,11 @@ class LoginView(APIView):
         return Response(response_data, status=status.HTTP_200_OK)
 
 
-@method_decorator(csrf_exempt, name="dispatch")
 class LogoutView(APIView):
-    authentication_classes = []
+    # SessionAuthentication enforces CSRF whenever a session user is present,
+    # which blocks logout-CSRF. Anonymous callers are unaffected because no
+    # session user is found, so they still get a 200.
+    authentication_classes = [SessionAuthentication]
     permission_classes = []
 
     def post(self, request):
@@ -75,6 +79,20 @@ class LogoutView(APIView):
             {"message": "Logged out successfully"},
             status=status.HTTP_200_OK,
         )
+
+
+class CSRFView(APIView):
+    """
+    GET /api/auth/csrf/
+
+    Ensures the ``csrftoken`` cookie is set and returns the token so a
+    cross-origin SPA can send it as ``X-CSRFToken`` on unsafe requests.
+    """
+    authentication_classes = []
+    permission_classes = []
+
+    def get(self, request):
+        return Response({"csrfToken": get_token(request)})
 
 
 @method_decorator(csrf_exempt, name="dispatch")

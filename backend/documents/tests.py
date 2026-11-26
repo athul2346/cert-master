@@ -759,3 +759,60 @@ class PredefinedTemplateApiTests(DocumentApiMixin, TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data, [])
+
+
+class CsrfEnforcementTests(TestCase):
+    """Session-authenticated writes must carry a valid CSRF token."""
+
+    def setUp(self):
+        self.user = User.objects.create_user(
+            email="csrf@example.com", password="pass12345"
+        )
+        CompanyProfile.objects.create(
+            user=self.user,
+            organisation_name="CSRF Co",
+            classification="private",
+            country="IN",
+            cin_number="CIN-CSRF-1",
+        )
+        # enforce_csrf_checks mirrors production behaviour.
+        self.client = APIClient(enforce_csrf_checks=True)
+        self.client.force_login(self.user)
+
+    def test_write_without_csrf_token_is_rejected(self):
+        response = self.client.post(
+            "/api/document-types/",
+            {"code": "CSRF1", "name": "CSRF Test"},
+            format="json",
+        )
+        self.assertEqual(response.status_code, 403)
+        self.assertFalse(
+            DocumentType.objects.filter(code="CSRF1").exists()
+        )
+
+    def test_write_with_csrf_token_succeeds(self):
+        # Bootstrap the cookie, then echo it back in the header like the SPA.
+        csrf_response = self.client.get("/api/auth/csrf/")
+        self.assertEqual(csrf_response.status_code, 200)
+        token = self.client.cookies["csrftoken"].value
+
+        response = self.client.post(
+            "/api/document-types/",
+            {"code": "CSRF2", "name": "CSRF Test 2"},
+            format="json",
+            HTTP_X_CSRFTOKEN=token,
+        )
+        self.assertEqual(response.status_code, 201)
+        self.assertTrue(DocumentType.objects.filter(code="CSRF2").exists())
+
+    def test_public_verify_endpoint_needs_no_auth_or_csrf(self):
+        self.client.logout()
+        response = self.client.get(
+            "/api/verify-qr/00000000-0000-0000-0000-000000000000/"
+        )
+        # Reaches the view (404 = unknown UUID) instead of 401/403.
+        self.assertEqual(response.status_code, 404)
+
+    def test_logout_requires_csrf_when_session_present(self):
+        response = self.client.post("/api/auth/logout/")
+        self.assertEqual(response.status_code, 403)

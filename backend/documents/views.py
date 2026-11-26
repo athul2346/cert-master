@@ -1,10 +1,8 @@
 from rest_framework import generics, status
-from rest_framework.permissions import IsAdminUser, IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.db import transaction
-from django.views.decorators.csrf import csrf_exempt
-from django.utils.decorators import method_decorator
 from django.conf import settings
 from django.db.models import Prefetch
 from django.shortcuts import render
@@ -24,7 +22,6 @@ from .serializers import (
     CompanyDocumentWithJsonSerializer,
     DocumentStatusUpdateSerializer,
 )
-from .authentication import CsrfExemptSessionAuthentication
 from .exceptions import DocumentLocked
 from . import predefined
 
@@ -37,9 +34,7 @@ def ensure_document_editable(document):
         )
 
 
-@method_decorator(csrf_exempt, name="dispatch")
 class DocumentTypeListCreateAPIView(generics.ListCreateAPIView):
-    authentication_classes = [CsrfExemptSessionAuthentication]
     queryset = DocumentType.objects.all()
     serializer_class = DocumentTypeSerializer
     permission_classes = [IsAuthenticated]
@@ -59,9 +54,7 @@ class DocumentTypeListCreateAPIView(generics.ListCreateAPIView):
         return context
 
 
-@method_decorator(csrf_exempt, name="dispatch")
 class DocumentTypeRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
-    authentication_classes = [CsrfExemptSessionAuthentication]
     queryset = DocumentType.objects.all()
     serializer_class = DocumentTypeSerializer
     permission_classes = [IsAuthenticated]
@@ -135,9 +128,7 @@ class DocumentTypeRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPI
         )
 
 
-@method_decorator(csrf_exempt, name="dispatch")
 class DocumentTemplateListCreateAPIView(generics.ListCreateAPIView):
-    authentication_classes = [CsrfExemptSessionAuthentication]
     permission_classes = [IsAuthenticated]
     serializer_class = DocumentTemplateSerializer
 
@@ -153,11 +144,9 @@ class DocumentTemplateListCreateAPIView(generics.ListCreateAPIView):
 
 
 
-@method_decorator(csrf_exempt, name="dispatch")
 class DocumentTemplateRetrieveUpdateDestroyAPIView(
     generics.RetrieveUpdateDestroyAPIView
 ):
-    authentication_classes = [CsrfExemptSessionAuthentication]
     permission_classes = [IsAuthenticated]
     serializer_class = DocumentTemplateSerializer
 
@@ -185,7 +174,6 @@ class DocumentTemplateRetrieveUpdateDestroyAPIView(
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
-@method_decorator(csrf_exempt, name="dispatch")
 class TemplatesByDocumentTypeAPIView(APIView):
     """
     API to get all templates under a specific document type.
@@ -194,7 +182,6 @@ class TemplatesByDocumentTypeAPIView(APIView):
     
     Returns all templates that belong to the specified document type.
     """
-    authentication_classes = [CsrfExemptSessionAuthentication]
     permission_classes = [IsAuthenticated]
     serializer_class = DocumentTemplateSerializer
 
@@ -235,7 +222,6 @@ class TemplatesByDocumentTypeAPIView(APIView):
         })
 
 
-@method_decorator(csrf_exempt, name="dispatch")
 class DocumentsByDocumentTypeAPIView(APIView):
     """
     Get all documents that belong to a specific document type.
@@ -245,7 +231,6 @@ class DocumentsByDocumentTypeAPIView(APIView):
     Returns all documents that belong to the specified document type
     for the logged-in user's company.
     """
-    authentication_classes = [CsrfExemptSessionAuthentication]
     permission_classes = [IsAuthenticated]
     serializer_class = CompanyDocumentSerializer
 
@@ -286,9 +271,7 @@ class DocumentsByDocumentTypeAPIView(APIView):
         })
 
 
-@method_decorator(csrf_exempt, name="dispatch")
 class CompanyDocumentCreateView(APIView):
-    authentication_classes = [CsrfExemptSessionAuthentication]
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
@@ -305,9 +288,7 @@ class CompanyDocumentCreateView(APIView):
         )
 
 
-@method_decorator(csrf_exempt, name="dispatch")
 class CompanyDocumentListView(APIView):
-    authentication_classes = [CsrfExemptSessionAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
@@ -323,9 +304,7 @@ class CompanyDocumentListView(APIView):
         return Response(serializer.data)
 
 
-@method_decorator(csrf_exempt, name="dispatch")
 class CompanyDocumentDetailView(APIView):
-    authentication_classes = [CsrfExemptSessionAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get_object(self, request, pk):
@@ -396,7 +375,13 @@ class CompanyDocumentDetailView(APIView):
 class VerifyQRAPIView(APIView):
     """
     API to verify a QR code and return certificate info.
+
+    Public by design: anyone scanning a certificate QR code must be able to
+    verify it without an account. It is a read-only GET, so CSRF does not
+    apply.
     """
+    authentication_classes = []
+    permission_classes = [AllowAny]
 
     def get(self, request, uuid):
         # Look up the Document directly
@@ -442,7 +427,6 @@ class VerifyQRAPIView(APIView):
         )
 
 
-@method_decorator(csrf_exempt, name="dispatch")
 class CompanyDocumentFieldUpdateView(APIView):
     """
     API to partially update DocumentField entries without full document replacement.
@@ -454,7 +438,6 @@ class CompanyDocumentFieldUpdateView(APIView):
     
     All operations are atomic - they all succeed or fail together.
     """
-    authentication_classes = [CsrfExemptSessionAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get_object(self, request, pk):
@@ -537,7 +520,6 @@ class CompanyDocumentFieldUpdateView(APIView):
         })
 
 
-@method_decorator(csrf_exempt, name="dispatch")
 class CompanyDocumentStatusUpdateView(APIView):
     """
     API to update only the status of a CompanyDocument.
@@ -549,7 +531,6 @@ class CompanyDocumentStatusUpdateView(APIView):
         "status": "ACTIVE"   # one of: PENDING, ACTIVE, EXPIRED, REVOKED
     }
     """
-    authentication_classes = [CsrfExemptSessionAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get_object(self, request, pk):
@@ -586,7 +567,6 @@ class CompanyDocumentStatusUpdateView(APIView):
         )
 
 
-@method_decorator(csrf_exempt, name="dispatch")
 class CertificateRenderAPIView(APIView):
     """
     API to render certificate HTML by replacing placeholders and adding QR code.
@@ -606,7 +586,6 @@ class CertificateRenderAPIView(APIView):
         "rendered_html": "<html>...</html>"
     }
     """
-    authentication_classes = [CsrfExemptSessionAuthentication]
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
@@ -669,7 +648,6 @@ class CertificateRenderAPIView(APIView):
         )
 
 
-@method_decorator(csrf_exempt, name="dispatch")
 class PredefinedTemplateListView(APIView):
     """
     GET /predefined-templates/
@@ -678,7 +656,6 @@ class PredefinedTemplateListView(APIView):
     Returns metadata only; fetch a single package for its HTML and JSON.
     """
 
-    authentication_classes = [CsrfExemptSessionAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
@@ -686,7 +663,6 @@ class PredefinedTemplateListView(APIView):
         return Response([predefined.summary(package) for package in packages])
 
 
-@method_decorator(csrf_exempt, name="dispatch")
 class PredefinedTemplateDetailView(APIView):
     """
     GET /predefined-templates/{slug}/
@@ -695,7 +671,6 @@ class PredefinedTemplateDetailView(APIView):
     The payload can be posted as-is to /document-template/.
     """
 
-    authentication_classes = [CsrfExemptSessionAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get(self, request, slug):
@@ -708,7 +683,6 @@ class PredefinedTemplateDetailView(APIView):
         return Response(predefined.detail(package))
 
 
-@method_decorator(csrf_exempt, name="dispatch")
 class PredefinedTemplateImportView(APIView):
     """
     POST /predefined-templates/{slug}/import/
@@ -719,7 +693,6 @@ class PredefinedTemplateImportView(APIView):
     reported as a 409 instead of overwriting user edits.
     """
 
-    authentication_classes = [CsrfExemptSessionAuthentication]
     permission_classes = [IsAuthenticated]
 
     def post(self, request, slug):
