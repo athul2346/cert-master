@@ -4,6 +4,7 @@ from rest_framework import status, generics, filters
 from rest_framework.authentication import SessionAuthentication
 from rest_framework.permissions import IsAdminUser
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
+from rest_framework.throttling import AnonRateThrottle, ScopedRateThrottle
 from django.contrib.auth import login, logout
 from django.middleware.csrf import get_token
 from django.views.decorators.csrf import csrf_exempt
@@ -12,6 +13,7 @@ from django.db import transaction
 from django.db.models import Count, Q
 from django.utils.timezone import now
 from .models import CompanyProfile, CompanyVerificationDocument, User
+from .throttles import AccountScopedRateThrottle
 from .otp import (
     OTPCooldownError,
     OTPDeliveryError,
@@ -35,6 +37,9 @@ from .serializers import (
 class LoginView(APIView):
     authentication_classes = []
     permission_classes = []
+    # Per-account (email) + per-IP flood control.
+    throttle_classes = [AccountScopedRateThrottle, AnonRateThrottle]
+    throttle_scope = "login"
 
     def post(self, request):
         serializer = LoginSerializer(
@@ -100,6 +105,8 @@ class CompanySignupView(APIView):
     authentication_classes = []
     permission_classes = []
     parser_classes = [MultiPartParser, FormParser, JSONParser]
+    throttle_classes = [AnonRateThrottle, ScopedRateThrottle]
+    throttle_scope = "signup"
 
     def post(self, request):
         serializer = CompanySignupSerializer(data=request.data)
@@ -156,6 +163,8 @@ class OTPVerifyView(APIView):
     """
     authentication_classes = []
     permission_classes = []
+    throttle_classes = [AccountScopedRateThrottle, AnonRateThrottle]
+    throttle_scope = "otp_verify"
 
     def post(self, request):
         serializer = OTPVerifySerializer(data=request.data)
@@ -216,6 +225,8 @@ class OTPResendView(APIView):
     """
     authentication_classes = []
     permission_classes = []
+    throttle_classes = [AccountScopedRateThrottle, AnonRateThrottle]
+    throttle_scope = "otp_resend"
 
     def post(self, request):
         serializer = OTPResendSerializer(data=request.data)

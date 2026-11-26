@@ -27,6 +27,28 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 DEBUG = os.getenv("DEBUG", "False").lower() == "true"
 
+# True while the Django test runner is active. Rate-limiting and HTTPS
+# redirects must not interfere with `manage.py test` out of the box.
+RUNNING_TESTS = "test" in sys.argv
+
+
+def _throttle_rates():
+    rates = {
+        "anon": "60/min",
+        "user": "300/min",
+        "login": "5/min",
+        "otp_verify": "10/min",
+        "otp_resend": "3/min",
+        "signup": "5/hour",
+        "verify_qr": "60/min",
+    }
+    if RUNNING_TESTS:
+        # Counters live in the process cache and would leak between test
+        # methods, making the suite order-dependent. Production rates are
+        # still asserted in accounts.test_throttling.
+        return {scope: None for scope in rates}
+    return rates
+
 # Never ship a hardcoded key: a public fallback lets anyone forge sessions.
 # Local development gets a throwaway key; production must supply its own.
 SECRET_KEY = os.getenv("SECRET_KEY")
@@ -77,6 +99,14 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticated",
     ],
+    # Rate limiting. Uses Django's cache backend (LocMem by default): limits
+    # are per-process, so switch to Redis/DatabaseCache if you run more than
+    # one gunicorn worker or instance and need shared counters.
+    "DEFAULT_THROTTLE_CLASSES": [
+        "rest_framework.throttling.AnonRateThrottle",
+        "rest_framework.throttling.UserRateThrottle",
+    ],
+    "DEFAULT_THROTTLE_RATES": _throttle_rates(),
 }
 
 
@@ -307,7 +337,6 @@ LOCAL_HTTP = _env_bool("LOCAL_HTTP", False)
 # the environment (useful for staging or local production-like testing).
 # The test client does not follow HTTPS redirects, so keep `manage.py test`
 # usable without extra env vars. An explicit SECURE_SSL_REDIRECT always wins.
-RUNNING_TESTS = "test" in sys.argv
 SECURE_SSL_REDIRECT = _env_bool(
     "SECURE_SSL_REDIRECT", not DEBUG and not LOCAL_HTTP and not RUNNING_TESTS
 )
