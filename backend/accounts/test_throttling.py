@@ -34,6 +34,8 @@ class ThrottleConfigTests(SimpleTestCase):
             if key not in ("DEBUG", "SECRET_KEY", "LOCAL_HTTP")
         }
         env["DJANGO_SETTINGS_MODULE"] = "backend.settings"
+        env["EMAIL_PROVIDER"] = "smtp"
+        env["EMAIL_HOST"] = "smtp.example.com"
         env["DEBUG"] = "false"
         env["SECRET_KEY"] = "unit-test-secret-key-not-real"
         result = subprocess.run(

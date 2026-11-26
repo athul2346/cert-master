@@ -20,6 +20,8 @@ class SecretKeySettingTests(SimpleTestCase):
         }
         env["DEBUG"] = debug
         env["DJANGO_SETTINGS_MODULE"] = "backend.settings"
+        env["EMAIL_PROVIDER"] = "smtp"
+        env["EMAIL_HOST"] = "smtp.example.com"
         if secret_key is not None:
             env["SECRET_KEY"] = secret_key
         return subprocess.run(

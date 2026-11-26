@@ -286,6 +286,30 @@ else:
         else "django.core.mail.backends.console.EmailBackend"
     )
 
+# A console backend in production silently prints signup OTPs to the logs:
+# signup looks broken and the codes leak to anyone with log access.
+if (
+    not DEBUG
+    and not RUNNING_TESTS
+    and EMAIL_BACKEND == "django.core.mail.backends.console.EmailBackend"
+):
+    raise ImproperlyConfigured(
+        "A real email backend must be configured in production. Set "
+        "EMAIL_PROVIDER=smtp (EMAIL_HOST, EMAIL_HOST_USER, "
+        "EMAIL_HOST_PASSWORD, DEFAULT_FROM_EMAIL) or "
+        "EMAIL_PROVIDER=resend (RESEND_API_KEY, DEFAULT_FROM_EMAIL)."
+    )
+
+if (
+    EMAIL_PROVIDER == "resend"
+    and not DEBUG
+    and not RUNNING_TESTS
+    and not RESEND_API_KEY
+):
+    raise ImproperlyConfigured(
+        "EMAIL_PROVIDER=resend requires RESEND_API_KEY to be set."
+    )
+
 # OTP behaviour
 OTP_LENGTH = int(os.getenv("OTP_LENGTH", "6"))
 OTP_EXPIRY_MINUTES = int(os.getenv("OTP_EXPIRY_MINUTES", "10"))

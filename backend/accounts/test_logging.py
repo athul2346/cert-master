@@ -29,6 +29,8 @@ class LoggingConfigTests(SimpleTestCase):
             if key not in ("DEBUG", "SECRET_KEY", "LOG_LEVEL", "SENTRY_DSN")
         }
         env["DJANGO_SETTINGS_MODULE"] = "backend.settings"
+        env["EMAIL_PROVIDER"] = "smtp"
+        env["EMAIL_HOST"] = "smtp.example.com"
         env["DEBUG"] = "false"
         env["SECRET_KEY"] = "unit-test-secret-key-not-real"
         env["LOG_LEVEL"] = "DEBUG"

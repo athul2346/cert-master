@@ -35,6 +35,8 @@ class SecuritySettingsTests(SimpleTestCase):
             if key not in _STRIPPED
         }
         env["DJANGO_SETTINGS_MODULE"] = "backend.settings"
+        env["EMAIL_PROVIDER"] = "smtp"
+        env["EMAIL_HOST"] = "smtp.example.com"
         env["SECRET_KEY"] = "unit-test-secret-key-not-real"
         env.update(overrides)
         return subprocess.run(
