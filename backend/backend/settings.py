@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 from pathlib import Path
 import os
 import socket
+import sys
 import dj_database_url
 from django.core.exceptions import ImproperlyConfigured
 
@@ -283,10 +284,60 @@ CSRF_TRUSTED_ORIGINS = [
 
 
 # ------------------------------------------------------------------
+# HTTPS / security headers
+# ------------------------------------------------------------------
+
+def _env_bool(name, default):
+    value = os.getenv(name)
+    if value is None:
+        return default
+    return value.strip().lower() in {"1", "true", "yes", "on"}
+
+
+# Render terminates TLS at its proxy and forwards the original scheme here.
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
+# Escape hatch for running a production-like build over plain HTTP locally
+# (e.g. `DEBUG=false docker compose up` on http://localhost:8000). It turns
+# off redirect / HSTS / Secure-cookie behaviour so the app is usable on http.
+# NEVER set this on a real deployment.
+LOCAL_HTTP = _env_bool("LOCAL_HTTP", False)
+
+# Every value below is production-safe by default and can be overridden from
+# the environment (useful for staging or local production-like testing).
+# The test client does not follow HTTPS redirects, so keep `manage.py test`
+# usable without extra env vars. An explicit SECURE_SSL_REDIRECT always wins.
+RUNNING_TESTS = "test" in sys.argv
+SECURE_SSL_REDIRECT = _env_bool(
+    "SECURE_SSL_REDIRECT", not DEBUG and not LOCAL_HTTP and not RUNNING_TESTS
+)
+SECURE_REDIRECT_EXEMPT = [r"^api/health/?$"]  # let platform health checks pass
+SECURE_HSTS_SECONDS = int(
+    os.getenv("SECURE_HSTS_SECONDS", "0" if (DEBUG or LOCAL_HTTP) else "31536000")
+)
+SECURE_HSTS_INCLUDE_SUBDOMAINS = _env_bool(
+    "SECURE_HSTS_INCLUDE_SUBDOMAINS", not DEBUG and not LOCAL_HTTP
+)
+# Emits the `preload` directive in production; it only takes effect if the
+# domain is later submitted to the browser HSTS preload list.
+SECURE_HSTS_PRELOAD = _env_bool(
+    "SECURE_HSTS_PRELOAD", not DEBUG and not LOCAL_HTTP
+)
+SECURE_CONTENT_TYPE_NOSNIFF = _env_bool("SECURE_CONTENT_TYPE_NOSNIFF", True)
+SECURE_REFERRER_POLICY = os.getenv(
+    "SECURE_REFERRER_POLICY", "strict-origin-when-cross-origin"
+)
+X_FRAME_OPTIONS = os.getenv("X_FRAME_OPTIONS", "DENY")
+SECURE_CROSS_ORIGIN_OPENER_POLICY = os.getenv(
+    "SECURE_CROSS_ORIGIN_OPENER_POLICY", "same-origin"
+)
+
+
+# ------------------------------------------------------------------
 # Session / CSRF cookie flags — FIXED
 # ------------------------------------------------------------------
 
-if DEBUG:
+if DEBUG or LOCAL_HTTP:
     SESSION_COOKIE_SAMESITE = "Lax"
     SESSION_COOKIE_SECURE = False
     CSRF_COOKIE_SAMESITE = "Lax"

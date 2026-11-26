@@ -77,7 +77,17 @@ See `API_REFERENCE_GUIDE.md`
 ```bash
 cp .env.example .env
 # Set DEBUG=false, generate SECRET_KEY, use docker postgres vars
+# Set LOCAL_HTTP=true so the HTTPS-only protections don't block
+# http://localhost:8000 (NEVER use LOCAL_HTTP in a real deployment)
 # PUBLIC_BASE_URL optional (auto http://hostname:8000 if unset)
 docker compose up --build
 curl -X POST $PUBLIC_BASE_URL/api/render/ ...
 ```
+
+Security behaviour is env-driven:
+- **Production defaults:** HTTPS redirect, 1-year HSTS, `Secure` cookies,
+  `SameSite=None` (needed by the cross-site SPA), CSRF enforced on writes.
+- **`LOCAL_HTTP=true`:** disables redirect/HSTS/Secure cookies so you can test
+  a `DEBUG=false` build over plain HTTP locally.
+- **Individual overrides:** `SECURE_SSL_REDIRECT`, `SECURE_HSTS_SECONDS`,
+  `SECURE_HSTS_INCLUDE_SUBDOMAINS`, `SECURE_REFERRER_POLICY`, `X_FRAME_OPTIONS`.
