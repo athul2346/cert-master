@@ -1,9 +1,12 @@
-Django>=4.2
-djangorestframework
-psycopg2-binary
-gunicorn
+# Pinned to the exact set the test suite passes with (74 tests).
+# Upgrade deliberately, then re-run: python manage.py test && manage.py check --deploy
+# Django 6.x requires Python >= 3.12 (see Dockerfile).
+Django==6.0.2
+djangorestframework==3.16.1
+gunicorn==25.0.3
+psycopg2-binary==2.9.11
 qrcode==8.2
-Pillow>=10.0.0
+Pillow==12.3.0
 dj-database-url==2.2.0
 django-cors-headers==4.4.0
-django-supabase-storage
+django-supabase-storage==1.1.2
