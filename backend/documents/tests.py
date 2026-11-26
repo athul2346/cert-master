@@ -132,8 +132,9 @@ class DocumentTypeDeleteTests(DocumentApiMixin, TestCase):
         response = self.client.get("/api/documents/list/")
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.data), 1)
-        self.assertIsNone(response.data[0]["document_type"])
+        self.assertEqual(response.data["count"], 1)
+        self.assertEqual(len(response.data["results"]), 1)
+        self.assertIsNone(response.data["results"][0]["document_type"])
 
     def test_verify_qr_with_null_document_type(self):
         active = self._document("active", "ACTIVE")
@@ -316,9 +317,9 @@ class DocumentTypeTemplatePayloadTests(DocumentApiMixin, TestCase):
         response = self.client.get("/api/document-types/")
 
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data["count"], 1)
 
-        templates = response.data[0]["templates"]
+        templates = response.data["results"][0]["templates"]
         self.assertEqual(len(templates), 1)
         template = templates[0]
         self.assertEqual(template["id"], self.template.pk)
@@ -869,3 +870,46 @@ class CertificateHtmlRenderingTests(SimpleTestCase):
         )
         self.assertIn("data:image/png;base64,", rendered)
         self.assertNotIn("qrserver.com", rendered)
+
+
+class PaginationShapeTests(DocumentApiMixin, TestCase):
+    """List endpoints expose bounded, metadata-carrying responses."""
+
+    def test_document_list_is_paginated(self):
+        self._document("one", "PENDING")
+
+        response = self.client.get("/api/documents/list/")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data["count"], 1)
+        self.assertEqual(len(response.data["results"]), 1)
+        self.assertIsNone(response.data["next"])
+        self.assertIsNone(response.data["previous"])
+
+    def test_document_type_list_is_paginated(self):
+        response = self.client.get("/api/document-types/")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data["count"], 1)
+        self.assertEqual(len(response.data["results"]), 1)
+        self.assertIn("results", response.data)
+
+    def test_templates_by_type_keeps_templates_key_plus_metadata(self):
+        response = self.client.get(
+            f"/api/document-types/{self.document_type.pk}/templates/"
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data["count"], 1)
+        self.assertEqual(len(response.data["templates"]), 1)
+
+    def test_documents_by_type_keeps_documents_key_plus_metadata(self):
+        self._document("one", "PENDING")
+
+        response = self.client.get(
+            f"/api/document-types/{self.document_type.pk}/documents/"
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data["count"], 1)
+        self.assertEqual(len(response.data["documents"]), 1)

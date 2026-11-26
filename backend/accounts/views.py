@@ -330,12 +330,16 @@ class ActiveEntitiesAPIView(generics.ListAPIView):
     def list(self, request, *args, **kwargs):
         response = super().list(request, *args, **kwargs)
         all_qs = CompanyProfile.objects.exclude(status=CompanyProfile.STATUS_PENDING)
+        page = response.data
         response.data = {
+            "count": page["count"],
+            "next": page["next"],
+            "previous": page["previous"],
             "counts": {
                 "active": all_qs.filter(status=CompanyProfile.STATUS_ACTIVE).count(),
                 "suspended": all_qs.filter(status=CompanyProfile.STATUS_SUSPENDED).count(),
             },
-            "entities": response.data,
+            "entities": page["results"],
         }
         return response
 
@@ -406,9 +410,13 @@ class VerificationQueueAPIView(generics.ListAPIView):
         pending_count = CompanyProfile.objects.filter(
             status=CompanyProfile.STATUS_PENDING
         ).count()
+        page = response.data
         response.data = {
+            "count": page["count"],
+            "next": page["next"],
+            "previous": page["previous"],
             "pending_count": pending_count,
-            "requests": response.data,
+            "requests": page["results"],
         }
         return response
 

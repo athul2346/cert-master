@@ -112,6 +112,8 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticated",
     ],
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE": int(os.getenv("PAGE_SIZE", "50")),
     # Rate limiting. Uses Django's cache backend (LocMem by default): limits
     # are per-process, so switch to Redis/DatabaseCache if you run more than
     # one gunicorn worker or instance and need shared counters.

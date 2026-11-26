@@ -1,4 +1,5 @@
 from rest_framework import generics, status
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.throttling import ScopedRateThrottle
 from rest_framework.views import APIView
@@ -207,19 +208,24 @@ class TemplatesByDocumentTypeAPIView(APIView):
             document_type=document_type
         )
         
+        paginator = PageNumberPagination()
+        page = paginator.paginate_queryset(templates, request, view=self)
         serializer = DocumentTemplateSerializer(
-            templates,
+            page,
             many=True,
             context={"request": request}
         )
-        
+
         return Response({
             "document_type": {
                 "id": document_type.id,
                 "code": document_type.code,
                 "name": document_type.name
             },
-            "templates": serializer.data
+            "templates": serializer.data,
+            "count": paginator.page.paginator.count,
+            "next": paginator.get_next_link(),
+            "previous": paginator.get_previous_link(),
         })
 
 
@@ -256,8 +262,10 @@ class DocumentsByDocumentTypeAPIView(APIView):
             document_type=document_type
         ).prefetch_related('fields')
 
+        paginator = PageNumberPagination()
+        page = paginator.paginate_queryset(documents, request, view=self)
         serializer = CompanyDocumentSerializer(
-            documents,
+            page,
             many=True,
             context={"request": request}
         )
@@ -268,7 +276,10 @@ class DocumentsByDocumentTypeAPIView(APIView):
                 "code": document_type.code,
                 "name": document_type.name
             },
-            "documents": serializer.data
+            "documents": serializer.data,
+            "count": paginator.page.paginator.count,
+            "next": paginator.get_next_link(),
+            "previous": paginator.get_previous_link(),
         })
 
 
@@ -297,12 +308,14 @@ class CompanyDocumentListView(APIView):
 
         queryset = CompanyDocument.objects.filter(company=company).prefetch_related('fields')
 
+        paginator = PageNumberPagination()
+        page = paginator.paginate_queryset(queryset, request, view=self)
         serializer = CompanyDocumentSerializer(
-            queryset,
+            page,
             many=True,
             context={"request": request}
         )
-        return Response(serializer.data)
+        return paginator.get_paginated_response(serializer.data)
 
 
 class CompanyDocumentDetailView(APIView):
