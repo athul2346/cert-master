@@ -243,17 +243,14 @@ PREDEFINED_TEMPLATES_DIR = BASE_DIR / "documents" / "predefined_templates"
 
 
 # ------------------------------------------------------------------
-# Email (SMTP) + signup OTP
+# Email (SMTP or Resend API) + signup OTP
 # ------------------------------------------------------------------
 
-# If EMAIL_HOST is not set we fall back to the console backend so local
-# development works without an SMTP server (codes are printed to the runserver
-# console). In production set EMAIL_HOST (and the other SMTP vars) in the env.
-EMAIL_BACKEND = os.getenv("EMAIL_BACKEND") or (
-    "django.core.mail.backends.smtp.EmailBackend"
-    if os.getenv("EMAIL_HOST")
-    else "django.core.mail.backends.console.EmailBackend"
-)
+# Backend is chosen by EMAIL_PROVIDER: "smtp" (default), "resend" or "console".
+# An explicit EMAIL_BACKEND always wins. When neither EMAIL_PROVIDER nor
+# EMAIL_BACKEND is set we auto-detect: SMTP if EMAIL_HOST is configured,
+# otherwise console (codes are printed to the runserver console in dev).
+EMAIL_PROVIDER = os.getenv("EMAIL_PROVIDER", "").strip().lower()
 
 EMAIL_HOST = os.getenv("EMAIL_HOST", "localhost")
 EMAIL_PORT = int(os.getenv("EMAIL_PORT", "587"))
@@ -270,6 +267,24 @@ EMAIL_TIMEOUT = int(os.getenv("EMAIL_TIMEOUT", "10"))
 DEFAULT_FROM_EMAIL = os.getenv(
     "DEFAULT_FROM_EMAIL", EMAIL_HOST_USER or "no-reply@localhost"
 )
+
+# Resend (API-token based email delivery)
+RESEND_API_KEY = os.getenv("RESEND_API_KEY", "")
+RESEND_API_URL = os.getenv("RESEND_API_URL", "https://api.resend.com/emails")
+RESEND_TIMEOUT = int(os.getenv("RESEND_TIMEOUT", "10"))
+
+if os.getenv("EMAIL_BACKEND"):
+    EMAIL_BACKEND = os.environ["EMAIL_BACKEND"]
+elif EMAIL_PROVIDER == "resend":
+    EMAIL_BACKEND = "accounts.email_backends.ResendEmailBackend"
+elif EMAIL_PROVIDER in ("smtp", "console"):
+    EMAIL_BACKEND = f"django.core.mail.backends.{EMAIL_PROVIDER}.EmailBackend"
+else:
+    EMAIL_BACKEND = (
+        "django.core.mail.backends.smtp.EmailBackend"
+        if os.getenv("EMAIL_HOST")
+        else "django.core.mail.backends.console.EmailBackend"
+    )
 
 # OTP behaviour
 OTP_LENGTH = int(os.getenv("OTP_LENGTH", "6"))

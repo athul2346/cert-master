@@ -139,9 +139,12 @@ Content-Type: application/json
 - A new code invalidates any previous unused code.
 - Unknown email addresses return `200` with a generic message so the endpoint
   cannot be used to enumerate registered accounts.
-- Email is sent via SMTP using `EMAIL_HOST`, `EMAIL_HOST_USER`,
-  `EMAIL_HOST_PASSWORD`, etc. If `EMAIL_HOST` is unset, Django prints the email
-  to the server console instead (development fallback).
+- Email can be sent through **SMTP** (default) or the **Resend API**. Select
+  with `EMAIL_PROVIDER=smtp|resend|console`. For Resend, set `RESEND_API_KEY`
+  (API token) and a verified `DEFAULT_FROM_EMAIL`; the SMTP values are then
+  ignored. An explicit `EMAIL_BACKEND` always overrides the provider setting.
+- If neither provider nor SMTP host is configured, Django prints the email to
+  the server console instead (development fallback).
 
 ---
 

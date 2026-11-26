@@ -1,7 +1,10 @@
+import json
 import re
 from datetime import timedelta
+from unittest.mock import patch
 
 from django.core import mail
+from django.core.exceptions import ImproperlyConfigured
 from django.test import TestCase, override_settings
 from django.utils import timezone
 
@@ -185,3 +188,50 @@ class SignupOTPTests(TestCase):
             content_type="application/json",
         )
         self.assertEqual(response.status_code, 200)
+
+
+@override_settings(
+    EMAIL_BACKEND="accounts.email_backends.ResendEmailBackend",
+    RESEND_API_KEY="re_test_key",
+    DEFAULT_FROM_EMAIL="no-reply@example.com",
+)
+class ResendBackendTests(TestCase):
+    def test_signup_sends_otp_via_resend_api(self):
+        with patch("accounts.email_backends.urlopen") as mock_urlopen:
+            response = self.client.post(
+                "/api/auth/signup/",
+                data=SIGNUP_PAYLOAD,
+                content_type="application/json",
+            )
+
+        self.assertEqual(response.status_code, 201)
+        self.assertTrue(response.data["otp_sent"])
+        mock_urlopen.assert_called_once()
+
+        request = mock_urlopen.call_args.args[0]
+        self.assertEqual(request.full_url, "https://api.resend.com/emails")
+        self.assertEqual(request.get_header("Authorization"), "Bearer re_test_key")
+
+        payload = json.loads(request.data)
+        self.assertEqual(payload["from"], "no-reply@example.com")
+        self.assertEqual(payload["to"], [SIGNUP_PAYLOAD["email"]])
+        self.assertIn("Your verification code", payload["subject"])
+
+        code = extract_otp(payload["text"])
+        verified = self.client.post(
+            "/api/auth/otp/verify/",
+            data={"email": SIGNUP_PAYLOAD["email"], "otp": code},
+            content_type="application/json",
+        )
+        self.assertEqual(verified.status_code, 200)
+
+    @override_settings(RESEND_API_KEY="")
+    def test_missing_api_key_raises_clear_error(self):
+        with self.assertRaises(ImproperlyConfigured) as ctx:
+            mail.send_mail(
+                "Subject",
+                "Body",
+                "no-reply@example.com",
+                ["to@example.com"],
+            )
+        self.assertIn("RESEND_API_KEY", str(ctx.exception))
