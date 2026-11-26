@@ -1,11 +1,61 @@
+# ------------------------------------------------------------------
+# Secrets / environment
+# ------------------------------------------------------------------
+.env
+.env.*
+!.env.example
+
+# ------------------------------------------------------------------
+# Python
+# ------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# ------------------------------------------------------------------
+# Django
+# ------------------------------------------------------------------
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+staticfiles/
+media/
+
+# Uploaded / generated user data (must never be committed)
+backend/company_documents/
+backend/company_templates/
+backend/media/
+backend/verification_docs/
+
+# ------------------------------------------------------------------
+# Tooling / editor
+# ------------------------------------------------------------------
 .aider*
-.env
-.env
-.env
-.env
-.env
-.env
-.env
-.env
-.env
+.cache/
+.pytest_cache/
+.coverage
+htmlcov/
 .DS_Store
+.idea/
+.vscode/
+*.swp
+
+# ------------------------------------------------------------------
+# Leaked local artifacts
+# ------------------------------------------------------------------
+cookies.txt
+*.pem
+*.key
