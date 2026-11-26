@@ -97,6 +97,9 @@ Security behaviour is env-driven:
   a `DEBUG=false` build over plain HTTP locally.
 - **Individual overrides:** `SECURE_SSL_REDIRECT`, `SECURE_HSTS_SECONDS`,
   `SECURE_HSTS_INCLUDE_SUBDOMAINS`, `SECURE_REFERRER_POLICY`, `X_FRAME_OPTIONS`.
+- **Hosts / origins:** set `ALLOWED_HOSTS` to your exact hostname (no wildcard),
+  and `CORS_ALLOWED_ORIGINS` / `CSRF_TRUSTED_ORIGINS` to your frontend URL(s).
+  Comma-separate multiple values. `render.yaml` sets these for the Blueprint.
 
 ## Logging & error tracking
 - Logs go to stdout/stderr (captured by Render) with timestamps and logger names.

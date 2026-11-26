@@ -50,6 +50,15 @@ def _throttle_rates():
         return {scope: None for scope in rates}
     return rates
 
+
+def _csv_env(name, default):
+    """Parse a comma-separated env var into a trimmed list of values."""
+    return [
+        value.strip()
+        for value in os.getenv(name, default).split(",")
+        if value.strip()
+    ]
+
 # Never ship a hardcoded key: a public fallback lets anyone forge sessions.
 # Local development gets a throwaway key; production must supply its own.
 SECRET_KEY = os.getenv("SECRET_KEY")
@@ -64,10 +73,13 @@ if not SECRET_KEY:
             "print(get_random_secret_key())\""
         )
 
-ALLOWED_HOSTS = os.getenv(
-    "ALLOWED_HOSTS",
-    "*.onrender.com,.onrender.com,localhost,127.0.0.1",
-).split(",")
+# Never accept a wildcard by default: "*.onrender.com" would match other
+# tenants' apps. Production must set an explicit host list.
+ALLOWED_HOSTS = [
+    host.strip()
+    for host in os.getenv("ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
+    if host.strip()
+]
 
 
 # ------------------------------------------------------------------
@@ -280,13 +292,13 @@ CERT_FRONTEND_URL = os.getenv("CERT_FRONTEND_URL")
 CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOW_CREDENTIALS = True
 
-CORS_ALLOWED_ORIGINS = [
-    "https://oauther-fqj8.vercel.app",
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-]
+_DEV_ORIGINS = (
+    "https://oauther-fqj8.vercel.app,"
+    "http://localhost:5173,http://127.0.0.1:5173,"
+    "http://localhost:3000,http://127.0.0.1:3000"
+)
+
+CORS_ALLOWED_ORIGINS = _csv_env("CORS_ALLOWED_ORIGINS", _DEV_ORIGINS)
 
 CORS_ALLOW_HEADERS = [
     "accept",
@@ -305,13 +317,7 @@ CORS_ALLOW_HEADERS = [
 # CSRF — FIXED
 # ------------------------------------------------------------------
 
-CSRF_TRUSTED_ORIGINS = [
-    "https://oauther-fqj8.vercel.app",
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-    "http://localhost:3000",
-    "http://127.0.0.1:3000",
-]
+CSRF_TRUSTED_ORIGINS = _csv_env("CSRF_TRUSTED_ORIGINS", _DEV_ORIGINS)
 
 
 # ------------------------------------------------------------------
