@@ -1,6 +1,7 @@
 # qr/utils.py
 import qrcode
 import base64
+import html
 import re
 from io import BytesIO
 
@@ -34,13 +35,20 @@ def render_certificate_html(template_html, document_json, qr_verify_url=None):
     """
     rendered_html = template_html
 
-    # Replace {{key}} placeholders (always)
+    # Replace {{key}} placeholders (always).
+    #
+    # Values come from API input, so they must be HTML-escaped before being
+    # injected into the template: an unescaped value such as
+    # <img src=x onerror=...> would become stored XSS in the rendered
+    # certificate. A callable replacement is used so backslashes in the
+    # value (e.g. r"\1") are not interpreted as regex backreferences.
     if document_json:
         for key, value in document_json.items():
             placeholder_pattern = r'\{\{\s*' + re.escape(key) + r'\s*\}\}'
+            safe_value = html.escape(str(value), quote=True)
             rendered_html = re.sub(
                 placeholder_pattern,
-                str(value),
+                lambda match, escaped=safe_value: escaped,
                 rendered_html,
                 flags=re.IGNORECASE
             )
@@ -54,7 +62,7 @@ def render_certificate_html(template_html, document_json, qr_verify_url=None):
 
     # Replace the qrserver.com img src with base64 QR
     qr_pattern = r'https://api\.qrserver\.com/v1/create-qr-code/\?[^"\']*'
-    rendered_html = re.sub(qr_pattern, qr_base64, rendered_html)
+    rendered_html = re.sub(qr_pattern, lambda match: qr_base64, rendered_html)
 
     # Also handle SVG lucide-qr-code if present (for other templates)
     qr_img_tag = (
@@ -64,7 +72,7 @@ def render_certificate_html(template_html, document_json, qr_verify_url=None):
     svg_pattern = r'<svg[^>]*class="[^"]*lucide-qr-code[^"]*"[^>]*>.*?</svg>'
     rendered_html = re.sub(
         svg_pattern,
-        qr_img_tag,
+        lambda match: qr_img_tag,
         rendered_html,
         flags=re.DOTALL
     )

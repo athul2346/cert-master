@@ -13,6 +13,7 @@ from documents.models import (
     DocumentTemplate,
     DocumentType,
 )
+from documents.utils import render_certificate_html
 
 
 class DocumentApiMixin:
@@ -816,3 +817,55 @@ class CsrfEnforcementTests(TestCase):
     def test_logout_requires_csrf_when_session_present(self):
         response = self.client.post("/api/auth/logout/")
         self.assertEqual(response.status_code, 403)
+
+
+class CertificateHtmlRenderingTests(SimpleTestCase):
+    """Field values are user input and must be escaped before injection."""
+
+    def test_field_values_are_html_escaped(self):
+        rendered = render_certificate_html(
+            "<p>{{Recipient}}</p>",
+            {"Recipient": "<script>alert(1)</script>"},
+        )
+        self.assertIn("&lt;script&gt;alert(1)&lt;/script&gt;", rendered)
+        self.assertNotIn("<script>", rendered)
+
+    def test_quotes_are_escaped_to_prevent_attribute_breakout(self):
+        rendered = render_certificate_html(
+            '<p title="{{Name}}">{{Name}}</p>',
+            {"Name": 'Bob "The Builder"'},
+        )
+        self.assertIn('title="Bob &quot;The Builder&quot;"', rendered)
+        self.assertNotIn('title="Bob "', rendered)
+
+    def test_backslashes_are_literal_not_regex_backreferences(self):
+        rendered = render_certificate_html(
+            "<p>{{Path}}</p>",
+            {"Path": r"C:\temp\1\g<0>"},
+        )
+        self.assertIn(r"C:\temp\1\g&lt;0&gt;", rendered)
+
+    def test_normal_substitution_is_case_insensitive(self):
+        rendered = render_certificate_html(
+            "<h1>{{recipient name}}</h1>",
+            {"recipient name": "Ada"},
+        )
+        self.assertEqual(rendered, "<h1>Ada</h1>")
+
+    def test_dummy_qr_is_left_untouched_without_verify_url(self):
+        template = (
+            '<img src="https://api.qrserver.com/v1/create-qr-code/'
+            '?size=150x150&data=dummy">'
+        )
+        self.assertEqual(render_certificate_html(template, {}, None), template)
+
+    def test_real_qr_is_injected_when_verify_url_supplied(self):
+        template = (
+            '<img src="https://api.qrserver.com/v1/create-qr-code/'
+            '?size=150x150&data=dummy">'
+        )
+        rendered = render_certificate_html(
+            template, {}, "https://example.com/verify/abc"
+        )
+        self.assertIn("data:image/png;base64,", rendered)
+        self.assertNotIn("qrserver.com", rendered)
