@@ -5,6 +5,8 @@ services:
     dockerfilePath: ./Dockerfile
     dockerContext: ./
     rootDir: ./
+    # Release phase: runs with production env vars (DB + Supabase) present.
+    preDeployCommand: "python manage.py migrate --noinput && python manage.py collectstatic --noinput"
     envVars:
       - key: PYTHON_VERSION
         value: 3.11

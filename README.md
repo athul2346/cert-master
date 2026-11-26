@@ -58,7 +58,13 @@ DATABASE_URL=from Render Postgres below
 
 ### 4. Deploy
 - Deploy → watch build/logs
-- Render auto-runs migrate via `python manage.py migrate` detect? If not, use Shell/CLI: `manage.py migrate`
+- Migrations and `collectstatic` run in the **pre-deploy phase** (see `render.yaml`).
+  If you deploy via the dashboard instead of the Blueprint, set the
+  **Pre Deploy Command** to:
+  ```
+  python manage.py migrate --noinput && python manage.py collectstatic --noinput
+  ```
+- Static files are uploaded to the configured Supabase bucket; no Whitenoise needed.
 
 ### 5. Post-Deploy
 - Admin: https://yourapp.onrender.com/admin/ (create superuser via shell if needed)
