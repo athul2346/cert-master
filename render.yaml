@@ -11,12 +11,13 @@ services:
       - fromDatabase:
           name: cert-master-db
           property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
       - key: DEBUG
         value: false
         generateValue: false
       - key: ALLOWED_HOSTS
         value: .onrender.com
         generateValue: false
-      - sync: false
     autoDeploy: true
 

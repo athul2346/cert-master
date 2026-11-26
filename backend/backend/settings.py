@@ -14,6 +14,7 @@ from pathlib import Path
 import os
 import socket
 import dj_database_url
+from django.core.exceptions import ImproperlyConfigured
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,12 +24,21 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Core settings
 # ------------------------------------------------------------------
 
-SECRET_KEY = os.getenv(
-    "SECRET_KEY",
-    "django-insecure-ha_7q46x6xv0z!*b!-_v=60%2=ji!0$#&6r^x#7)sgdphx2fos",
-)
-
 DEBUG = os.getenv("DEBUG", "False").lower() == "true"
+
+# Never ship a hardcoded key: a public fallback lets anyone forge sessions.
+# Local development gets a throwaway key; production must supply its own.
+SECRET_KEY = os.getenv("SECRET_KEY")
+if not SECRET_KEY:
+    if DEBUG:
+        SECRET_KEY = "django-insecure-dev-only-not-for-production"
+    else:
+        raise ImproperlyConfigured(
+            "The SECRET_KEY environment variable must be set when DEBUG is "
+            "false. Generate one with: python -c "
+            "\"from django.core.management.utils import get_random_secret_key; "
+            "print(get_random_secret_key())\""
+        )
 
 ALLOWED_HOSTS = os.getenv(
     "ALLOWED_HOSTS",
