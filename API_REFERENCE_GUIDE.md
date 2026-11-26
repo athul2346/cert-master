@@ -370,6 +370,9 @@ Cookie: sessionid={session_id}
         "code": "CERT",
         "name": "Certificate"
     },
+    "count": 1,
+    "next": null,
+    "previous": null,
     "templates": [
         {
             "id": 4,
@@ -593,6 +596,8 @@ layout). These endpoints expose them to the frontend; nothing is created until
   for the caller's company. It comes from the package JSON when declared,
   otherwise it is inferred from the slug and editor.
 - `validity_days` is the template's suggested validity (may be `null`).
+- `{{reference}}` is injected automatically by `/render/` from the document's
+  generated reference (see section 13); no `DocumentField` is needed.
 
 ---
 
@@ -696,6 +701,7 @@ Cookie: sessionid={session_id}
 ```json
 {
     "id": 6,
+    "reference": "ACME-CERT-2026-000001",
     "uuid": "550e8400-e29b-41d4-a716-446655440000",
     "document_type": 1,
     "template": 1,
@@ -739,9 +745,13 @@ Cookie: sessionid={session_id}
         "code": "CERT",
         "name": "Certificate"
     },
+    "count": 1,
+    "next": null,
+    "previous": null,
     "documents": [
         {
             "id": 6,
+            "reference": "ACME-CERT-2026-000001",
             "uuid": "550e8400-e29b-41d4-a716-446655440000",
             "document_type": 1,
             "template": 1,
@@ -783,28 +793,34 @@ Cookie: sessionid={session_id}
 
 **Success Response (200):**
 ```json
-[
-    {
-        "id": 6,
-        "uuid": "550e8400-e29b-41d4-a716-446655440000",
-        "document_type": 1,
-        "template": 1,
-        "recipient": "Alice Johnson",
-        "fields": [
-            {"key": "recipient_name", "value": "Alice Johnson"},
-            {"key": "course_name", "value": "Advanced Python Programming"},
-            {"key": "issue_date", "value": "2024-01-15"},
-            {"key": "certificate_number", "value": "CERT-2024-001"}
-        ],
-        "issued_date": "2024-01-15",
-        "expiry_date": "2025-01-15",
-        "never_expires": false,
-        "status": "ACTIVE"
-    }
-]
+{
+    "count": 1,
+    "next": null,
+    "previous": null,
+    "results": [
+        {
+            "id": 6,
+            "reference": "ACME-CERT-2026-000001",
+            "uuid": "550e8400-e29b-41d4-a716-446655440000",
+            "document_type": 1,
+            "template": 1,
+            "recipient": "Alice Johnson",
+            "fields": [
+                {"key": "recipient_name", "value": "Alice Johnson"},
+                {"key": "course_name", "value": "Advanced Python Programming"},
+                {"key": "issue_date", "value": "2024-01-15"},
+                {"key": "certificate_number", "value": "CERT-2024-001"}
+            ],
+            "issued_date": "2024-01-15",
+            "expiry_date": "2025-01-15",
+            "never_expires": false,
+            "status": "ACTIVE"
+        }
+    ]
+}
 ```
 
-**Note:** Only returns documents belonging to the logged-in user's company.
+**Note:** Paginated (50 per page by default). Use `?page=2` for the next page, or follow the absolute `next` URL. Only returns documents belonging to the logged-in user's company.
 
 ---
 
@@ -821,6 +837,7 @@ Cookie: sessionid={session_id}
 ```json
 {
     "id": 6,
+    "reference": "ACME-CERT-2026-000001",
     "uuid": "550e8400-e29b-41d4-a716-446655440000",
     "document_type": 1,
     "template": 1,
@@ -844,6 +861,31 @@ Cookie: sessionid={session_id}
     "detail": "Document not found"
 }
 ```
+
+---
+
+### 13. Get Single Document by Reference
+
+**Endpoint:** `GET /documents/by-reference/{reference}/`
+
+Example: `GET /documents/by-reference/ACME-CERT-2026-000001/`
+
+**Headers:**
+```http
+Cookie: sessionid={session_id}
+```
+
+Returns the same document payload as `GET /documents/{id}/`. The lookup is
+case-insensitive and restricted to the logged-in user's company; another
+company's reference returns `404`.
+
+**Reference format:** `{COMPANY_CODE}-{TYPE_CODE}-{YYYY}-{NNNNNN}`, e.g.
+`ACME-CERT-2026-000001`. The company code is generated once from the
+organisation name (editable in Django admin before the first document is
+issued); the type code is snapshotted from `DocumentType.code`; the sequence
+is per company/type/year. References are read-only and never change after
+issue, even if the type code or issue date is edited later. `GEN` is used for
+documents without a document type.
 
 ---
 
@@ -881,6 +923,7 @@ Cookie: sessionid={session_id}
 ```json
 {
     "id": 6,
+    "reference": "ACME-CERT-2026-000001",
     "uuid": "550e8400-e29b-41d4-a716-446655440000",
     "document_type": 1,
     "template": 1,

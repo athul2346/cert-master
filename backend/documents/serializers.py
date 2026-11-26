@@ -153,6 +153,7 @@ class CompanyDocumentSerializer(serializers.ModelSerializer):
         model = CompanyDocument
         fields = [
             "id",
+            "reference",
             "uuid",
             "document_type",
             "template",

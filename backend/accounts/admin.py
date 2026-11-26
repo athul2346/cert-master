@@ -9,10 +9,17 @@ class VerificationDocInline(admin.TabularInline):
 
 @admin.register(CompanyProfile)
 class CompanyProfileAdmin(admin.ModelAdmin):
-    list_display = ("organisation_name", "user", "status", "entity_type", "location", "created_at")
+    list_display = ("organisation_name", "short_code", "user", "status", "entity_type", "location", "created_at")
     list_filter = ("status", "entity_type")
-    search_fields = ("organisation_name", "user__email", "cin_number")
+    search_fields = ("organisation_name", "user__email", "cin_number", "short_code")
     inlines = [VerificationDocInline]
+
+    def get_readonly_fields(self, request, obj=None):
+        readonly = list(super().get_readonly_fields(request, obj))
+        # References already printed on certificates embed this code.
+        if obj and obj.documents.exists():
+            readonly.append("short_code")
+        return readonly
 
 
 @admin.register(CompanyVerificationDocument)

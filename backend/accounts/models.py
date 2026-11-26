@@ -1,7 +1,27 @@
+import re
+
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.db import models
 from django.utils import timezone
 from .managers import UserManager
+
+
+def short_code_candidates(name):
+    """Yield stable, URL-safe company codes derived from an organisation name."""
+    words = re.findall(r"[A-Za-z0-9]+", name or "")
+    base = (words[0].upper() if words else "CO")[:10]
+    yield base
+    for number in range(2, 1000):
+        suffix = str(number)
+        yield base[:10 - len(suffix)] + suffix
+
+
+def generate_short_code(name):
+    """Pick the first unused company code for this name."""
+    for candidate in short_code_candidates(name):
+        if not CompanyProfile.objects.filter(short_code=candidate).exists():
+            return candidate
+    raise RuntimeError("Could not generate a unique company short code")
 
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
@@ -59,6 +79,9 @@ class CompanyProfile(models.Model):
     )
 
     organisation_name = models.CharField(max_length=255)
+    # Stable prefix used in human-readable certificate references. Generated
+    # once and never derived from the (mutable) organisation name.
+    short_code = models.CharField(max_length=10, unique=True, blank=True)
     classification = models.CharField(
         max_length=50,
         choices=CLASSIFICATION_CHOICES
@@ -89,6 +112,14 @@ class CompanyProfile(models.Model):
     rejection_reason = models.TextField(blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        if not self.short_code:
+            self.short_code = generate_short_code(self.organisation_name)
+            update_fields = kwargs.get("update_fields")
+            if update_fields is not None:
+                kwargs["update_fields"] = set(update_fields) | {"short_code"}
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.organisation_name

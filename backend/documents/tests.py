@@ -1,15 +1,21 @@
+import importlib
 import json
+import re
 import tempfile
+from datetime import date
 from pathlib import Path
 
+from django.apps import apps
 from django.db import DatabaseError, IntegrityError, connection, transaction
 from django.test import SimpleTestCase, TestCase, override_settings
+from django.utils import timezone
 from rest_framework.test import APIClient
 
 from accounts.models import CompanyProfile, User
 from documents.models import (
     CompanyDocument,
     DocumentField,
+    DocumentSequence,
     DocumentTemplate,
     DocumentType,
 )
@@ -913,3 +919,210 @@ class PaginationShapeTests(DocumentApiMixin, TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data["count"], 1)
         self.assertEqual(len(response.data["documents"]), 1)
+
+
+class DocumentReferenceTests(DocumentApiMixin, TestCase):
+    """Company-scoped human-readable references stay stable and unique."""
+
+    def test_reference_format(self):
+        document = self._document("one", "PENDING")
+
+        self.assertRegex(
+            document.reference,
+            rf"^ACME-CERT-{document.created_at.year}-\d{{6}}$",
+        )
+        self.assertTrue(document.reference.endswith("000001"))
+
+    def test_sequence_increments_per_company_type_and_year(self):
+        first = self._document("one", "PENDING")
+        second = self._document("two", "PENDING")
+
+        self.assertEqual(int(first.reference[-6:]) + 1, int(second.reference[-6:]))
+
+        other_type = DocumentType.objects.create(
+            company=self.company, code="OTHER", name="Other"
+        )
+        other = CompanyDocument.objects.create(
+            company=self.company,
+            document_type=other_type,
+            recipient="three",
+            never_expires=True,
+        )
+        self.assertIn("-OTHER-", other.reference)
+        self.assertTrue(other.reference.endswith("000001"))
+
+        older = CompanyDocument.objects.create(
+            company=self.company,
+            document_type=self.document_type,
+            recipient="four",
+            issued_date=date(2025, 5, 1),
+            never_expires=True,
+        )
+        self.assertIn("-2025-000001", older.reference)
+
+    def test_null_document_type_uses_generic_code(self):
+        document = CompanyDocument.objects.create(
+            company=self.company,
+            document_type=None,
+            recipient="none",
+            never_expires=True,
+        )
+
+        self.assertIn("-GEN-", document.reference)
+
+    def test_reference_does_not_change_when_type_code_changes(self):
+        document = self._document("one", "PENDING")
+        original = document.reference
+
+        self.document_type.code = "RENAMED"
+        self.document_type.save(update_fields=["code"])
+        second = self._document("two", "PENDING")
+        document.refresh_from_db()
+
+        self.assertEqual(document.reference, original)
+        self.assertIn("-RENAMED-", second.reference)
+
+    def test_short_code_collisions_get_a_suffix(self):
+        second_user = User.objects.create_user(
+            email="second@example.com", password="pass12345"
+        )
+        second = CompanyProfile.objects.create(
+            user=second_user,
+            organisation_name="Acme Ltd",
+            classification="private",
+            country="IN",
+            cin_number="CIN-2",
+        )
+        third_user = User.objects.create_user(
+            email="third@example.com", password="pass12345"
+        )
+        third = CompanyProfile.objects.create(
+            user=third_user,
+            organisation_name="Acme Inc",
+            classification="private",
+            country="IN",
+            cin_number="CIN-3",
+        )
+
+        self.assertEqual(self.company.short_code, "ACME")
+        self.assertEqual(second.short_code, "ACME2")
+        self.assertEqual(third.short_code, "ACME3")
+
+    def test_client_cannot_choose_a_reference(self):
+        response = self.client.post(
+            "/api/documents/",
+            {
+                "document_type": self.document_type.pk,
+                "template": self.template.pk,
+                "recipient": "spoof",
+                "never_expires": True,
+                "document_json": {},
+                "reference": "HACK-XXXX-0000-999999",
+            },
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, 201)
+        self.assertNotEqual(response.data["reference"], "HACK-XXXX-0000-999999")
+        self.assertIn("-CERT-", response.data["reference"])
+
+    def test_lookup_by_reference(self):
+        document = self._document("one", "PENDING")
+
+        response = self.client.get(
+            f"/api/documents/by-reference/{document.reference}/"
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data["id"], document.pk)
+        self.assertEqual(response.data["reference"], document.reference)
+
+    def test_lookup_is_case_insensitive(self):
+        document = self._document("one", "PENDING")
+
+        response = self.client.get(
+            f"/api/documents/by-reference/{document.reference.lower()}/"
+        )
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_lookup_is_scoped_to_the_callers_company(self):
+        document = self._document("one", "PENDING")
+        other_user = User.objects.create_user(
+            email="other@example.com", password="pass12345"
+        )
+        CompanyProfile.objects.create(
+            user=other_user,
+            organisation_name="Other Co",
+            classification="private",
+            country="IN",
+            cin_number="CIN-OTHER",
+        )
+        self.client.force_authenticate(user=other_user)
+
+        response = self.client.get(
+            f"/api/documents/by-reference/{document.reference}/"
+        )
+
+        self.assertEqual(response.status_code, 404)
+
+    def test_backfill_assigns_references_to_legacy_documents(self):
+        first = self._document("one", "PENDING")
+        second = self._document("two", "PENDING")
+        for legacy in (first, second):
+            legacy.reference = f"LEGACY-{legacy.pk}"
+            legacy.save(update_fields=["reference"])
+        DocumentSequence.objects.all().delete()
+
+        migration = importlib.import_module(
+            "documents.migrations.0014_backfill_document_references"
+        )
+        migration.backfill_references(apps, None)
+        first.refresh_from_db()
+        second.refresh_from_db()
+
+        self.assertNotEqual(first.reference, "")
+        self.assertNotEqual(second.reference, "")
+        self.assertEqual(int(first.reference[-6:]) + 1, int(second.reference[-6:]))
+        sequence = DocumentSequence.objects.get(
+            company=self.company, type_code="CERT", year=first.created_at.year
+        )
+        self.assertEqual(sequence.last_value, 2)
+
+
+class CompanyCodeAdminTests(DocumentApiMixin, TestCase):
+    def test_short_code_is_locked_once_documents_exist(self):
+        from django.contrib import admin
+        from django.test import RequestFactory
+
+        from accounts.admin import CompanyProfileAdmin
+
+        model_admin = CompanyProfileAdmin(CompanyProfile, admin.site)
+        request = RequestFactory().get("/admin/")
+
+        self.assertNotIn("short_code", model_admin.get_readonly_fields(request, None))
+        self._document("one", "PENDING")
+        self.assertIn(
+            "short_code", model_admin.get_readonly_fields(request, self.company)
+        )
+
+
+class CertificateReferencePlaceholderTests(DocumentApiMixin, TestCase):
+    def test_reference_is_available_as_a_template_placeholder(self):
+        document = self._document("one", "PENDING")
+        template = DocumentTemplate.objects.create(
+            company=self.company,
+            document_type=self.document_type,
+            template_name="with-reference",
+            template_json={},
+            template_html="<html><body>{{reference}}</body></html>",
+        )
+
+        response = self.client.post(
+            "/api/render/",
+            {"template_id": template.pk, "document_id": document.pk},
+            format="json",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(document.reference, response.data["rendered_html"])

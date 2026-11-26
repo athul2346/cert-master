@@ -136,6 +136,7 @@ class EntitySerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "organisation_name",
+            "short_code",
             "email",
             "status",
             "entity_type",

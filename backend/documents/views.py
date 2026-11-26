@@ -386,6 +386,27 @@ class CompanyDocumentDetailView(APIView):
         )
 
 
+class CompanyDocumentByReferenceAPIView(APIView):
+    """Look up one of the caller's documents by its human-readable reference."""
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, reference):
+        document = CompanyDocument.objects.prefetch_related('fields').filter(
+            company=request.user.company,
+            reference__iexact=reference.strip(),
+        ).first()
+
+        if not document:
+            return Response(
+                {"detail": "Document not found"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        serializer = CompanyDocumentSerializer(document)
+        return Response(serializer.data)
+
+
 class VerifyQRAPIView(APIView):
     """
     API to verify a QR code and return certificate info.
@@ -639,8 +660,10 @@ class CertificateRenderAPIView(APIView):
                 status=status.HTTP_404_NOT_FOUND
             )
 
-        # Get document fields as dictionary
+        # Get document fields as dictionary. The generated reference is
+        # available as an extra placeholder so templates can print it.
         document_json = {f.key: f.value for f in document.fields.all()}
+        document_json["reference"] = document.reference
 
         # Only inject the real QR when the document is ACTIVE.
         # For any other status (PENDING / EXPIRED / REVOKED) we pass None

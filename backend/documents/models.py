@@ -1,6 +1,75 @@
-from django.db import models
+import re
+
+from django.db import models, transaction
+from django.utils import timezone
 from accounts.models import CompanyProfile
 import uuid
+
+GENERIC_TYPE_CODE = "GEN"
+
+
+def reference_type_code(document_type):
+    """Snapshot a document type code as a safe, compact reference segment."""
+    code = document_type.code if document_type else ""
+    code = re.sub(r"[^A-Za-z0-9]", "", code or "").upper()
+    return code[:10] or GENERIC_TYPE_CODE
+
+
+def reference_year(document):
+    """Issuance year, falling back to creation year for undated documents."""
+    if document.issued_date:
+        return document.issued_date.year
+    if document.created_at:
+        return document.created_at.year
+    return timezone.localdate().year
+
+
+def allocate_reference(document):
+    """Allocate the next reference in the document's company/type/year bucket.
+
+    Call inside transaction.atomic(): the row lock must be held until the
+    document insert commits so two concurrent creates cannot get the same
+    sequence number.
+    """
+    sequence, _ = DocumentSequence.objects.get_or_create(
+        company=document.company,
+        type_code=reference_type_code(document.document_type),
+        year=reference_year(document),
+        defaults={"last_value": 0},
+    )
+    sequence = DocumentSequence.objects.select_for_update().get(pk=sequence.pk)
+    sequence.last_value += 1
+    sequence.save(update_fields=["last_value"])
+    return (
+        f"{document.company.short_code}-{sequence.type_code}-"
+        f"{sequence.year}-{sequence.last_value:06d}"
+    )
+
+
+class DocumentSequence(models.Model):
+    """Per-company, per-type, per-year counter for certificate references."""
+
+    company = models.ForeignKey(
+        CompanyProfile,
+        on_delete=models.CASCADE,
+        related_name="document_sequences",
+    )
+    # Stored as a string snapshot so renaming/deleting a DocumentType never
+    # changes an already-issued reference or breaks its counter.
+    type_code = models.CharField(max_length=10)
+    year = models.PositiveIntegerField()
+    last_value = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["company", "type_code", "year"],
+                name="unique_document_sequence",
+            )
+        ]
+
+    def __str__(self):
+        return f"{self.company.short_code}-{self.type_code}-{self.year}: {self.last_value}"
 
 class DocumentType(models.Model):
     company = models.ForeignKey(
@@ -116,6 +185,9 @@ class CompanyDocument(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     uuid = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
+    # Human-readable, company-scoped certificate number. Never derived from
+    # mutable fields and never regenerated once issued.
+    reference = models.CharField(max_length=64, unique=True, editable=False)
 
     class Meta:
         constraints = [
@@ -129,6 +201,17 @@ class CompanyDocument(models.Model):
             models.Index(fields=["recipient"]),
             models.Index(fields=["status"]),
         ]
+
+    def save(self, *args, **kwargs):
+        if not self.reference:
+            update_fields = kwargs.get("update_fields")
+            with transaction.atomic():
+                self.reference = allocate_reference(self)
+                if update_fields is not None:
+                    kwargs["update_fields"] = set(update_fields) | {"reference"}
+                super().save(*args, **kwargs)
+            return
+        super().save(*args, **kwargs)
 
     def __str__(self):
         document_type_name = self.document_type.name if self.document_type else "No document type"
