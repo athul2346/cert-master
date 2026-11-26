@@ -97,3 +97,9 @@ Security behaviour is env-driven:
   a `DEBUG=false` build over plain HTTP locally.
 - **Individual overrides:** `SECURE_SSL_REDIRECT`, `SECURE_HSTS_SECONDS`,
   `SECURE_HSTS_INCLUDE_SUBDOMAINS`, `SECURE_REFERRER_POLICY`, `X_FRAME_OPTIONS`.
+
+## Logging & error tracking
+- Logs go to stdout/stderr (captured by Render) with timestamps and logger names.
+  Set `LOG_LEVEL=DEBUG` temporarily for verbose logs (default `INFO`).
+- For error tracking, set `SENTRY_DSN` in the environment. Sentry is initialised
+  automatically (PII disabled); `SENTRY_TRACES_SAMPLE_RATE` defaults to `0.0`.

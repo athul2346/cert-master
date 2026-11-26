@@ -10,3 +10,5 @@ Pillow==12.3.0
 dj-database-url==2.2.0
 django-cors-headers==4.4.0
 django-supabase-storage==1.1.2
+# Optional error tracking, activated by SENTRY_DSN.
+sentry-sdk==3.0.1

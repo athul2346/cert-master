@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import logging
 import os
 import socket
 import sys
@@ -384,3 +385,73 @@ else:
 SESSION_COOKIE_HTTPONLY = True
 CSRF_COOKIE_HTTPONLY = False   # must be readable from JS to send X-CSRFToken
 SESSION_COOKIE_AGE = 60 * 60 * 24 * 7  # 1 week
+
+# ------------------------------------------------------------------
+# Logging / error tracking
+# ------------------------------------------------------------------
+
+# Render captures stdout/stderr, so a console handler is all that is needed.
+# LOG_LEVEL lets you turn on DEBUG logging temporarily without a code change.
+LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO").upper()
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "console": {
+            "format": "{asctime} {levelname} {name} {message}",
+            "style": "{",
+        },
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "stream": sys.stdout,
+            "formatter": "console",
+            "level": LOG_LEVEL,
+        },
+    },
+    "root": {"handlers": ["console"], "level": LOG_LEVEL},
+    "loggers": {
+        "django": {
+            "handlers": ["console"],
+            "level": LOG_LEVEL,
+            "propagate": False,
+        },
+        "django.request": {
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": False,
+        },
+        "django.security": {
+            "handlers": ["console"],
+            "level": "WARNING",
+            "propagate": False,
+        },
+        # Application loggers (otp.py, exception_handler.py, views).
+        "accounts": {"handlers": ["console"], "level": LOG_LEVEL, "propagate": False},
+        "documents": {"handlers": ["console"], "level": LOG_LEVEL, "propagate": False},
+        "backend": {"handlers": ["console"], "level": LOG_LEVEL, "propagate": False},
+    },
+}
+
+# Optional error tracking. Nothing happens unless SENTRY_DSN is configured.
+SENTRY_DSN = os.getenv("SENTRY_DSN", "")
+SENTRY_TRACES_SAMPLE_RATE = float(os.getenv("SENTRY_TRACES_SAMPLE_RATE", "0.0"))
+if SENTRY_DSN and not RUNNING_TESTS:
+    try:
+        import sentry_sdk
+        from sentry_sdk.integrations.django import DjangoIntegration
+
+        sentry_sdk.init(
+            dsn=SENTRY_DSN,
+            integrations=[DjangoIntegration()],
+            traces_sample_rate=SENTRY_TRACES_SAMPLE_RATE,
+            # Certificate recipient data must not be shipped to Sentry.
+            send_default_pii=False,
+        )
+    except ImportError:
+        logging.getLogger(__name__).warning(
+            "SENTRY_DSN is set but sentry-sdk is not installed; "
+            "error tracking is disabled."
+        )
