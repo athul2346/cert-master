@@ -211,6 +211,9 @@ class ResendBackendTests(TestCase):
         request = mock_urlopen.call_args.args[0]
         self.assertEqual(request.full_url, "https://api.resend.com/emails")
         self.assertEqual(request.get_header("Authorization"), "Bearer re_test_key")
+        # Cloudflare in front of api.resend.com rejects urllib's default UA.
+        self.assertTrue(request.get_header("User-agent"))
+        self.assertNotIn("Python-urllib", request.get_header("User-agent"))
 
         payload = json.loads(request.data)
         self.assertEqual(payload["from"], "no-reply@example.com")

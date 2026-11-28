@@ -36,6 +36,12 @@ class ResendEmailBackend(BaseEmailBackend):
             or getattr(settings, "RESEND_API_URL", self.DEFAULT_API_URL)
         )
         self.timeout = getattr(settings, "RESEND_TIMEOUT", 10)
+        # Cloudflare fronts api.resend.com and rejects the default
+        # "Python-urllib/x.y" signature with a 403 (error 1010,
+        # browser_signature_banned). Always identify ourselves explicitly.
+        self.user_agent = kwargs.get("user_agent") or getattr(
+            settings, "RESEND_USER_AGENT", "cert-master/1.0"
+        )
 
     def send_messages(self, email_messages):
         if not email_messages:
@@ -97,6 +103,7 @@ class ResendEmailBackend(BaseEmailBackend):
                 "Authorization": f"Bearer {self.api_key}",
                 "Content-Type": "application/json",
                 "Accept": "application/json",
+                "User-Agent": self.user_agent,
             },
             method="POST",
         )

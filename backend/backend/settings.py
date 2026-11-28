@@ -272,6 +272,10 @@ DEFAULT_FROM_EMAIL = os.getenv(
 RESEND_API_KEY = os.getenv("RESEND_API_KEY", "")
 RESEND_API_URL = os.getenv("RESEND_API_URL", "https://api.resend.com/emails")
 RESEND_TIMEOUT = int(os.getenv("RESEND_TIMEOUT", "10"))
+# api.resend.com is behind Cloudflare, which 403s the default urllib
+# User-Agent ("Python-urllib/x.y", error 1010). Keep this set to something
+# identifiable.
+RESEND_USER_AGENT = os.getenv("RESEND_USER_AGENT", "cert-master/1.0")
 
 if os.getenv("EMAIL_BACKEND"):
     EMAIL_BACKEND = os.environ["EMAIL_BACKEND"]
