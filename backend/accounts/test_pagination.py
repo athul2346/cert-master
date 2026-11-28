@@ -22,11 +22,11 @@ class AdminPaginationTests(TestCase):
             cin_number="CIN-ACTIVE",
             status=CompanyProfile.STATUS_ACTIVE,
         )
-        pending_user = User.objects.create_user(
+        self.pending_user = User.objects.create_user(
             email="pending@example.com", password="pass12345"
         )
         CompanyProfile.objects.create(
-            user=pending_user,
+            user=self.pending_user,
             organisation_name="Pending Co",
             classification="private",
             country="IN",
@@ -52,3 +52,15 @@ class AdminPaginationTests(TestCase):
         self.assertEqual(response.data["pending_count"], 1)
         self.assertIsInstance(response.data["requests"], list)
         self.assertEqual(len(response.data["requests"]), 1)
+
+    def test_verification_queue_exposes_email_verified_status(self):
+        response = self.client.get("/api/auth/admin/verification-queue/")
+
+        self.assertFalse(response.data["requests"][0]["email_verified"])
+
+        self.pending_user.email_verified = True
+        self.pending_user.save(update_fields=["email_verified"])
+
+        response = self.client.get("/api/auth/admin/verification-queue/")
+
+        self.assertTrue(response.data["requests"][0]["email_verified"])

@@ -150,6 +150,11 @@ class EntitySerializer(serializers.ModelSerializer):
 class VerificationQueueSerializer(serializers.ModelSerializer):
     """Row shape for the 'Verification Queue' admin screen."""
     email = serializers.EmailField(source="user.email", read_only=True)
+    # Whether the organisation's signup OTP has been confirmed. Reviewers need
+    # this to know if the address on the request is actually reachable/owned.
+    email_verified = serializers.BooleanField(
+        source="user.email_verified", read_only=True
+    )
     docs_attached = serializers.IntegerField(read_only=True)
     documents = CompanyVerificationDocumentSerializer(
         source="verification_documents", many=True, read_only=True
@@ -162,6 +167,7 @@ class VerificationQueueSerializer(serializers.ModelSerializer):
             "id",
             "organisation_name",
             "email",
+            "email_verified",
             "status",
             "entity_type",
             "location",
